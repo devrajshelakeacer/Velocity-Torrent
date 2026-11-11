@@ -7,13 +7,20 @@ import "views"
 
 Window {
     id: appWindow
-    width: 1280
-    height: 820
-    minimumWidth: 1040
-    minimumHeight: 680
+    width: Math.min(1160, Screen.width - 60)
+    height: Math.min(720, Screen.height - 80)
+    minimumWidth: 880
+    minimumHeight: 560
     visible: true
     title: "VELOCITY — Intelligent Torrent Downloading"
     color: GeistTheme.canvas
+    flags: Qt.Window | Qt.WindowSystemMenuHint | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint
+
+    Component.onCompleted: {
+        appWindow.show();
+        appWindow.raise();
+        appWindow.requestActivate();
+    }
 
     FontLoader {
         id: interFontLoader

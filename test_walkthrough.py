@@ -8,7 +8,9 @@ and demonstrates live V200 bottleneck telemetry on your Windows desktop.
 import sys
 import os
 import time
-from PySide6.QtGui import QGuiApplication, QFontDatabase, QFont
+from PySide6.QtWidgets import QApplication
+from PySide6.QtQuickControls2 import QQuickStyle
+from PySide6.QtGui import QFontDatabase, QFont
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Property, QTimer, Slot
 import random
@@ -170,8 +172,9 @@ def main():
         except Exception:
             pass
 
+    QQuickStyle.setStyle("Basic")
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Basic"
-    app = QGuiApplication(sys.argv)
+    app = QApplication(sys.argv)
     app.setApplicationName("VELOCITY")
     app.setOrganizationName("VelocityProject")
 
@@ -183,6 +186,8 @@ def main():
             app.setFont(QFont("Inter", 10))
 
     engine = QQmlApplicationEngine()
+    ui_dir = os.path.join(os.path.dirname(__file__), "ui")
+    engine.addImportPath(ui_dir)
     bridge = AutomatedTestBridge()
 
     context = engine.rootContext()

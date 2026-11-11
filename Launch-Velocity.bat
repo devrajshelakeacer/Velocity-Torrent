@@ -1,9 +1,16 @@
 @echo off
-title Launching VELOCITY...
+title VELOCITY Desktop Launcher
 cd /d "%~dp0"
+echo ========================================================
+echo   Launching VELOCITY Desktop Client...
+echo ========================================================
 if exist ".venv\Scripts\python.exe" (
-    start "" ".venv\Scripts\python.exe" "run_app.py"
+    ".venv\Scripts\python.exe" -u run_app.py
 ) else (
-    python run_app.py
+    python -u run_app.py
 )
-exit
+if %errorlevel% neq 0 (
+    echo.
+    echo [ERROR] Application exited with code %errorlevel%
+    pause
+)
