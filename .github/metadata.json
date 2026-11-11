@@ -1,0 +1,32 @@
+{
+  "name": "velocity",
+  "description": "⚡ High-performance, secure, and completely free BitTorrent client for Windows 10 & 11 (64-bit). Saturates 200 Mbps broadband (~25 MB/s). Built with C++20, Qt 6 / QML, and libtorrent. Vercel Geist design system. Features VSE-X Swarm Intelligence, V200 Optimizer, V-FORCE SSD Protection, and V-SHIELD Antivirus Defense.",
+  "homepage": "https://velocity-torrent.github.io/velocity/",
+  "topics": [
+    "torrent",
+    "bittorrent",
+    "bittorrent-client",
+    "torrent-downloader",
+    "cpp20",
+    "qt6",
+    "qml",
+    "libtorrent",
+    "windows-11",
+    "windows-10",
+    "download-manager",
+    "peer-to-peer",
+    "p2p",
+    "high-performance",
+    "open-source",
+    "qbittorrent-alternative",
+    "bandwidth-optimization",
+    "cybersecurity",
+    "antivirus",
+    "geist-ui"
+  ],
+  "private": false,
+  "has_issues": true,
+  "has_projects": true,
+  "has_wiki": false,
+  "license_template": "gpl-3.0"
+}

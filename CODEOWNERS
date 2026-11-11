@@ -1,0 +1,21 @@
+# Global Codeowners
+*                       @velocity-torrent/core-maintainers
+
+# Engine & Architecture
+/src/engine/            @velocity-torrent/torrent-engineers
+/src/network/           @velocity-torrent/network-engineers
+/src/hardware/          @velocity-torrent/performance-engineers
+
+# Security
+/src/security/          @velocity-torrent/security-architects
+/docs/SECURITY*         @velocity-torrent/security-architects
+
+# UI & Presentation
+/ui/                    @velocity-torrent/ui-engineers
+/src/ui/                @velocity-torrent/ui-engineers
+/src/models/            @velocity-torrent/ui-engineers
+
+# Build & CI/CD
+/cmake/                 @velocity-torrent/devops
+/scripts/               @velocity-torrent/devops
+CMakeLists.txt          @velocity-torrent/devops

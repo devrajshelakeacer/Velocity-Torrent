@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: VELOCITY CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Windows x64 Build & Test (MSVC / Clang)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Python & Test Runner
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Core Verification Suite
+        run: |
+          python tests/test_runner.py
+
+      - name: Verify SPDX SBOM Integrity
+        run: |
+          python scripts/generate_sbom.py
+          git diff --exit-code docs/SBOM.json

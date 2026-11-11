@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: VELOCITY Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish-release:
+    name: Build & Publish Release Artifacts
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Test Verification
+        run: |
+          python tests/test_runner.py
+
+      - name: Generate SBOM
+        run: |
+          python scripts/generate_sbom.py
+
+      - name: Create Portable Zip Package
+        run: |
+          powershell -Command "Compress-Archive -Path src, ui, docs, scripts, LICENSE, README.md, CMakeLists.txt -DestinationPath Velocity-Portable-x64.zip -Force"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Velocity-Portable-x64.zip
+            docs/SBOM.json
+          draft: false
+          prerelease: false
+          generate_release_notes: true
