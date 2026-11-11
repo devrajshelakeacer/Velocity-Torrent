@@ -120,6 +120,10 @@ def main():
         print("[CRITICAL] Could not load QML scene graph. Exiting.")
         sys.exit(-1)
 
+    window = engine.rootObjects()[0]
+    window.raise_()
+    window.requestActivate()
+
     print("[SUCCESS] VELOCITY Desktop UI Launched Successfully with Inter Typography.")
     sys.exit(app.exec())
 
