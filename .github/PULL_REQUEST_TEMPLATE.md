@@ -1,18 +1,17 @@
-## Description of Changes
-A concise summary of the changes proposed in this Pull Request.
+## Description
+Briefly describe the change and its motivation.
 
-## Affected Subsystems
-- [ ] VSE-X Swarm Intelligence
-- [ ] V200 Broadband Pipeline
-- [ ] V-FORCE & Thermal Guardian
-- [ ] V-SHIELD Security Architecture
-- [ ] QML Presentation / UI ViewModels
-- [ ] Build & Packaging
+## Subsystem Impact
+- [ ] VSE-X (Swarm Engine / Peer Scoring)
+- [ ] V200 (Bandwidth Saturation / Bottleneck Diagnostics)
+- [ ] V-FORCE & Direct Piece Coalescing Cache
+- [ ] Thermal Guardian (Hardware Safety)
+- [ ] V-SHIELD (Zero-Trust Security & Path Sanitization)
+- [ ] UI / QML Geist Presentation Layer
 
-## Testing Performed
-- [ ] Unit tests added / updated
-- [ ] Automated verification harness passes (`python tests/test_runner.py`)
-- [ ] Tested on Windows 10/11 x64
-
-## Developer Certificate of Origin (DCO 1.1)
-- [ ] All commits signed-off (`git commit -s`)
+## Checklist
+- [ ] Code follows C++20 / Qt 6 conventions.
+- [ ] Minimum 12px font size and Inter typography preserved in UI.
+- [ ] User-Controlled Thermal Policy intact.
+- [ ] Unit tests added / passing.
+- [ ] Verified on Windows 10/11 64-bit.
