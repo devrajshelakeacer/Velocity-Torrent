@@ -2,6 +2,7 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import "../components"
+import ".."
 
 Item {
     id: root
@@ -12,67 +13,77 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-        spacing: 16
+        anchors.margins: 28
+        spacing: 20
 
         // Header Title
         RowLayout {
             Layout.fillWidth: true
-            spacing: 12
+            spacing: 14
             ColumnLayout {
                 spacing: 4
                 Text {
                     text: root.torrentName
-                    font.pixelSize: 18
-                    font.weight: Font.DemiBold
-                    color: "#ffffff"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeTitle
+                    font.weight: Font.Bold
+                    color: GeistTheme.inkPrimary
                 }
                 Text {
                     text: "Hash: " + root.infoHash + " | Path: " + root.savePath
-                    font.pixelSize: 11
-                    font.family: "Consolas, monospace"
-                    color: "#666666"
+                    font.family: GeistTheme.fontMono
+                    font.pixelSize: GeistTheme.fontSizeMicro
+                    color: GeistTheme.inkSecondary
                 }
             }
             Item { Layout.fillWidth: true }
-            GeistBadge { text: "90.2% COMPLETE"; dotColor: "#00e599" }
+            GeistBadge {
+                text: "90.2% COMPLETE"
+                dotColor: GeistTheme.accentGreen
+            }
         }
 
         // Details Grid Cards
         RowLayout {
             Layout.fillWidth: true
-            spacing: 16
+            spacing: 18
 
             GeistCard {
                 Layout.fillWidth: true
-                height: 80
+                height: 96
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 12
-                    Text { text: "VERIFIED PIECES"; font.pixelSize: 11; color: "#888888" }
-                    Text { text: "2,309 / 2,560 (4 MiB each)"; font.pixelSize: 16; font.weight: Font.Bold; font.family: "Consolas"; color: "#00e599" }
-                    Text { text: "0 bad blocks detected | 100% hash integrity"; font.pixelSize: 11; color: "#666666" }
+                    anchors.fill: parent
+                    anchors.margins: 16
+                    spacing: 4
+                    Text { text: "VERIFIED PIECES"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary }
+                    Text { text: "2,309 / 2,560 (4 MiB each)"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
+                    Text { text: "0 bad blocks detected | 100% hash integrity"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
 
             GeistCard {
                 Layout.fillWidth: true
-                height: 80
+                height: 96
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 12
-                    Text { text: "ACTIVE TRACKERS"; font.pixelSize: 11; color: "#888888" }
-                    Text { text: "4 Working (Tier 0 & 1)"; font.pixelSize: 16; font.weight: Font.Bold; font.family: "Consolas"; color: "#ffffff" }
-                    Text { text: "torrent.ubuntu.com:6969 [UDP Announce OK]"; font.pixelSize: 11; color: "#666666" }
+                    anchors.fill: parent
+                    anchors.margins: 16
+                    spacing: 4
+                    Text { text: "ACTIVE TRACKERS"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary }
+                    Text { text: "4 Working (Tier 0 & 1)"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
+                    Text { text: "torrent.ubuntu.com:6969 [UDP Announce OK]"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
 
             GeistCard {
                 Layout.fillWidth: true
-                height: 80
+                height: 96
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 12
-                    Text { text: "FILE PRIORITY"; font.pixelSize: 11; color: "#888888" }
-                    Text { text: "Sequential Head/Tail Enabled"; font.pixelSize: 16; font.weight: Font.Bold; color: "#0070f3" }
-                    Text { text: "First 2% & Last 1% cached for preview"; font.pixelSize: 11; color: "#666666" }
+                    anchors.fill: parent
+                    anchors.margins: 16
+                    spacing: 4
+                    Text { text: "FILE PRIORITY"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary }
+                    Text { text: "Sequential Head/Tail Enabled"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
+                    Text { text: "First 2% & Last 1% cached for instant preview"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
         }
@@ -84,49 +95,50 @@ Item {
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 16
-                spacing: 12
+                anchors.margins: 20
+                spacing: 14
 
                 Text {
-                    text: "Swarm Piece Heatmap (2,560 Pieces)"
-                    font.pixelSize: 13
-                    font.weight: Font.Medium
-                    color: "#ffffff"
+                    text: "Swarm Piece Assembly Heatmap (2,560 Pieces)"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeMedium
+                    font.weight: Font.DemiBold
+                    color: GeistTheme.inkPrimary
                 }
 
                 // Grid of piece status blocks
                 GridView {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    cellWidth: 10
-                    cellHeight: 10
+                    cellWidth: 12
+                    cellHeight: 12
                     clip: true
-                    model: 320 // Sample piece representation
+                    model: 320
 
                     delegate: Rectangle {
-                        width: 8
-                        height: 8
-                        radius: 1
-                        color: index < 288 ? "#00e599" : (index < 298 ? "#0070f3" : "#222222")
+                        width: 10
+                        height: 10
+                        radius: 2
+                        color: index < 288 ? GeistTheme.accentGreen : (index < 298 ? GeistTheme.accentBlue : "#1e1e1e")
                     }
                 }
 
                 RowLayout {
-                    spacing: 16
+                    spacing: 20
                     Row {
-                        spacing: 6
-                        Rectangle { width: 8; height: 8; radius: 1; color: "#00e599"; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: "Verified Downloaded"; font.pixelSize: 11; color: "#888888" }
+                        spacing: 8
+                        Rectangle { width: 10; height: 10; radius: 2; color: GeistTheme.accentGreen; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "Verified Downloaded"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                     }
                     Row {
-                        spacing: 6
-                        Rectangle { width: 8; height: 8; radius: 1; color: "#0070f3"; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: "Pending Verification"; font.pixelSize: 11; color: "#888888" }
+                        spacing: 8
+                        Rectangle { width: 10; height: 10; radius: 2; color: GeistTheme.accentBlue; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "In-Flight In Cache"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                     }
                     Row {
-                        spacing: 6
-                        Rectangle { width: 8; height: 8; radius: 1; color: "#222222"; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: "Remaining"; font.pixelSize: 11; color: "#888888" }
+                        spacing: 8
+                        Rectangle { width: 10; height: 10; radius: 2; color: "#1e1e1e"; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "Unrequested"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                     }
                 }
             }

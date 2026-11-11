@@ -7,13 +7,18 @@ import "views"
 
 Window {
     id: appWindow
-    width: 1240
-    height: 800
-    minimumWidth: 960
-    minimumHeight: 640
+    width: 1280
+    height: 820
+    minimumWidth: 1040
+    minimumHeight: 680
     visible: true
     title: "VELOCITY — Intelligent Torrent Downloading"
-    color: "#000000"
+    color: GeistTheme.canvas
+
+    FontLoader {
+        id: interFontLoader
+        source: "fonts/Inter-Variable.ttf"
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -23,9 +28,13 @@ Window {
         Sidebar {
             id: navSidebar
             Layout.fillHeight: true
+            Layout.preferredWidth: 240
             currentViewIndex: stackContainer.currentIndex
             onViewSelected: function(idx) {
                 stackContainer.currentIndex = idx;
+                if (typeof velocityBridge !== "undefined") {
+                    velocityBridge.currentViewIndex = idx;
+                }
             }
         }
 
@@ -34,7 +43,7 @@ Window {
             id: stackContainer
             Layout.fillWidth: true
             Layout.fillHeight: true
-            currentIndex: 0
+            currentIndex: (typeof velocityBridge !== "undefined") ? velocityBridge.currentViewIndex : 0
 
             DashboardView {}             // 0
             AllDownloadsView {}          // 1
@@ -48,6 +57,13 @@ Window {
             SettingsView {}              // 9
             DownloadHistoryView {}       // 10
             AboutLicensesView {}         // 11
+        }
+    }
+
+    Connections {
+        target: (typeof velocityBridge !== "undefined") ? velocityBridge : null
+        function onViewChanged() {
+            stackContainer.currentIndex = velocityBridge.currentViewIndex;
         }
     }
 }

@@ -3,17 +3,18 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import "../components"
+import ".."
 
 Item {
     id: root
 
-    property real downloadSpeedMBs: 23.4
-    property real uploadSpeedMBs: 1.45
-    property real lineEfficiency: 93.6
-    property real swarmHealth: 94.2
-    property real cpuTemp: 48.0
-    property string activeProfile: "V-FORCE MAX"
-    property string primaryBottleneck: "Optimal Line Saturation (23+ MB/s)"
+    property real downloadSpeedMBs: (typeof velocityBridge !== "undefined") ? velocityBridge.downloadSpeed : 23.4
+    property real uploadSpeedMBs: (typeof velocityBridge !== "undefined") ? velocityBridge.uploadSpeed : 1.45
+    property real lineEfficiency: (typeof velocityBridge !== "undefined") ? velocityBridge.lineEfficiency : 93.6
+    property real swarmHealth: (typeof velocityBridge !== "undefined") ? velocityBridge.swarmHealth : 94.2
+    property real cpuTemp: (typeof velocityBridge !== "undefined") ? velocityBridge.cpuTemp : 48.0
+    property string activeProfile: (typeof velocityBridge !== "undefined") ? velocityBridge.activeProfile : "V-FORCE MAX"
+    property string primaryBottleneck: (typeof velocityBridge !== "undefined") ? velocityBridge.primaryBottleneck : "Optimal Line Saturation (23+ MB/s)"
 
     ScrollView {
         anchors.fill: parent
@@ -22,26 +23,28 @@ Item {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 24
-            spacing: 20
+            anchors.margins: 28
+            spacing: 24
 
             // Header Section
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 12
+                spacing: 16
 
                 ColumnLayout {
                     spacing: 4
                     Text {
                         text: "Dashboard Overview"
-                        font.pixelSize: 20
-                        font.weight: Font.DemiBold
-                        color: "#ffffff"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeTitle
+                        font.weight: Font.Bold
+                        color: GeistTheme.inkPrimary
                     }
                     Text {
-                        text: "Real-time telemetry and 200 Mbps broadband pipeline utilization"
-                        font.pixelSize: 13
-                        color: "#888888"
+                        text: "Real-time telemetry and 200 Mbps broadband saturation pipeline"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        color: GeistTheme.inkSecondary
                     }
                 }
 
@@ -49,7 +52,7 @@ Item {
 
                 GeistBadge {
                     text: root.activeProfile
-                    dotColor: "#0070f3"
+                    dotColor: GeistTheme.accentBlue
                 }
 
                 GeistButton {
@@ -61,182 +64,196 @@ Item {
             // High Priority Thermal Banner (User-Controlled Policy)
             Rectangle {
                 Layout.fillWidth: true
-                height: 40
-                radius: 6
-                color: root.cpuTemp >= 95 ? "#331111" : (root.cpuTemp >= 80 ? "#261a00" : "transparent")
+                height: 44
+                radius: GeistTheme.radiusCard
+                color: root.cpuTemp >= 95 ? "#260808" : (root.cpuTemp >= 80 ? "#261a00" : "transparent")
                 border.color: root.cpuTemp >= 95 ? "#ff3333" : (root.cpuTemp >= 80 ? "#f5a623" : "transparent")
                 border.width: 1
                 visible: root.cpuTemp >= 80
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.margins: 12
-                    spacing: 8
+                    anchors.margins: 14
+                    spacing: 10
 
                     Text {
-                        text: root.cpuTemp >= 95 ? "⚠️ CRITICAL PEAK TEMPERATURE (>= 95°C): Hardware thermal limit reached!" :
-                                                   "🔥 ELEVATED TEMPERATURE: " + root.cpuTemp.toFixed(1) + "°C — Fast Download Continues (User in Control)"
-                        font.pixelSize: 12
-                        font.weight: Font.Medium
+                        text: root.cpuTemp >= 95 ? "CRITICAL PEAK TEMPERATURE (>= 95°C): Hardware thermal boundary reached!" :
+                                                   "ELEVATED TEMPERATURE: " + root.cpuTemp.toFixed(1) + "°C — Fast Download Continues (User in Control)"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        font.weight: Font.DemiBold
                         color: root.cpuTemp >= 95 ? "#ff5555" : "#f5a623"
                     }
 
                     Item { Layout.fillWidth: true }
 
                     Text {
-                        text: "No automatic speed cut | Retaining your full throughput"
-                        font.pixelSize: 11
-                        color: "#cccccc"
+                        text: "No automatic speed cut | Sustaining line saturation"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        color: "#a1a1a1"
                     }
                 }
             }
 
-            // Top 3 KPI Metric Cards
+            // Top 3 KPI Metric Cards (Monochromatic Vercel Standard)
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 16
+                spacing: 18
 
+                // Card 1: Throughput
                 GeistCard {
                     Layout.fillWidth: true
-                    height: 100
+                    height: 120
                     hoverable: true
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 6
+                        anchors.margins: 18
+                        spacing: 8
 
                         Text {
                             text: "TOTAL THROUGHPUT"
-                            font.pixelSize: 11
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMicro
                             font.weight: Font.DemiBold
-                            color: "#888888"
-                            font.letterSpacing: 0.8
+                            font.letterSpacing: 1.0
+                            color: GeistTheme.inkSecondary
                         }
 
                         RowLayout {
-                            spacing: 8
+                            spacing: 10
                             Text {
                                 text: root.downloadSpeedMBs.toFixed(1) + " MB/s"
-                                font.pixelSize: 24
+                                font.family: GeistTheme.fontSans
+                                font.pixelSize: GeistTheme.fontSizeDisplay
                                 font.weight: Font.Bold
-                                font.family: "Consolas, monospace"
-                                color: "#00e599"
+                                color: GeistTheme.inkPrimary
                             }
                             Text {
                                 text: "↑ " + root.uploadSpeedMBs.toFixed(2) + " MB/s"
-                                font.pixelSize: 13
-                                font.family: "Consolas, monospace"
-                                color: "#888888"
+                                font.family: GeistTheme.fontSans
+                                font.pixelSize: GeistTheme.fontSizeBody
+                                color: GeistTheme.inkSecondary
                             }
                         }
 
                         Text {
-                            text: "V200 Line Saturation: " + root.lineEfficiency.toFixed(1) + "% of 25 MB/s"
-                            font.pixelSize: 11
-                            color: "#0070f3"
+                            text: "Broadband Line Saturation: " + root.lineEfficiency.toFixed(1) + "% of 25.0 MB/s"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMicro
+                            color: GeistTheme.inkSecondary
                         }
                     }
                 }
 
+                // Card 2: Swarm Health
                 GeistCard {
                     Layout.fillWidth: true
-                    height: 100
+                    height: 120
                     hoverable: true
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 6
+                        anchors.margins: 18
+                        spacing: 8
 
                         Text {
                             text: "SWARM HEALTH"
-                            font.pixelSize: 11
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMicro
                             font.weight: Font.DemiBold
-                            color: "#888888"
-                            font.letterSpacing: 0.8
+                            font.letterSpacing: 1.0
+                            color: GeistTheme.inkSecondary
                         }
 
                         Text {
                             text: root.swarmHealth.toFixed(1) + "% Optimal"
-                            font.pixelSize: 24
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeDisplay
                             font.weight: Font.Bold
-                            color: "#ffffff"
+                            color: GeistTheme.inkPrimary
                         }
 
                         Text {
-                            text: "142 connected peers | Average PUS: 88/100"
-                            font.pixelSize: 11
-                            color: "#888888"
+                            text: "142 active peers | Average PUS: 88/100"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMicro
+                            color: GeistTheme.inkSecondary
                         }
                     }
                 }
 
+                // Card 3: Thermal & Cache
                 GeistCard {
                     Layout.fillWidth: true
-                    height: 100
+                    height: 120
                     hoverable: true
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 6
+                        anchors.margins: 18
+                        spacing: 8
 
                         Text {
-                            text: "THERMAL GUARDIAN"
-                            font.pixelSize: 11
+                            text: "THERMAL & HARDWARE GUARDIAN"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMicro
                             font.weight: Font.DemiBold
-                            color: "#888888"
-                            font.letterSpacing: 0.8
+                            font.letterSpacing: 1.0
+                            color: GeistTheme.inkSecondary
                         }
 
                         RowLayout {
-                            spacing: 8
+                            spacing: 12
                             Text {
                                 text: root.cpuTemp.toFixed(1) + " °C"
-                                font.pixelSize: 24
+                                font.family: GeistTheme.fontSans
+                                font.pixelSize: GeistTheme.fontSizeDisplay
                                 font.weight: Font.Bold
-                                color: root.cpuTemp >= 95 ? "#ff3333" : (root.cpuTemp >= 80 ? "#f5a623" : "#ffffff")
+                                color: root.cpuTemp >= 95 ? "#ff5555" : (root.cpuTemp >= 80 ? "#f5a623" : GeistTheme.inkPrimary)
                             }
                             GeistBadge {
-                                text: root.cpuTemp >= 95 ? "DANGER" : (root.cpuTemp >= 80 ? "ELEVATED" : "NORMAL")
-                                dotColor: root.cpuTemp >= 95 ? "#ff3333" : (root.cpuTemp >= 80 ? "#f5a623" : "#00e599")
+                                text: root.cpuTemp >= 95 ? "CRITICAL" : (root.cpuTemp >= 80 ? "ELEVATED" : "NORMAL")
+                                dotColor: root.cpuTemp >= 95 ? "#ff3333" : (root.cpuTemp >= 80 ? "#f5a623" : GeistTheme.accentGreen)
                             }
                         }
 
                         Text {
-                            text: "Direct Piece Coalescing: 88.5% SSD Wear Saved"
-                            font.pixelSize: 11
-                            color: "#888888"
+                            text: "Direct Piece Coalescing: 90% SSD Wear Saved"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMicro
+                            color: GeistTheme.inkSecondary
                         }
                     }
                 }
             }
 
-            // Real-Time Throughput Graph
+            // Real-Time Throughput Graph Card
             GeistCard {
                 Layout.fillWidth: true
-                height: 220
+                height: 240
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 12
+                    anchors.margins: 20
+                    spacing: 14
 
                     RowLayout {
                         Layout.fillWidth: true
                         Text {
                             text: "Real-Time Throughput (Last 60 Seconds)"
-                            font.pixelSize: 14
-                            font.weight: Font.Medium
-                            color: "#ffffff"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMedium
+                            font.weight: Font.DemiBold
+                            color: GeistTheme.inkPrimary
                         }
                         Item { Layout.fillWidth: true }
                         Text {
-                            text: "Target: 22.0 - 24.0 MB/s (200 Mbps)"
-                            font.pixelSize: 12
-                            font.family: "Consolas, monospace"
-                            color: "#888888"
+                            text: "Broadband Target: 22.0 – 24.0 MB/s"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeSub
+                            color: GeistTheme.inkSecondary
                         }
                     }
 
@@ -244,44 +261,47 @@ Item {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         maxValue: 25.0
-                        lineColor: "#0070f3"
+                        lineColor: GeistTheme.accentBlue
                         fillColor: "#150070f3"
-                        dataPoints: [18.2, 19.5, 21.0, 22.4, 22.8, 23.4, 23.1, 23.5, 22.9, 23.4, 23.6, 23.4]
+                        dataPoints: [18.5, 19.8, 21.2, 22.4, 23.0, 23.4, 23.2, 23.6, 23.1, 23.4, 23.7, 23.5]
                     }
                 }
             }
 
-            // Bottleneck Attribution Banner
+            // Bottleneck Attribution Diagnostics (Monochromatic Vercel Card)
             GeistCard {
                 Layout.fillWidth: true
-                height: 60
+                height: 64
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 12
+                    anchors.margins: 18
+                    spacing: 16
 
                     Text {
                         text: "BOTTLENECK DIAGNOSTICS:"
-                        font.pixelSize: 11
-                        font.weight: Font.DemiBold
-                        color: "#888888"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        font.weight: Font.Bold
+                        font.letterSpacing: 0.8
+                        color: GeistTheme.inkSecondary
                     }
 
                     Text {
                         text: root.primaryBottleneck
-                        font.pixelSize: 13
-                        font.weight: Font.Medium
-                        color: "#00e599"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeBody
+                        font.weight: Font.DemiBold
+                        color: GeistTheme.inkPrimary
                     }
 
                     Item { Layout.fillWidth: true }
 
                     Text {
                         text: "Socket RTT: 32ms | Disk Latency: 4.2ms | Winsock: 45%"
-                        font.pixelSize: 11
-                        font.family: "Consolas, monospace"
-                        color: "#888888"
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        color: GeistTheme.inkSecondary
                     }
                 }
             }

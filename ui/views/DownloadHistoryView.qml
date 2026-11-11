@@ -2,21 +2,33 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import "../components"
+import ".."
 
 Item {
     id: root
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-        spacing: 16
+        anchors.margins: 28
+        spacing: 20
 
         RowLayout {
             Layout.fillWidth: true
             ColumnLayout {
                 spacing: 4
-                Text { text: "Download History & Verification Receipts"; font.pixelSize: 20; font.weight: Font.DemiBold; color: "#ffffff" }
-                Text { text: "Searchable log of completed transfers with cryptographic hash verification receipts"; font.pixelSize: 13; color: "#888888" }
+                Text {
+                    text: "Download History & Verification Receipts"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeTitle
+                    font.weight: Font.Bold
+                    color: GeistTheme.inkPrimary
+                }
+                Text {
+                    text: "Searchable audit trail of completed transfers with cryptographic hash verification receipts"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeSub
+                    color: GeistTheme.inkSecondary
+                }
             }
             Item { Layout.fillWidth: true }
             GeistButton { text: "Export Receipts (JSON)"; variant: "secondary" }
@@ -27,7 +39,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
-            spacing: 8
+            spacing: 10
 
             model: ListModel {
                 ListElement { filename: "debian-12.8.0-amd64-netinst.iso"; sizeStr: "620 MB"; dateCompleted: "2026-11-10 18:22"; hashStr: "9a41b528c31048f7e6e5894101e405a2e5660142"; receiptStatus: "VERIFIED 100%" }
@@ -37,29 +49,63 @@ Item {
 
             delegate: Rectangle {
                 width: parent.width
-                height: 56
-                color: "#0a0a0a"
-                border.color: "#1a1a1a"
+                height: 60
+                color: mArea.containsMouse ? GeistTheme.surfaceCardHover : GeistTheme.surfaceCard
+                border.color: mArea.containsMouse ? GeistTheme.borderHover : GeistTheme.borderCard
                 border.width: 1
-                radius: 6
+                radius: GeistTheme.radiusMedium
+
+                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on border.color { ColorAnimation { duration: 120 } }
+
+                MouseArea {
+                    id: mArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                }
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 16
-                    spacing: 12
+                    anchors.leftMargin: 18
+                    anchors.rightMargin: 18
+                    spacing: 16
 
                     ColumnLayout {
                         Layout.fillWidth: true
-                        spacing: 2
-                        Text { text: model.filename; font.pixelSize: 13; font.weight: Font.Medium; color: "#ffffff" }
-                        Text { text: "SHA-1: " + model.hashStr; font.pixelSize: 11; font.family: "Consolas"; color: "#666666" }
+                        spacing: 3
+                        Text {
+                            text: model.filename
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeBody
+                            font.weight: Font.Medium
+                            color: GeistTheme.inkPrimary
+                        }
+                        Text {
+                            text: "SHA-1: " + model.hashStr
+                            font.family: GeistTheme.fontMono
+                            font.pixelSize: GeistTheme.fontSizeMicro
+                            color: GeistTheme.inkSecondary
+                        }
                     }
 
-                    Text { text: model.sizeStr; font.pixelSize: 12; font.family: "Consolas"; color: "#888888" }
-                    Text { text: model.dateCompleted; font.pixelSize: 11; color: "#666666" }
-                    GeistBadge { text: model.receiptStatus; dotColor: "#00e599" }
-                    GeistButton { text: "Open Folder"; implicitHeight: 28; implicitWidth: 85 }
+                    Text {
+                        text: model.sizeStr
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        color: GeistTheme.inkPrimary
+                    }
+
+                    Text {
+                        text: model.dateCompleted
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        color: GeistTheme.inkSecondary
+                    }
+
+                    GeistBadge {
+                        text: model.receiptStatus
+                        dotColor: GeistTheme.accentGreen
+                    }
                 }
             }
         }

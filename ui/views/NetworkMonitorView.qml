@@ -2,94 +2,137 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import "../components"
+import ".."
 
 Item {
     id: root
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-        spacing: 20
+        anchors.margins: 28
+        spacing: 22
 
         RowLayout {
             Layout.fillWidth: true
             ColumnLayout {
                 spacing: 4
-                Text { text: "Network Monitor & Interface Topology"; font.pixelSize: 20; font.weight: Font.DemiBold; color: "#ffffff" }
-                Text { text: "Windows IP Helper adapter discovery, UPnP status, and routing stack diagnostics"; font.pixelSize: 13; color: "#888888" }
+                Text {
+                    text: "Network Monitor & Interface Topology"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeTitle
+                    font.weight: Font.Bold
+                    color: GeistTheme.inkPrimary
+                }
+                Text {
+                    text: "Windows IP Helper adapter discovery, UPnP status, and Winsock routing diagnostics"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeSub
+                    color: GeistTheme.inkSecondary
+                }
             }
             Item { Layout.fillWidth: true }
-            GeistBadge { text: "PORT 6881 OPEN (UPnP OK)"; dotColor: "#00e599" }
+            GeistBadge { text: "PORT 6881 OPEN (UPnP OK)"; dotColor: GeistTheme.accentGreen }
         }
 
         // Detected Network Adapters
-        Text { text: "DETECTED NETWORK INTERFACES"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
+        Text {
+            text: "DETECTED NETWORK INTERFACES"
+            font.family: GeistTheme.fontSans
+            font.pixelSize: GeistTheme.fontSizeMicro
+            font.weight: Font.Bold
+            font.letterSpacing: 0.8
+            color: GeistTheme.inkSecondary
+        }
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: 16
+            spacing: 18
 
             GeistCard {
                 Layout.fillWidth: true
-                height: 120
+                height: 136
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 14; spacing: 4
+                    anchors.fill: parent
+                    anchors.margins: 18
+                    spacing: 6
                     RowLayout {
-                        Text { text: "Ethernet (Realtek PCIe GbE)"; font.pixelSize: 14; font.weight: Font.DemiBold; color: "#ffffff" }
+                        Text {
+                            text: "Ethernet (Realtek PCIe GbE)"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMedium
+                            font.weight: Font.DemiBold
+                            color: GeistTheme.inkPrimary
+                        }
                         Item { Layout.fillWidth: true }
-                        GeistBadge { text: "ACTIVE"; dotColor: "#00e599" }
+                        GeistBadge { text: "PRIMARY ACTIVE"; dotColor: GeistTheme.accentGreen }
                     }
-                    Text { text: "IPv4: 192.168.1.105 | Subnet: 255.255.255.0"; font.pixelSize: 11; font.family: "Consolas"; color: "#888888" }
-                    Text { text: "Gateway: 192.168.1.1 | Speed: 1000 Mbps Full Duplex"; font.pixelSize: 11; font.family: "Consolas"; color: "#888888" }
-                    Text { text: "Bound Peer Sockets: 38 connections"; font.pixelSize: 11; color: "#0070f3" }
+                    Text { text: "IPv4: 192.168.1.105 | Subnet: 255.255.255.0"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                    Text { text: "Gateway: 192.168.1.1 | Link: 1000 Mbps Full Duplex"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                    Text { text: "Bound Peer Sockets: 38 connections active"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkPrimary }
                 }
             }
 
             GeistCard {
                 Layout.fillWidth: true
-                height: 120
+                height: 136
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 14; spacing: 4
+                    anchors.fill: parent
+                    anchors.margins: 18
+                    spacing: 6
                     RowLayout {
-                        Text { text: "Wi-Fi 6 (Intel AX200 160MHz)"; font.pixelSize: 14; font.weight: Font.DemiBold; color: "#ffffff" }
+                        Text {
+                            text: "Wi-Fi 6 (Intel AX200 160MHz)"
+                            font.family: GeistTheme.fontSans
+                            font.pixelSize: GeistTheme.fontSizeMedium
+                            font.weight: Font.DemiBold
+                            color: GeistTheme.inkPrimary
+                        }
                         Item { Layout.fillWidth: true }
-                        GeistBadge { text: "STANDBY"; dotColor: "#888888" }
+                        GeistBadge { text: "HOT STANDBY"; dotColor: GeistTheme.inkSecondary }
                     }
-                    Text { text: "IPv4: 192.168.1.142 | Signal: 98% (-42 dBm)"; font.pixelSize: 11; font.family: "Consolas"; color: "#888888" }
-                    Text { text: "Link Speed: 1200 Mbps (802.11ax)"; font.pixelSize: 11; font.family: "Consolas"; color: "#888888" }
-                    Text { text: "Secondary route: Standby (Metrics: 45)"; font.pixelSize: 11; color: "#888888" }
+                    Text { text: "IPv4: 192.168.1.142 | Signal: 98% (-42 dBm)"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                    Text { text: "Link Speed: 1200 Mbps (802.11ax)"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                    Text { text: "Secondary route: Standby (Metric: 45)"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
         }
 
-        // Port & Socket Diagnostics
+        // Routing Stack Diagnostics
         GeistCard {
             Layout.fillWidth: true
-            height: 120
+            Layout.fillHeight: true
+
             ColumnLayout {
-                anchors.fill: parent; anchors.margins: 16; spacing: 8
-                Text { text: "PORT FORWARDING & WINSOCK BUFFER STATUS"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
+                anchors.fill: parent
+                anchors.margins: 20
+                spacing: 12
+
+                Text {
+                    text: "Socket Pipeline & Routing Diagnostics"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeMedium
+                    font.weight: Font.DemiBold
+                    color: GeistTheme.inkPrimary
+                }
+
                 RowLayout {
+                    Layout.fillWidth: true
                     spacing: 24
-                    Column {
-                        spacing: 2
-                        Text { text: "External Listening Port"; font.pixelSize: 11; color: "#666666" }
-                        Text { text: "6881 (TCP / UDP)"; font.pixelSize: 14; font.family: "Consolas"; font.weight: Font.Bold; color: "#00e599" }
+
+                    ColumnLayout {
+                        spacing: 4
+                        Text { text: "Average RTT (Round Trip Time): 32.4 ms"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                        Text { text: "Packet Loss Rate: 0.02% (Target: < 0.5%)"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                        Text { text: "Winsock Send/Recv Buffer: 8 MiB (Auto-Tuned)"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                     }
-                    Column {
-                        spacing: 2
-                        Text { text: "NAT Traversal"; font.pixelSize: 11; color: "#666666" }
-                        Text { text: "UPnP IGD Profile 2.0 (Active)"; font.pixelSize: 14; font.weight: Font.Bold; color: "#ffffff" }
-                    }
-                    Column {
-                        spacing: 2
-                        Text { text: "Winsock Buffer Allocation"; font.pixelSize: 11; color: "#666666" }
-                        Text { text: "2048 KiB (Dynamic Tuning)"; font.pixelSize: 14; font.family: "Consolas"; font.weight: Font.Bold; color: "#0070f3" }
-                    }
-                    Column {
-                        spacing: 2
-                        Text { text: "Network Lock Interface"; font.pixelSize: 11; color: "#666666" }
-                        Text { text: "All Physical Interfaces"; font.pixelSize: 14; font.weight: Font.Bold; color: "#cccccc" }
+
+                    Item { Layout.fillWidth: true }
+
+                    ColumnLayout {
+                        spacing: 4
+                        Text { text: "uTP Congestion Control: LEDBAT Native"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                        Text { text: "TCP BBR/Cubic Window: Saturated (24 MB/s)"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
+                        Text { text: "Network Lock (Kill-Switch): ARMED"; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkPrimary }
                     }
                 }
             }

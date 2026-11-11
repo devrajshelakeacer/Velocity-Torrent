@@ -2,14 +2,15 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import "../components"
+import ".."
 
 Item {
     id: root
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-        spacing: 16
+        anchors.margins: 28
+        spacing: 20
 
         // Toolbar
         RowLayout {
@@ -18,9 +19,10 @@ Item {
 
             Text {
                 text: "All Downloads"
-                font.pixelSize: 20
-                font.weight: Font.DemiBold
-                color: "#ffffff"
+                font.family: GeistTheme.fontSans
+                font.pixelSize: GeistTheme.fontSizeTitle
+                font.weight: Font.Bold
+                color: GeistTheme.inkPrimary
             }
 
             Item { Layout.fillWidth: true }
@@ -44,27 +46,27 @@ Item {
         // Table Header
         Rectangle {
             Layout.fillWidth: true
-            height: 36
-            color: "#0d0d0d"
-            border.color: "#1f1f1f"
+            height: 40
+            color: GeistTheme.surfaceSubtle
+            border.color: GeistTheme.borderCard
             border.width: 1
-            radius: 4
+            radius: GeistTheme.radiusMedium
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 16
-                anchors.rightMargin: 16
-                spacing: 12
+                anchors.leftMargin: 18
+                anchors.rightMargin: 18
+                spacing: 14
 
-                Text { text: "STATUS"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 90 }
-                Text { text: "NAME"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.fillWidth: true }
-                Text { text: "SIZE"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 80 }
-                Text { text: "PROGRESS"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 140 }
-                Text { text: "DOWN SPEED"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 95 }
-                Text { text: "UP SPEED"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 80 }
-                Text { text: "ETA"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 60 }
-                Text { text: "SEEDS / PEERS"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 100 }
-                Text { text: "ACTIONS"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#666666"; Layout.preferredWidth: 70 }
+                Text { text: "STATUS"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 100 }
+                Text { text: "NAME"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.fillWidth: true }
+                Text { text: "SIZE"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 80 }
+                Text { text: "PROGRESS"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 150 }
+                Text { text: "DOWN SPEED"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 100 }
+                Text { text: "UP SPEED"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 85 }
+                Text { text: "ETA"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 65 }
+                Text { text: "SEEDS / PEERS"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 105 }
+                Text { text: "ACTIONS"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary; Layout.preferredWidth: 74 }
             }
         }
 
@@ -73,7 +75,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
-            spacing: 6
+            spacing: 8
 
             model: ListModel {
                 ListElement {
@@ -116,11 +118,14 @@ Item {
 
             delegate: Rectangle {
                 width: parent.width
-                height: 48
-                color: mArea.containsMouse ? "#141414" : "#0a0a0a"
-                border.color: mArea.containsMouse ? "#2a2a2a" : "#1a1a1a"
+                height: 52
+                color: mArea.containsMouse ? GeistTheme.surfaceCardHover : GeistTheme.surfaceCard
+                border.color: mArea.containsMouse ? GeistTheme.borderHover : GeistTheme.borderCard
                 border.width: 1
-                radius: 6
+                radius: GeistTheme.radiusMedium
+
+                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on border.color { ColorAnimation { duration: 120 } }
 
                 MouseArea {
                     id: mArea
@@ -130,35 +135,36 @@ Item {
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 16
-                    spacing: 12
+                    anchors.leftMargin: 18
+                    anchors.rightMargin: 18
+                    spacing: 14
 
                     GeistBadge {
                         text: model.statusText
                         dotColor: model.statusDot
-                        Layout.preferredWidth: 90
+                        Layout.preferredWidth: 100
                     }
 
                     Text {
                         text: model.torrentName
-                        font.pixelSize: 13
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeBody
                         font.weight: Font.Medium
-                        color: "#ffffff"
+                        color: GeistTheme.inkPrimary
                         elide: Text.ElideRight
                         Layout.fillWidth: true
                     }
 
                     Text {
                         text: model.sizeStr
-                        font.pixelSize: 12
-                        font.family: "Consolas, monospace"
-                        color: "#888888"
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        color: GeistTheme.inkSecondary
                         Layout.preferredWidth: 80
                     }
 
                     RowLayout {
-                        Layout.preferredWidth: 140
+                        Layout.preferredWidth: 150
                         spacing: 8
                         GeistProgressBar {
                             Layout.fillWidth: true
@@ -167,58 +173,58 @@ Item {
                         }
                         Text {
                             text: model.progStr
-                            font.pixelSize: 11
-                            font.family: "Consolas, monospace"
-                            color: "#cccccc"
+                            font.family: GeistTheme.fontMono
+                            font.pixelSize: GeistTheme.fontSizeMicro
+                            color: GeistTheme.inkPrimary
                         }
                     }
 
                     Text {
                         text: model.downSpeed
-                        font.pixelSize: 12
-                        font.family: "Consolas, monospace"
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeSub
                         font.weight: Font.DemiBold
-                        color: model.downSpeed.indexOf("22") !== -1 ? "#00e599" : "#ffffff"
-                        Layout.preferredWidth: 95
+                        color: GeistTheme.inkPrimary
+                        Layout.preferredWidth: 100
                     }
 
                     Text {
                         text: model.upSpeed
-                        font.pixelSize: 12
-                        font.family: "Consolas, monospace"
-                        color: "#888888"
-                        Layout.preferredWidth: 80
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        color: GeistTheme.inkSecondary
+                        Layout.preferredWidth: 85
                     }
 
                     Text {
                         text: model.etaStr
-                        font.pixelSize: 12
-                        font.family: "Consolas, monospace"
-                        color: "#cccccc"
-                        Layout.preferredWidth: 60
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        color: GeistTheme.inkPrimary
+                        Layout.preferredWidth: 65
                     }
 
                     Text {
                         text: model.peersStr
-                        font.pixelSize: 12
-                        font.family: "Consolas, monospace"
-                        color: "#888888"
-                        Layout.preferredWidth: 100
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        color: GeistTheme.inkSecondary
+                        Layout.preferredWidth: 105
                     }
 
                     RowLayout {
-                        Layout.preferredWidth: 70
-                        spacing: 4
+                        Layout.preferredWidth: 74
+                        spacing: 6
                         GeistButton {
                             text: "⏸"
-                            implicitWidth: 30
-                            implicitHeight: 28
+                            implicitWidth: 32
+                            implicitHeight: 30
                         }
                         GeistButton {
                             text: "✕"
                             variant: "danger"
-                            implicitWidth: 30
-                            implicitHeight: 28
+                            implicitWidth: 32
+                            implicitHeight: 30
                         }
                     }
                 }

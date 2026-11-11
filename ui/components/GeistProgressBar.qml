@@ -1,27 +1,30 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
+import ".."
 
 Item {
     id: root
 
     property real value: 0.0 // 0.0 to 1.0
-    property color barColor: "#0070f3"
+    property color barColor: GeistTheme.accentBlue
 
-    implicitHeight: 4
-    implicitWidth: 120
+    implicitHeight: 6
+    implicitWidth: 140
 
     Rectangle {
         anchors.fill: parent
-        radius: 2
-        color: "#1a1a1a"
+        radius: 3
+        color: GeistTheme.surfaceElevated
+        border.color: GeistTheme.borderHairline
+        border.width: 1
 
         Rectangle {
             height: parent.height
             width: Math.max(0, Math.min(parent.width, parent.width * root.value))
-            radius: 2
+            radius: 3
             color: root.barColor
 
-            Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutQuad } }
+            Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
         }
     }
 }

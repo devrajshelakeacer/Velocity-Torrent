@@ -2,42 +2,59 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import "../components"
+import ".."
 
 Item {
     id: root
 
-    property string selectedProfile: "V-FORCE MAX"
-    property real currentTemp: 48.0
-    property real ssdWafReduction: 88.5
+    property string selectedProfile: (typeof velocityBridge !== "undefined") ? velocityBridge.activeProfile : "V-FORCE MAX"
+    property real currentTemp: (typeof velocityBridge !== "undefined") ? velocityBridge.cpuTemp : 48.0
+    property real ssdWafReduction: (typeof velocityBridge !== "undefined") ? velocityBridge.wafReduction : 90.0
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-        spacing: 20
+        anchors.margins: 28
+        spacing: 22
 
         RowLayout {
             Layout.fillWidth: true
             ColumnLayout {
                 spacing: 4
-                Text { text: "V-FORCE — Maximum Safe Performance & Thermal Guardian"; font.pixelSize: 20; font.weight: Font.DemiBold; color: "#ffffff" }
-                Text { text: "Hardware-aware resource scaling, Direct Piece Coalescing, and user-first thermal management"; font.pixelSize: 13; color: "#888888" }
+                Text {
+                    text: "V-FORCE — Hardware-Aware Maximum Performance"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeTitle
+                    font.weight: Font.Bold
+                    color: GeistTheme.inkPrimary
+                }
+                Text {
+                    text: "Hardware-aware resource scaling, Direct Piece Coalescing, and user-controlled thermal policy"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeSub
+                    color: GeistTheme.inkSecondary
+                }
             }
             Item { Layout.fillWidth: true }
-            GeistBadge { text: "ACTIVE: " + root.selectedProfile; dotColor: "#0070f3" }
+            GeistBadge { text: "ACTIVE: " + root.selectedProfile; dotColor: GeistTheme.accentBlue }
         }
 
         // Direct Piece Coalescing Cache Banner
         GeistCard {
             Layout.fillWidth: true
-            height: 90
+            height: 96
 
             RowLayout {
                 anchors.fill: parent
-                anchors.margins: 16
+                anchors.margins: 18
                 spacing: 16
 
                 Rectangle {
-                    width: 48; height: 48; radius: 24; color: "#111111"; border.color: "#222222"; border.width: 1
+                    width: 50
+                    height: 50
+                    radius: GeistTheme.radiusCard
+                    color: GeistTheme.surfaceSubtle
+                    border.color: GeistTheme.borderCard
+                    border.width: 1
                     Text { text: "⚡"; font.pixelSize: 22; anchors.centerIn: parent }
                 }
 
@@ -45,46 +62,67 @@ Item {
                     spacing: 4
                     Text {
                         text: "Direct Piece Coalescing Cache (SSD Endurance Protection)"
-                        font.pixelSize: 14
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeMedium
                         font.weight: Font.DemiBold
-                        color: "#ffffff"
+                        color: GeistTheme.inkPrimary
                     }
                     Text {
-                        text: "Assembling incoming 16KB blocks in RAM into 4MB–16MB contiguous writes | SSD Write Amplification reduced by " + root.ssdWafReduction.toFixed(1) + "%"
-                        font.pixelSize: 12
-                        color: "#00e599"
+                        text: "Assembling incoming 16KB blocks in RAM into 4MB–16MB contiguous sequential writes | SSD Write Amplification reduced by " + root.ssdWafReduction.toFixed(1) + "%"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        color: GeistTheme.inkSecondary
                     }
                 }
             }
         }
 
         // Three Performance Profiles
-        Text { text: "OPERATIONAL PROFILES"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
+        Text {
+            text: "OPERATIONAL PROFILES"
+            font.family: GeistTheme.fontSans
+            font.pixelSize: GeistTheme.fontSizeMicro
+            font.weight: Font.Bold
+            font.letterSpacing: 0.8
+            color: GeistTheme.inkSecondary
+        }
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: 16
+            spacing: 18
 
             // Profile 1: Balanced
             GeistCard {
                 Layout.fillWidth: true
-                height: 160
+                height: 180
                 hoverable: true
-                border.color: root.selectedProfile === "BALANCED" ? "#0070f3" : "#1f1f1f"
+                border.color: root.selectedProfile === "BALANCED" ? GeistTheme.accentBlue : GeistTheme.borderCard
 
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 16; spacing: 8
+                    anchors.fill: parent
+                    anchors.margins: 18
+                    spacing: 8
                     RowLayout {
-                        Text { text: "BALANCED"; font.pixelSize: 15; font.weight: Font.DemiBold; color: "#ffffff" }
+                        Text { text: "BALANCED"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
                         Item { Layout.fillWidth: true }
-                        GeistBadge { text: "128 MB RAM"; dotColor: "#888888" }
+                        GeistBadge { text: "128 MB RAM"; dotColor: GeistTheme.inkSecondary }
                     }
-                    Text { text: "Energy-efficient operation. 128 MB disk cache, 2 hash worker threads, standard socket buffers. Silent fan profile."; font.pixelSize: 12; color: "#888888"; wrapMode: Text.WordWrap; Layout.fillWidth: true }
+                    Text {
+                        text: "Energy-efficient operation. 128 MB cache buffer, 2 hashing threads, low-power socket scheduling.";
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        color: GeistTheme.inkSecondary
+                        wrapMode: Text.WordWrap
+                        Layout.fillWidth: true
+                    }
                     Item { Layout.fillHeight: true }
                     GeistButton {
                         text: root.selectedProfile === "BALANCED" ? "Current Profile" : "Switch to Balanced"
                         variant: root.selectedProfile === "BALANCED" ? "primary" : "secondary"
-                        onClicked: root.selectedProfile = "BALANCED"
+                        onClicked: {
+                            root.selectedProfile = "BALANCED"
+                            if (typeof velocityBridge !== "undefined") velocityBridge.setProfile("BALANCED")
+                        }
                     }
                 }
             }
@@ -92,23 +130,35 @@ Item {
             // Profile 2: Turbo
             GeistCard {
                 Layout.fillWidth: true
-                height: 160
+                height: 180
                 hoverable: true
-                border.color: root.selectedProfile === "TURBO" ? "#0070f3" : "#1f1f1f"
+                border.color: root.selectedProfile === "TURBO" ? GeistTheme.accentBlue : GeistTheme.borderCard
 
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 16; spacing: 8
+                    anchors.fill: parent
+                    anchors.margins: 18
+                    spacing: 8
                     RowLayout {
-                        Text { text: "TURBO"; font.pixelSize: 15; font.weight: Font.DemiBold; color: "#ffffff" }
+                        Text { text: "TURBO"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
                         Item { Layout.fillWidth: true }
-                        GeistBadge { text: "512 MB RAM"; dotColor: "#f5a623" }
+                        GeistBadge { text: "512 MB RAM"; dotColor: GeistTheme.accentAmber }
                     }
-                    Text { text: "Performance scheduling. 512 MB memory cache, 4 hash worker threads, dynamic request pipelining."; font.pixelSize: 12; color: "#888888"; wrapMode: Text.WordWrap; Layout.fillWidth: true }
+                    Text {
+                        text: "High-performance scheduling. 512 MB memory cache, 4 hash threads, dynamic request queue pipelining.";
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        color: GeistTheme.inkSecondary
+                        wrapMode: Text.WordWrap
+                        Layout.fillWidth: true
+                    }
                     Item { Layout.fillHeight: true }
                     GeistButton {
                         text: root.selectedProfile === "TURBO" ? "Current Profile" : "Switch to Turbo"
                         variant: root.selectedProfile === "TURBO" ? "primary" : "secondary"
-                        onClicked: root.selectedProfile = "TURBO"
+                        onClicked: {
+                            root.selectedProfile = "TURBO"
+                            if (typeof velocityBridge !== "undefined") velocityBridge.setProfile("TURBO")
+                        }
                     }
                 }
             }
@@ -116,23 +166,35 @@ Item {
             // Profile 3: V-Force Max
             GeistCard {
                 Layout.fillWidth: true
-                height: 160
+                height: 180
                 hoverable: true
-                border.color: root.selectedProfile === "V-FORCE MAX" ? "#0070f3" : "#1f1f1f"
+                border.color: root.selectedProfile === "V-FORCE MAX" ? GeistTheme.accentBlue : GeistTheme.borderCard
 
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 16; spacing: 8
+                    anchors.fill: parent
+                    anchors.margins: 18
+                    spacing: 8
                     RowLayout {
-                        Text { text: "V-FORCE MAX"; font.pixelSize: 15; font.weight: Font.DemiBold; color: "#ffffff" }
+                        Text { text: "V-FORCE MAX"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
                         Item { Layout.fillWidth: true }
-                        GeistBadge { text: "1.5 GB RAM"; dotColor: "#00e599" }
+                        GeistBadge { text: "1.5 GB RAM"; dotColor: GeistTheme.accentGreen }
                     }
-                    Text { text: "Maximum throughput. 1.5 GB cache, full AVX2 multi-core hashing, deep Winsock buffers. Sustains full 24 MB/s."; font.pixelSize: 12; color: "#888888"; wrapMode: Text.WordWrap; Layout.fillWidth: true }
+                    Text {
+                        text: "Maximum 200 Mbps saturation. 1.5 GB RAM cache, multi-core AVX2 hashing, sustained 24 MB/s goodput.";
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        color: GeistTheme.inkSecondary
+                        wrapMode: Text.WordWrap
+                        Layout.fillWidth: true
+                    }
                     Item { Layout.fillHeight: true }
                     GeistButton {
                         text: root.selectedProfile === "V-FORCE MAX" ? "Active Max Profile" : "Engage V-Force Max"
                         variant: root.selectedProfile === "V-FORCE MAX" ? "primary" : "secondary"
-                        onClicked: root.selectedProfile = "V-FORCE MAX"
+                        onClicked: {
+                            root.selectedProfile = "V-FORCE MAX"
+                            if (typeof velocityBridge !== "undefined") velocityBridge.setProfile("V-FORCE MAX")
+                        }
                     }
                 }
             }
@@ -141,23 +203,37 @@ Item {
         // Thermal Guardian User-Controlled Policy Card
         GeistCard {
             Layout.fillWidth: true
-            height: 120
+            height: 130
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 16
+                anchors.margins: 18
                 spacing: 8
 
                 RowLayout {
-                    Text { text: "THERMAL GUARDIAN — USER AUTONOMY POLICY"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
+                    Text {
+                        text: "THERMAL GUARDIAN — USER AUTONOMY POLICY"
+                        font.family: GeistTheme.fontSans
+                        font.pixelSize: GeistTheme.fontSizeMicro
+                        font.weight: Font.Bold
+                        font.letterSpacing: 0.8
+                        color: GeistTheme.inkSecondary
+                    }
                     Item { Layout.fillWidth: true }
-                    Text { text: "CPU Temperature: " + root.currentTemp.toFixed(1) + "°C (WMI Sensor)"; font.pixelSize: 12; font.family: "Consolas"; color: "#00e599" }
+                    Text {
+                        text: "CPU Core Temp: " + root.currentTemp.toFixed(1) + "°C (WMI Sensor)"
+                        font.family: GeistTheme.fontMono
+                        font.pixelSize: GeistTheme.fontSizeSub
+                        font.weight: Font.Bold
+                        color: GeistTheme.inkPrimary
+                    }
                 }
 
                 Text {
-                    text: "VELOCITY respects user autonomy: Thermal Guardian does NOT automatically demote your profile to Balanced at 85°C. Uninterrupted fast downloads continue with visible warnings, reserving emergency alerts strictly for extreme hardware peak danger (>= 95°C)."
-                    font.pixelSize: 12
-                    color: "#cccccc"
+                    text: "VELOCITY respects user autonomy: Thermal Guardian does NOT automatically demote your profile to Balanced at 85°C. Uninterrupted fast downloads continue with visible status warnings, reserving emergency alerts strictly for extreme hardware peak danger (>= 95°C)."
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeSub
+                    color: GeistTheme.inkSecondary
                     wrapMode: Text.WordWrap
                     Layout.fillWidth: true
                 }

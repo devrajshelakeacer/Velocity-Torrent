@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
+import ".."
 
 Rectangle {
     id: card
@@ -7,10 +8,10 @@ Rectangle {
     property bool hoverable: false
     property alias mouseArea: mArea
 
-    color: (hoverable && mArea.containsMouse) ? "#121212" : "#0a0a0a"
-    border.color: (hoverable && mArea.containsMouse) ? "#333333" : "#1f1f1f"
+    color: (hoverable && mArea.containsMouse) ? GeistTheme.surfaceCardHover : GeistTheme.surfaceCard
+    border.color: (hoverable && mArea.containsMouse) ? GeistTheme.borderHover : GeistTheme.borderCard
     border.width: 1
-    radius: 8
+    radius: GeistTheme.radiusCard
 
     Behavior on color { ColorAnimation { duration: 150 } }
     Behavior on border.color { ColorAnimation { duration: 150 } }

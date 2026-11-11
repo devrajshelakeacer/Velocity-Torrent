@@ -2,24 +2,36 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import "../components"
+import ".."
 
 Item {
     id: root
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-        spacing: 20
+        anchors.margins: 28
+        spacing: 22
 
         RowLayout {
             Layout.fillWidth: true
             ColumnLayout {
                 spacing: 4
-                Text { text: "V-SHIELD — Security Architecture & Isolation"; font.pixelSize: 20; font.weight: Font.DemiBold; color: "#ffffff" }
-                Text { text: "Path traversal barriers, Microsoft Defender scanning, zero auto-execution, and Network Lock"; font.pixelSize: 13; color: "#888888" }
+                Text {
+                    text: "V-SHIELD — Zero-Trust Security & Isolation"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeTitle
+                    font.weight: Font.Bold
+                    color: GeistTheme.inkPrimary
+                }
+                Text {
+                    text: "Path traversal barriers, Microsoft Defender scanning, zero auto-execution, and Network Lock"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeSub
+                    color: GeistTheme.inkSecondary
+                }
             }
             Item { Layout.fillWidth: true }
-            GeistBadge { text: "V-SHIELD ENFORCED"; dotColor: "#00e599" }
+            GeistBadge { text: "V-SHIELD ENFORCED"; dotColor: GeistTheme.accentGreen }
         }
 
         // 4 Security Posture Cards
@@ -28,87 +40,94 @@ Item {
             spacing: 16
 
             GeistCard {
-                Layout.fillWidth: true; height: 100
+                Layout.fillWidth: true; height: 110
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 14; spacing: 4
-                    Text { text: "PATH TRAVERSAL GUARD"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
-                    Text { text: "ACTIVE (100% Isolated)"; font.pixelSize: 15; font.weight: Font.Bold; color: "#00e599" }
-                    Text { text: "All metadata filenames canonicalized; NTFS ADS stripped"; font.pixelSize: 11; color: "#666666" }
+                    anchors.fill: parent; anchors.margins: 16; spacing: 4
+                    Text { text: "PATH TRAVERSAL GUARD"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary }
+                    Text { text: "ACTIVE (Isolated)"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
+                    Text { text: "Canonicalized paths; NTFS ADS stripped"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
 
             GeistCard {
-                Layout.fillWidth: true; height: 100
+                Layout.fillWidth: true; height: 110
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 14; spacing: 4
-                    Text { text: "MICROSOFT DEFENDER"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
-                    Text { text: "CONNECTED (Auto-Scan)"; font.pixelSize: 15; font.weight: Font.Bold; color: "#00e599" }
-                    Text { text: "Completed downloads scanned via MpCmdRun / AMSI"; font.pixelSize: 11; color: "#666666" }
+                    anchors.fill: parent; anchors.margins: 16; spacing: 4
+                    Text { text: "MICROSOFT DEFENDER"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary }
+                    Text { text: "CONNECTED (Auto-Scan)"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
+                    Text { text: "Completed downloads scanned via MpCmdRun"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
 
             GeistCard {
-                Layout.fillWidth: true; height: 100
+                Layout.fillWidth: true; height: 110
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 14; spacing: 4
-                    Text { text: "AUTO-EXECUTION POLICY"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
-                    Text { text: "ZERO AUTO-EXECUTE"; font.pixelSize: 15; font.weight: Font.Bold; color: "#0070f3" }
-                    Text { text: "Never executes binaries automatically; user remains in control"; font.pixelSize: 11; color: "#666666" }
+                    anchors.fill: parent; anchors.margins: 16; spacing: 4
+                    Text { text: "AUTO-EXECUTION POLICY"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary }
+                    Text { text: "ZERO AUTO-EXECUTE"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
+                    Text { text: "Never executes binaries; user in control"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
 
             GeistCard {
-                Layout.fillWidth: true; height: 100
+                Layout.fillWidth: true; height: 110
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 14; spacing: 4
-                    Text { text: "NETWORK LOCK"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
-                    Text { text: "READY (Kill-Switch)"; font.pixelSize: 15; font.weight: Font.Bold; color: "#ffffff" }
-                    Text { text: "Binds sockets to adapter; prevents IP leaks on VPN drop"; font.pixelSize: 11; color: "#666666" }
+                    anchors.fill: parent; anchors.margins: 16; spacing: 4
+                    Text { text: "NETWORK LOCK KILL-SWITCH"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; font.weight: Font.Bold; font.letterSpacing: 0.8; color: GeistTheme.inkSecondary }
+                    Text { text: "ARMED & READY"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMedium; font.weight: Font.Bold; color: GeistTheme.inkPrimary }
+                    Text { text: "Zero IP leaks on VPN/interface drop"; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary }
                 }
             }
         }
 
-        // Security Activity & Quarantine Log
+        // Security Audit & Quarantine Log
         GeistCard {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 16
+                anchors.margins: 20
                 spacing: 12
 
-                Text { text: "Security Audit & Sanitization Event Log"; font.pixelSize: 14; font.weight: Font.Medium; color: "#ffffff" }
+                Text {
+                    text: "V-Shield Real-Time Security Audit Log"
+                    font.family: GeistTheme.fontSans
+                    font.pixelSize: GeistTheme.fontSizeMedium
+                    font.weight: Font.DemiBold
+                    color: GeistTheme.inkPrimary
+                }
 
                 ListView {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     clip: true
-                    spacing: 6
+                    spacing: 8
 
                     model: ListModel {
-                        ListElement { timeStr: "14:52:10"; eventType: "DEFENDER"; eventDesc: "Microsoft Defender scanned 'ubuntu-24.04.1-desktop-amd64.iso' [Result: Clean / No threats found]"; statusColor: "#00e599" }
-                        ListElement { timeStr: "14:48:33"; eventType: "SANITIZER"; eventDesc: "VShieldSanitizer canonicalized download destination path to 'D:/Downloads'"; statusColor: "#0070f3" }
-                        ListElement { timeStr: "14:30:12"; eventType: "NETWORK"; eventDesc: "Network Lock adapter check: Primary Gigabit Ethernet is operational"; statusColor: "#00e599" }
+                        ListElement { timeStr: "15:42:01"; eventStr: "Sanitized path: stripped invalid NTFS reparse point '\\..\\..\\Windows\\System32'"; level: "INFO" }
+                        ListElement { timeStr: "15:42:04"; eventStr: "Microsoft Defender scan passed: ubuntu-24.04.1-desktop-amd64.iso (Clean)"; level: "SUCCESS" }
+                        ListElement { timeStr: "15:42:08"; eventStr: "Stripped alternate data stream (Zone.Identifier) on piece hash commit"; level: "INFO" }
+                        ListElement { timeStr: "15:42:12"; eventStr: "Memory limit guard active: 1.5 GB allocated within 16 GB physical RAM envelope"; level: "SUCCESS" }
                     }
 
                     delegate: Rectangle {
                         width: parent.width
                         height: 38
-                        color: "#0d0d0d"
-                        border.color: "#1c1c1c"
+                        color: GeistTheme.surfaceSubtle
+                        radius: GeistTheme.radiusSmall
+                        border.color: GeistTheme.borderHairline
                         border.width: 1
-                        radius: 4
 
                         RowLayout {
                             anchors.fill: parent
-                            anchors.leftMargin: 12
-                            anchors.rightMargin: 12
+                            anchors.leftMargin: 14
+                            anchors.rightMargin: 14
                             spacing: 12
 
-                            Text { text: model.timeStr; font.pixelSize: 11; font.family: "Consolas"; color: "#666666" }
-                            GeistBadge { text: model.eventType; dotColor: model.statusColor }
-                            Text { text: model.eventDesc; font.pixelSize: 12; color: "#cccccc"; Layout.fillWidth: true; elide: Text.ElideRight }
+                            Text { text: model.timeStr; font.family: GeistTheme.fontMono; font.pixelSize: GeistTheme.fontSizeMicro; color: GeistTheme.inkSecondary; Layout.preferredWidth: 70 }
+                            Text { text: model.eventStr; font.family: GeistTheme.fontSans; font.pixelSize: GeistTheme.fontSizeSub; color: GeistTheme.inkPrimary; Layout.fillWidth: true }
+                            GeistBadge { text: model.level; dotColor: model.level === "SUCCESS" ? GeistTheme.accentGreen : GeistTheme.accentBlue }
                         }
                     }
                 }
