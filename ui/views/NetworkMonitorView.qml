@@ -71,10 +71,26 @@ Item {
                 Text { text: "PORT FORWARDING & WINSOCK BUFFER STATUS"; font.pixelSize: 11; font.weight: Font.DemiBold; color: "#888888" }
                 RowLayout {
                     spacing: 24
-                    Column { spacing: 2; Text { text: "External Listening Port"; font.pixelSize: 11; color: "#666666" }; Text { text: "6881 (TCP / UDP)"; font.pixelSize: 14; font.family: "Consolas"; font.weight: Font.Bold; color: "#00e599" } }
-                    Column { spacing: 2; Text { text: "NAT Traversal"; font.pixelSize: 11; color: "#666666" }; Text { text: "UPnP IGD Profile 2.0 (Active)"; font.pixelSize: 14; font.weight: Font.Bold; color: "#ffffff" } }
-                    Column { spacing: 2; Text { text: "Winsock Buffer Allocation"; font.pixelSize: 11; color: "#666666" }; Text { text: "2048 KiB (Dynamic Tuning)"; font.pixelSize: 14; font.family: "Consolas"; font.weight: Font.Bold; color: "#0070f3" } }
-                    Column { spacing: 2; Text { text: "Network Lock Interface"; font.pixelSize: 11; color: "#666666" }; Text { text: "All Physical Interfaces"; font.pixelSize: 14; font.weight: Font.Bold; color: "#cccccc" } }
+                    Column {
+                        spacing: 2
+                        Text { text: "External Listening Port"; font.pixelSize: 11; color: "#666666" }
+                        Text { text: "6881 (TCP / UDP)"; font.pixelSize: 14; font.family: "Consolas"; font.weight: Font.Bold; color: "#00e599" }
+                    }
+                    Column {
+                        spacing: 2
+                        Text { text: "NAT Traversal"; font.pixelSize: 11; color: "#666666" }
+                        Text { text: "UPnP IGD Profile 2.0 (Active)"; font.pixelSize: 14; font.weight: Font.Bold; color: "#ffffff" }
+                    }
+                    Column {
+                        spacing: 2
+                        Text { text: "Winsock Buffer Allocation"; font.pixelSize: 11; color: "#666666" }
+                        Text { text: "2048 KiB (Dynamic Tuning)"; font.pixelSize: 14; font.family: "Consolas"; font.weight: Font.Bold; color: "#0070f3" }
+                    }
+                    Column {
+                        spacing: 2
+                        Text { text: "Network Lock Interface"; font.pixelSize: 11; color: "#666666" }
+                        Text { text: "All Physical Interfaces"; font.pixelSize: 14; font.weight: Font.Bold; color: "#cccccc" }
+                    }
                 }
             }
         }

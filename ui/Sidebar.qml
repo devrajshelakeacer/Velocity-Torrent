@@ -82,7 +82,7 @@ Rectangle {
                     Text {
                         text: model.icon
                         font.pixelSize: 13
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.alignment: Qt.AlignVCenter
                     }
 
                     Text {
@@ -90,7 +90,7 @@ Rectangle {
                         font.pixelSize: 13
                         font.weight: (sidebar.currentViewIndex === model.viewId) ? Font.DemiBold : Font.Normal
                         color: (sidebar.currentViewIndex === model.viewId) ? "#ffffff" : (mArea.containsMouse ? "#cccccc" : "#888888")
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.alignment: Qt.AlignVCenter
                         Layout.fillWidth: true
                     }
                 }

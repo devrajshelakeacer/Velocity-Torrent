@@ -113,9 +113,21 @@ Item {
 
                 RowLayout {
                     spacing: 16
-                    Row { spacing: 6; Rectangle { width: 8; height: 8; radius: 1; color: "#00e599"; anchors.verticalCenter: parent.verticalCenter }; Text { text: "Verified Downloaded"; font.pixelSize: 11; color: "#888888" } }
-                    Row { spacing: 6; Rectangle { width: 8; height: 8; radius: 1; color: "#0070f3"; anchors.verticalCenter: parent.verticalCenter }; Text { text: "Pending Verification"; font.pixelSize: 11; color: "#888888" } }
-                    Row { spacing: 6; Rectangle { width: 8; height: 8; radius: 1; color: "#222222"; anchors.verticalCenter: parent.verticalCenter }; Text { text: "Remaining"; font.pixelSize: 11; color: "#888888" } }
+                    Row {
+                        spacing: 6
+                        Rectangle { width: 8; height: 8; radius: 1; color: "#00e599"; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "Verified Downloaded"; font.pixelSize: 11; color: "#888888" }
+                    }
+                    Row {
+                        spacing: 6
+                        Rectangle { width: 8; height: 8; radius: 1; color: "#0070f3"; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "Pending Verification"; font.pixelSize: 11; color: "#888888" }
+                    }
+                    Row {
+                        spacing: 6
+                        Rectangle { width: 8; height: 8; radius: 1; color: "#222222"; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "Remaining"; font.pixelSize: 11; color: "#888888" }
+                    }
                 }
             }
         }
