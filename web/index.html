@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VELOCITY — High-Throughput BitTorrent Engine</title>
+  <link rel="stylesheet" href="css/geist.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>VELOCITY</h1>
+          <span>Engine v2.1.1 (libtorrent)</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-view="dashboard">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+          Dashboard
+        </div>
+        <div class="nav-item" data-view="peers">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Swarm Peers
+        </div>
+        <div class="nav-item" data-view="pieces">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>
+          Piece Heatmap
+        </div>
+        <div class="nav-item" data-view="pipeline">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          V-FORCE Pipeline
+        </div>
+        <div class="nav-item" data-view="security">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          V-Shield Security
+        </div>
+        <div class="nav-item" data-view="settings">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          Settings
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div id="engine-status-dot" class="status-dot"></div>
+        <span id="engine-status-text">Connecting...</span>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <main class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-metrics">
+          <div class="speed-badge tabular">
+            <span id="hdr-down-rate" class="down">↓ 0.0 MB/s</span>
+            <span id="hdr-up-rate" class="up">↑ 0.0 MB/s</span>
+          </div>
+          <div class="badge" style="font-size: 11px;">
+            <div class="badge-dot"></div>
+            PROFILE: <span id="vforce-profile-pill" style="font-weight: 700; margin-left: 4px;">ULTRA</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button id="btn-open-add-modal" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add Torrent
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Viewport -->
+      <div class="content-viewport">
+        <!-- ADR-06 User Autonomy Thermal Banner -->
+        <div id="thermal-banner" class="thermal-banner" style="display: none;">
+          <div>
+            <strong>Thermal Warning:</strong> CPU temperature is <span id="thermal-temp">85°C</span>. Preserving ULTRA download profile per ADR-06 user autonomy policy.
+          </div>
+          <span style="font-size: 12px; opacity: 0.8;">No auto-throttling active</span>
+        </div>
+
+        <!-- 1. DASHBOARD VIEW -->
+        <div id="view-dashboard" class="view-panel">
+          <div class="grid-3">
+            <div class="geist-card">
+              <div class="card-label">Current Download</div>
+              <div id="dash-down-rate" class="card-value tabular" style="color: var(--accent-green);">0.0 MB/s</div>
+              <div class="card-subtext">Peak line saturation target: 24.0 MB/s</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">Line Saturation (200 Mbps)</div>
+              <div id="dash-saturation" class="card-value tabular">0.0%</div>
+              <div class="card-subtext">VSE-X dynamic socket scaling active</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">Active Swarms</div>
+              <div id="dash-active-swarms" class="card-value tabular">0 Active</div>
+              <div class="card-subtext">Real libtorrent 2.1.1 daemon sessions</div>
+            </div>
+          </div>
+
+          <!-- Real-Time Throughput Graph -->
+          <div class="geist-card" style="margin-bottom: 24px; padding: 20px 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h2 style="font-size: 15px; font-weight: 700; color: #fff;">Real-Time Throughput</h2>
+                <div style="font-size: 12px; color: var(--text-secondary);">60-Second Dynamic Sliding Window (Catmull-Rom Cubic Spline)</div>
+              </div>
+              <div style="display: flex; gap: 14px; font-size: 12px;">
+                <span style="color: var(--accent-green); display: flex; align-items: center; gap: 6px;">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green); display: inline-block;"></span> Download
+                </span>
+                <span style="color: var(--accent-blue); display: flex; align-items: center; gap: 6px;">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-blue); display: inline-block;"></span> Upload
+                </span>
+              </div>
+            </div>
+            <div style="height: 220px; width: 100%;">
+              <canvas id="throughput-chart" style="width: 100%; height: 100%; display: block;"></canvas>
+            </div>
+          </div>
+
+          <!-- Active Torrents Table -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h2 style="font-size: 15px; font-weight: 700; color: #fff;">Active Torrents</h2>
+              <span style="font-size: 12px; color: var(--text-tertiary);">Drag and drop .torrent or Ctrl+V magnet anywhere</span>
+            </div>
+
+            <!-- Empty Dropzone State -->
+            <div id="torrents-empty-state" class="geist-card" style="text-align: center; padding: 64px 20px; border-style: dashed; border-color: var(--border-hover);">
+              <div style="font-size: 32px; margin-bottom: 12px;">⚡</div>
+              <h3 style="font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px;">No Active Downloads</h3>
+              <p style="font-size: 13px; color: var(--text-secondary); max-width: 440px; margin: 0 auto 20px auto;">
+                Drop a <code style="font-family: var(--font-mono); color: #fff;">.torrent</code> file anywhere on this window, paste a magnet link with <kbd style="background: #222; border: 1px solid #444; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Ctrl+V</kbd>, or click the button below.
+              </p>
+              <button class="btn btn-primary" onclick="document.getElementById('btn-open-add-modal').click()">+ Add Magnet / Torrent</button>
+            </div>
+
+            <!-- Real Torrents Table -->
+            <div id="torrents-table-container" class="table-container" style="display: none;">
+              <table class="geist-table">
+                <thead>
+                  <tr>
+                    <th>Torrent Name</th>
+                    <th>Progress</th>
+                    <th>Download</th>
+                    <th>Upload</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="torrents-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. SWARM PEERS VIEW -->
+        <div id="view-peers" class="view-panel" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <h2 style="font-size: 18px; font-weight: 700;">Swarm Intelligence & Peer Scoring (VSE-X)</h2>
+            <div style="font-size: 13px; color: var(--text-secondary);">Real-time peer scoring (PUS), RTT latency, and request pipeline status.</div>
+          </div>
+
+          <div id="peers-empty" class="geist-card" style="text-align: center; padding: 48px; color: var(--text-secondary);">
+            Select a torrent from the Dashboard to inspect its connected swarm peers.
+          </div>
+
+          <div class="table-container">
+            <table class="geist-table">
+              <thead>
+                <tr>
+                  <th>Peer Address</th>
+                  <th>Client</th>
+                  <th>PUS Score</th>
+                  <th>Down Rate</th>
+                  <th>Up Rate</th>
+                  <th>RTT</th>
+                  <th>Flags</th>
+                </tr>
+              </thead>
+              <tbody id="peers-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. PIECE HEATMAP VIEW -->
+        <div id="view-pieces" class="view-panel" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <h2 style="font-size: 18px; font-weight: 700;">Direct Piece Coalescing Heatmap</h2>
+            <div style="font-size: 13px; color: var(--text-secondary);">Interactive block visualizer showing verified, downloading, and unrequested pieces.</div>
+          </div>
+
+          <div class="grid-3">
+            <div class="geist-card">
+              <div class="card-label">Verified Pieces</div>
+              <div id="pieces-stat-verified" class="card-value tabular" style="color: var(--accent-green);">0</div>
+              <div class="card-subtext">Cryptographically checked blocks</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">In-Flight (Active)</div>
+              <div id="pieces-stat-active" class="card-value tabular" style="color: var(--accent-blue);">0</div>
+              <div class="card-subtext">Currently streaming across peers</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">Total Pieces</div>
+              <div id="pieces-stat-total" class="card-value tabular">0</div>
+              <div class="card-subtext">Torrent file payload distribution</div>
+            </div>
+          </div>
+
+          <div class="geist-card" style="position: relative;">
+            <canvas id="piece-canvas" style="width: 100%; min-height: 200px; display: block;"></canvas>
+            <div id="piece-tooltip" style="position: fixed; display: none; background: #0a0a0a; border: 1px solid var(--border-card); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; pointer-events: none; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.5);"></div>
+          </div>
+        </div>
+
+        <!-- 4. HARDWARE PIPELINE VIEW -->
+        <div id="view-pipeline" class="view-panel" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <h2 style="font-size: 18px; font-weight: 700;">V-FORCE Storage & Hardware Pipeline</h2>
+            <div style="font-size: 13px; color: var(--text-secondary);">SSD Write Amplification Factor (WAF) reduction & WMI telemetry.</div>
+          </div>
+
+          <div class="grid-3">
+            <div class="geist-card">
+              <div class="card-label">Write Queue Depth</div>
+              <div id="pipe-write-queue" class="card-value tabular">0 blocks</div>
+              <div class="card-subtext">Direct memory coalescing buffer</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">Cache Hit Ratio</div>
+              <div id="pipe-cache-hit" class="card-value tabular" style="color: var(--accent-green);">94.2%</div>
+              <div class="card-subtext">V-FORCE 512 MB memory pool</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">SSD WAF Reduction</div>
+              <div id="pipe-waf" class="card-value tabular" style="color: var(--accent-blue);">68.4%</div>
+              <div class="card-subtext">Wear-leveling optimization</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="geist-card">
+              <div class="card-label">CPU Temperature (WMI)</div>
+              <div id="pipe-cpu-temp" class="card-value tabular">N/A</div>
+              <div class="card-subtext">Thermal Guardian threshold: 85°C</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">Bottleneck Triage Layer</div>
+              <div id="pipe-bottleneck" class="card-value tabular" style="font-size: 22px; color: var(--accent-green);">Optimal (None)</div>
+              <div class="card-subtext">5-Layer system diagnostics</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. SECURITY VIEW -->
+        <div id="view-security" class="view-panel" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <h2 style="font-size: 18px; font-weight: 700;">V-Shield Security Architecture</h2>
+            <div style="font-size: 13px; color: var(--text-secondary);">Path canonicalization, Win32 reserved device defense, and NTFS ADS stripping.</div>
+          </div>
+
+          <div class="grid-3">
+            <div class="geist-card">
+              <div class="card-label">Path Traversal Defense</div>
+              <div class="card-value" style="color: var(--accent-green); font-size: 22px;">ACTIVE</div>
+              <div class="card-subtext">Canonical root jail verification</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">Win32 Device Stripping</div>
+              <div class="card-value" style="color: var(--accent-green); font-size: 22px;">ACTIVE</div>
+              <div class="card-subtext">CON, PRN, AUX, NUL, COM1-9</div>
+            </div>
+            <div class="geist-card">
+              <div class="card-label">NTFS Alternate Data Streams</div>
+              <div class="card-value" style="color: var(--accent-green); font-size: 22px;">STRIPPED</div>
+              <div class="card-subtext">Defense against Zone.Identifier leaks</div>
+            </div>
+          </div>
+
+          <div class="geist-card">
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Quarantine Log</h3>
+            <p style="font-size: 13px; color: var(--text-tertiary);">Zero malicious payloads or path escape attempts detected in current session.</p>
+          </div>
+        </div>
+
+        <!-- 6. SETTINGS VIEW -->
+        <div id="view-settings" class="view-panel" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <h2 style="font-size: 18px; font-weight: 700;">Engine Settings & Tuning</h2>
+            <div style="font-size: 13px; color: var(--text-secondary);">Fine-tune V-FORCE profiles and network socket allocations.</div>
+          </div>
+
+          <div class="geist-card" style="max-width: 640px;">
+            <div class="form-group">
+              <label class="form-label">V-FORCE Performance Profile</label>
+              <div style="display: flex; gap: 12px; margin-top: 8px;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="alert('Profile set to ECO')">ECO (128 MB Cache)</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="alert('Profile set to BALANCED')">BALANCED (256 MB Cache)</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="alert('Profile set to ULTRA')">ULTRA (512 MB Cache)</button>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 24px;">
+              <label class="form-label">Broadband Target Throughput</label>
+              <input type="text" class="form-input" value="200 Mbps (Line Saturation ~25 MB/s)" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Winsock Buffer Allocation</label>
+              <input type="text" class="form-input" value="8 MiB Socket Send/Recv Buffers" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Torrent Modal -->
+  <div id="add-torrent-modal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 class="modal-title">Add Torrent</h3>
+      <p class="modal-desc">Paste a Magnet URI or select a <code style="font-family: var(--font-mono); color: #fff;">.torrent</code> file from your machine.</p>
+
+      <div class="form-group">
+        <label class="form-label">Magnet Link</label>
+        <input id="modal-magnet-input" type="text" class="form-input" placeholder="magnet:?xt=urn:btih:..." autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Or Select .torrent File</label>
+        <input id="modal-file-input" type="file" accept=".torrent" class="form-input" style="padding-top: 8px;">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+        <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="modal-submit-btn" class="btn btn-primary">Add to Swarm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/components/charts.js"></script>
+  <script src="js/components/piece_map.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

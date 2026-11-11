@@ -96,18 +96,24 @@ Most desktop torrent clients for Windows were designed over a decade ago. They s
 
 ## 📥 Quick Start & Installation
 
-### Option A: 1-Click Desktop Run (Local Installation)
-Simply run the included launcher in the repository:
-```powershell
-.\Launch-Velocity.bat
-```
+### Option A: Clone & Run Local WebApp (Recommended)
+Users can clone this repository and run the client immediately with zero build friction. The automated launcher configures the local virtual environment and starts the high-throughput engine with the Vercel-inspired web frontend.
 
-### Option B: Building from Source with CMake & Ninja
 ```powershell
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/velocity-torrent/velocity.git
 cd velocity
 
+# 2. Launch on Windows (1-Click Run)
+.\Launch-Velocity.bat
+
+# Or Launch on Linux / macOS
+chmod +x launch.sh && ./launch.sh
+```
+The application will automatically launch in your default browser at `http://127.0.0.1:8080/` with 100% genuine real-time libtorrent 2.1.1 engine metrics (zero mock data).
+
+### Option B: Building Native Desktop C++ from Source
+```powershell
 # Configure with CMake
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
