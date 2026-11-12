@@ -53,30 +53,59 @@
   <!-- Ambient Glow Background -->
   <div class="ambient-glow"></div>
 
-  <!-- ----------------- STICKY HEADER ----------------- -->
+  <!-- ----------------- CLOUDFLARE-GRADE STICKY HEADER ----------------- -->
   <header class="landing-header">
     <div class="container landing-nav">
-      <a href="/landing" class="brand-wrap">
+      <a href="/landing" class="brand-wrap" aria-label="VELOCITY Homepage">
         <img src="/assets/logo.svg" alt="VELOCITY Brandmark" width="28" height="28">
         <span class="brand-name">VELOCITY</span>
         <span class="brand-badge">v1.1.0</span>
       </a>
 
-      <nav class="nav-links">
-        <a href="#bdp-calculator" class="nav-link">Live Speed Calc</a>
-        <a href="#pillars" class="nav-link">Engineering Pillars</a>
-        <a href="#pc-gaming" class="nav-link">PC Gaming Engine</a>
-        <a href="#ui-preview" class="nav-link">Product Showcase</a>
-        <a href="#matrix" class="nav-link">Comparison</a>
-        <a href="#security" class="nav-link">Security Audit</a>
+      <nav class="nav-links" aria-label="Desktop Navigation">
+        <a href="#bdp-calculator" class="nav-link">Speed Calc</a>
+        <a href="#pillars" class="nav-link">Architecture</a>
+        <a href="#pc-gaming" class="nav-link">PC Gaming</a>
+        <a href="#ui-preview" class="nav-link">Showcase</a>
+        <a href="#matrix" class="nav-link">Benchmarks</a>
+        <a href="#security" class="nav-link">Security</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="#quickstart" class="nav-link">Quickstart</a>
       </nav>
 
       <div class="nav-actions">
-        <a href="https://github.com/developer/Velocity-Torrent" target="_blank" rel="noopener" class="btn btn-secondary" style="height: 34px; font-size: 12px;">
+        <a href="https://github.com/developer/Velocity-Torrent" target="_blank" rel="noopener" class="btn btn-secondary nav-gh-btn" style="height: 34px; font-size: 12px;">
           ★ GitHub
         </a>
         <a href="/" class="btn btn-primary" style="height: 34px; font-size: 12px;">
+          ⚡ Launch Client
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer" aria-label="Mobile Navigation Drawer">
+      <nav class="mobile-drawer-links">
+        <a href="#bdp-calculator" class="mobile-drawer-link">⚡ Live Speed Calculator</a>
+        <a href="#pillars" class="mobile-drawer-link">🏛️ Four Engineering Pillars</a>
+        <a href="#pc-gaming" class="mobile-drawer-link">🎮 Large PC Game Engine</a>
+        <a href="#ui-preview" class="mobile-drawer-link">🖥️ Product UI Showcase</a>
+        <a href="#matrix" class="mobile-drawer-link">📊 Competitor Benchmarks</a>
+        <a href="#security" class="mobile-drawer-link">🛡️ V-Shield Security Audit</a>
+        <a href="#faq" class="mobile-drawer-link">❓ Frequently Asked Questions</a>
+        <a href="#quickstart" class="mobile-drawer-link">🚀 60-Second Quickstart</a>
+      </nav>
+      <div class="mobile-drawer-actions">
+        <a href="/" class="btn btn-primary" style="width: 100%; height: 42px;">
           ⚡ Launch Web Client
+        </a>
+        <a href="https://github.com/developer/Velocity-Torrent" target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%; height: 42px;">
+          ★ View on GitHub
         </a>
       </div>
     </div>

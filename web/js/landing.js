@@ -6,9 +6,52 @@
 
 class VelocityLanding {
   constructor() {
+    this.initMobileDrawer();
     this.initSpeedSlider();
     this.initPreviewTabs();
     this.initCopyButtons();
+  }
+
+  /* ---------------- 0. CLOUDFLARE-GRADE MOBILE DRAWER ---------------- */
+  initMobileDrawer() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const drawer = document.getElementById('mobile-drawer');
+    if (!toggle || !drawer) return;
+
+    const openDrawer = () => {
+      toggle.classList.add('active');
+      toggle.setAttribute('aria-expanded', 'true');
+      drawer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeDrawer = () => {
+      toggle.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+      drawer.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (drawer.classList.contains('open')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+
+    // Close when any link clicked
+    drawer.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => closeDrawer());
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) {
+        closeDrawer();
+      }
+    });
   }
 
   /* ---------------- 1. INTERACTIVE BDP CALCULATOR ---------------- */
