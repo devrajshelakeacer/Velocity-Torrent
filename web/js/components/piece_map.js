@@ -126,6 +126,12 @@ class PieceMap {
     }
 
     const stride = this.blockSize + this.gap;
+    const bs = this.blockSize;
+
+    // High-performance batched drawing passes: eliminates 60,000 canvas context switches
+    const verified = [];
+    const downloading = [];
+    const empty = [];
 
     for (let i = 0; i < this.totalPieces; i++) {
       const col = i % this.cols;
@@ -134,21 +140,37 @@ class PieceMap {
       const y = row * stride + 2;
 
       const state = this.pieces[i];
-      if (state === 2) {
-        ctx.fillStyle = this.colors.verified;
-      } else if (state === 1) {
-        ctx.fillStyle = this.colors.downloading;
-      } else {
-        ctx.fillStyle = this.colors.empty;
+      if (state === 2) verified.push(x, y);
+      else if (state === 1) downloading.push(x, y);
+      else empty.push(x, y);
+    }
+
+    // Pass 1: Empty pieces
+    if (empty.length > 0) {
+      ctx.fillStyle = this.colors.empty;
+      for (let i = 0; i < empty.length; i += 2) {
+        ctx.fillRect(empty[i], empty[i + 1], bs, bs);
       }
+      ctx.strokeStyle = this.colors.emptyBorder;
+      ctx.lineWidth = 1;
+      for (let i = 0; i < empty.length; i += 2) {
+        ctx.strokeRect(empty[i] + 0.5, empty[i + 1] + 0.5, bs - 1, bs - 1);
+      }
+    }
 
-      ctx.fillRect(x, y, this.blockSize, this.blockSize);
+    // Pass 2: Downloading pieces
+    if (downloading.length > 0) {
+      ctx.fillStyle = this.colors.downloading;
+      for (let i = 0; i < downloading.length; i += 2) {
+        ctx.fillRect(downloading[i], downloading[i + 1], bs, bs);
+      }
+    }
 
-      // Border for empty pieces to maintain grid rhythm
-      if (state === 0) {
-        ctx.strokeStyle = this.colors.emptyBorder;
-        ctx.lineWidth = 1;
-        ctx.strokeRect(x + 0.5, y + 0.5, this.blockSize - 1, this.blockSize - 1);
+    // Pass 3: Verified pieces
+    if (verified.length > 0) {
+      ctx.fillStyle = this.colors.verified;
+      for (let i = 0; i < verified.length; i += 2) {
+        ctx.fillRect(verified[i], verified[i + 1], bs, bs);
       }
     }
   }

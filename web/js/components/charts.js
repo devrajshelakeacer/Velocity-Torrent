@@ -21,9 +21,23 @@ class ThroughputChart {
     this.history = []; // Array of { timestamp, downRate, upRate }
     this.maxRate = 1024 * 1024; // Dynamic max, default 1 MB/s minimum ceiling
     this.dpr = window.devicePixelRatio || 1;
+    this._rafId = null;
 
     this.resize();
     window.addEventListener('resize', () => this.resize());
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) this.scheduleRender();
+    });
+  }
+
+  scheduleRender() {
+    if (this._rafId) return; // Batch into single display refresh
+    if (document.hidden) return; // 0% GPU/CPU overhead when tab is minimized or hidden
+
+    this._rafId = requestAnimationFrame(() => {
+      this._rafId = null;
+      this.render();
+    });
   }
 
   resize() {
@@ -36,7 +50,7 @@ class ThroughputChart {
     this.canvas.height = Math.floor(this.height * this.dpr);
 
     this.ctx.scale(this.dpr, this.dpr);
-    this.render();
+    this.scheduleRender();
   }
 
   addDataPoint(downRate, upRate) {
@@ -61,7 +75,7 @@ class ThroughputChart {
     }
     this.maxRate = peak * 1.25;
 
-    this.render();
+    this.scheduleRender();
   }
 
   formatSpeed(bytesPerSec) {
