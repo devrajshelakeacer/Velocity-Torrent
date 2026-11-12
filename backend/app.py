@@ -431,9 +431,49 @@ def build_telemetry_payload(include_torrents: bool = False):
         payload["torrents"] = torrents
     return payload
 
+class BackgroundTelemetryWorker:
+    """Samples hardware & aggregate swarm telemetry off the main asyncio event loop."""
+    def __init__(self):
+        self._cached_snapshot = build_telemetry_payload(include_torrents=False)
+        self._running = False
+        self._task = None
+
+    async def start(self):
+        if self._running:
+            return
+        self._running = True
+        self._task = asyncio.create_task(self._sample_loop())
+
+    async def stop(self):
+        self._running = False
+        if self._task:
+            self._task.cancel()
+
+    async def _sample_loop(self):
+        while self._running:
+            try:
+                # Offload to worker thread to prevent event loop starvation
+                self._cached_snapshot = await asyncio.to_thread(build_telemetry_payload, False)
+            except Exception:
+                pass
+            await asyncio.sleep(0.1)
+
+    def get_snapshot(self) -> dict:
+        return self._cached_snapshot
+
+telemetry_worker = BackgroundTelemetryWorker()
+
+@app.on_event("startup")
+async def on_startup():
+    await telemetry_worker.start()
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    await telemetry_worker.stop()
+
 @app.get("/api/telemetry")
 async def get_telemetry():
-    return build_telemetry_payload(include_torrents=True)
+    return await asyncio.to_thread(build_telemetry_payload, True)
 
 @app.get("/api/settings")
 async def get_settings():
@@ -465,9 +505,12 @@ async def set_save_path(req: SavePathRequest):
 @app.websocket("/ws/telemetry")
 async def websocket_telemetry(websocket: WebSocket):
     await websocket.accept()
+    if not telemetry_worker._running:
+        await telemetry_worker.start()
     try:
         while True:
-            payload = build_telemetry_payload()
+            # Sub-millisecond non-blocking snapshot dispatch
+            payload = telemetry_worker.get_snapshot()
             await websocket.send_json(payload)
             await asyncio.sleep(0.1) # 10 Hz high-frequency updates
     except (WebSocketDisconnect, asyncio.CancelledError):
