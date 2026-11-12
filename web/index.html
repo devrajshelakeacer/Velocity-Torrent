@@ -129,8 +129,14 @@
           <!-- Active Torrents Table -->
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <h2 style="font-size: 15px; font-weight: 700; color: #fff;">Active Torrents</h2>
-              <span style="font-size: 12px; color: var(--text-tertiary);">Drag and drop .torrent or Ctrl+V magnet anywhere</span>
+              <div>
+                <h2 style="font-size: 15px; font-weight: 700; color: #fff;">Active Torrents</h2>
+                <span style="font-size: 12px; color: var(--text-tertiary);">Drag and drop .torrent or Ctrl+V magnet anywhere</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button id="btn-pause-all" class="btn btn-secondary" style="height: 30px; font-size: 12px;" onclick="window.app.pauseAll()">Pause All</button>
+                <button id="btn-resume-all" class="btn btn-secondary" style="height: 30px; font-size: 12px;" onclick="window.app.resumeAll()">Resume All</button>
+              </div>
             </div>
 
             <!-- Empty Dropzone State -->
@@ -164,9 +170,14 @@
 
         <!-- 2. SWARM PEERS VIEW -->
         <div id="view-peers" class="view-panel" style="display: none;">
-          <div style="margin-bottom: 16px;">
-            <h2 style="font-size: 18px; font-weight: 700;">Swarm Intelligence & Peer Scoring (VSE-X)</h2>
-            <div style="font-size: 13px; color: var(--text-secondary);">Real-time peer scoring (PUS), RTT latency, and request pipeline status.</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h2 style="font-size: 18px; font-weight: 700;">Swarm Intelligence & Peer Scoring (VSE-X)</h2>
+              <div style="font-size: 13px; color: var(--text-secondary);">Real-time peer scoring (PUS), RTT latency, and request pipeline status.</div>
+            </div>
+            <button id="btn-reannounce-swarm" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.reannounceSelected()">
+              ⚡ Re-announce to Tier-1 Swarm Trackers
+            </button>
           </div>
 
           <div id="peers-empty" class="geist-card" style="text-align: center; padding: 48px; color: var(--text-secondary);">
@@ -193,9 +204,14 @@
 
         <!-- 3. PIECE HEATMAP VIEW -->
         <div id="view-pieces" class="view-panel" style="display: none;">
-          <div style="margin-bottom: 16px;">
-            <h2 style="font-size: 18px; font-weight: 700;">Direct Piece Coalescing Heatmap</h2>
-            <div style="font-size: 13px; color: var(--text-secondary);">Interactive block visualizer showing verified, downloading, and unrequested pieces.</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h2 style="font-size: 18px; font-weight: 700;">Direct Piece Coalescing Heatmap</h2>
+              <div style="font-size: 13px; color: var(--text-secondary);">Interactive block visualizer showing verified, downloading, and unrequested pieces.</div>
+            </div>
+            <button id="btn-refresh-pieces" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.loadPiecesForSelected()">
+              🔄 Refresh Bitfield Heatmap
+            </button>
           </div>
 
           <div class="grid-3">
@@ -224,9 +240,16 @@
 
         <!-- 4. HARDWARE PIPELINE VIEW -->
         <div id="view-pipeline" class="view-panel" style="display: none;">
-          <div style="margin-bottom: 16px;">
-            <h2 style="font-size: 18px; font-weight: 700;">V-FORCE Storage & Hardware Pipeline</h2>
-            <div style="font-size: 13px; color: var(--text-secondary);">SSD Write Amplification Factor (WAF) reduction & WMI telemetry.</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h2 style="font-size: 18px; font-weight: 700;">V-FORCE Storage & Hardware Pipeline</h2>
+              <div style="font-size: 13px; color: var(--text-secondary);">SSD Write Amplification Factor (WAF) reduction & WMI telemetry.</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-flush-cache" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.flushCache()">
+                💾 Flush Memory Cache to Disk
+              </button>
+            </div>
           </div>
 
           <div class="grid-3">
@@ -238,7 +261,7 @@
             <div class="geist-card">
               <div class="card-label">Cache Hit Ratio</div>
               <div id="pipe-cache-hit" class="card-value tabular" style="color: var(--accent-green);">94.2%</div>
-              <div class="card-subtext">V-FORCE 512 MB memory pool</div>
+              <div class="card-subtext">V-FORCE 1.5 GB memory pool</div>
             </div>
             <div class="geist-card">
               <div class="card-label">SSD WAF Reduction</div>
@@ -263,9 +286,19 @@
 
         <!-- 5. SECURITY VIEW -->
         <div id="view-security" class="view-panel" style="display: none;">
-          <div style="margin-bottom: 16px;">
-            <h2 style="font-size: 18px; font-weight: 700;">V-Shield Security Architecture</h2>
-            <div style="font-size: 13px; color: var(--text-secondary);">Path canonicalization, Win32 reserved device defense, and NTFS ADS stripping.</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h2 style="font-size: 18px; font-weight: 700;">V-Shield Security Architecture</h2>
+              <div style="font-size: 13px; color: var(--text-secondary);">Path canonicalization, Win32 reserved device defense, and NTFS ADS stripping.</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-scan-threats" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.runSecurityScan()">
+                🛡️ Run V-Shield Threat Scan
+              </button>
+              <button id="btn-test-sanitizer" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.runSanitizerTest()">
+                🔒 Test Path Traversal Defense
+              </button>
+            </div>
           </div>
 
           <div class="grid-3">
@@ -287,8 +320,13 @@
           </div>
 
           <div class="geist-card">
-            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Quarantine Log</h3>
-            <p style="font-size: 13px; color: var(--text-tertiary);">Zero malicious payloads or path escape attempts detected in current session.</p>
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Quarantine & Defense Status</h3>
+            <p id="security-status-text" style="font-size: 13px; color: var(--text-tertiary);">Zero malicious payloads or path escape attempts detected in current session.</p>
+          </div>
+
+          <div id="security-report-card" class="geist-card" style="margin-top: 16px; display: none;">
+            <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--accent-green);">V-Shield Diagnostic Output</h4>
+            <pre id="security-report-pre" style="font-family: var(--font-mono); font-size: 12px; color: #a1a1a1; white-space: pre-wrap; line-height: 1.4;"></pre>
           </div>
         </div>
 
@@ -310,13 +348,35 @@
             </div>
 
             <div class="form-group" style="margin-top: 24px;">
-              <label class="form-label">Broadband Target Throughput</label>
-              <input type="text" class="form-input" value="200 Mbps (Line Saturation ~25 MB/s)" disabled>
+              <label class="form-label">Download Storage Directory (Root Jail)</label>
+              <div style="display: flex; gap: 8px;">
+                <input id="settings-save-path" type="text" class="form-input" value="downloads" style="flex: 1;">
+                <button id="btn-save-path" class="btn btn-secondary" style="height: 40px;" onclick="window.app.saveDownloadPath()">Update Path</button>
+              </div>
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">Enforced by V-Shield canonical path jail verification.</div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-top: 20px;">
+              <label class="form-label">Maximum Swarm Connections Limit</label>
+              <input id="settings-connections-limit" type="number" class="form-input" value="500" min="50" max="2000">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">Optimized for 200 Mbps BDP multi-peer saturation.</div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+              <label class="form-label">Incoming Listen Port</label>
+              <input id="settings-listen-port" type="number" class="form-input" value="6881" disabled>
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">Bound to 0.0.0.0:6881 with UPnP / NAT-PMP port forwarding.</div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
               <label class="form-label">Winsock Buffer Allocation</label>
               <input type="text" class="form-input" value="8 MiB Socket Send/Recv Buffers" disabled>
+            </div>
+
+            <div style="margin-top: 28px; display: flex; justify-content: flex-end;">
+              <button id="btn-save-all-settings" class="btn btn-primary" onclick="window.app.saveAllSettings()">
+                💾 Save All Engine Settings
+              </button>
             </div>
           </div>
         </div>
@@ -348,8 +408,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/components/charts.js"></script>
-  <script src="js/components/piece_map.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/components/charts.js?v=1.0.2"></script>
+  <script src="js/components/piece_map.js?v=1.0.2"></script>
+  <script src="js/app.js?v=1.0.2"></script>
 </body>
 </html>
