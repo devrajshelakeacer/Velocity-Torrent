@@ -59,6 +59,16 @@ class ProfileRequest(BaseModel):
 class SavePathRequest(BaseModel):
     path: str
 
+class FilePriorityRequest(BaseModel):
+    priority: int
+
+class TrackerAddRequest(BaseModel):
+    url: str
+
+class BandwidthLimitRequest(BaseModel):
+    download_limit_kbps: int
+    upload_limit_kbps: int
+
 class SettingsUpdateRequest(BaseModel):
     profile: Optional[str] = None
     save_path: Optional[str] = None
@@ -213,6 +223,46 @@ async def get_torrent_peers(info_hash: str):
 @app.get("/api/torrents/{info_hash}/pieces")
 async def get_torrent_pieces(info_hash: str):
     return engine.get_piece_bitfield(info_hash)
+
+@app.get("/api/torrents/{info_hash}/files")
+async def get_torrent_files(info_hash: str):
+    return engine.get_torrent_files(info_hash)
+
+@app.post("/api/torrents/{info_hash}/files/{file_index}/priority")
+async def set_torrent_file_priority(info_hash: str, file_index: int, req: FilePriorityRequest):
+    success = engine.set_file_priority(info_hash, file_index, req.priority)
+    if not success:
+        raise HTTPException(status_code=400, detail="Failed to set file priority or invalid handle.")
+    return {"success": True, "file_index": file_index, "priority": req.priority}
+
+@app.get("/api/torrents/{info_hash}/trackers")
+async def get_torrent_trackers(info_hash: str):
+    return engine.get_torrent_trackers(info_hash)
+
+@app.post("/api/torrents/{info_hash}/trackers")
+async def add_torrent_tracker(info_hash: str, req: TrackerAddRequest):
+    if not req.url or not req.url.strip():
+        raise HTTPException(status_code=400, detail="Tracker URL cannot be empty.")
+    success = engine.add_torrent_tracker(info_hash, req.url)
+    if not success:
+        raise HTTPException(status_code=400, detail="Failed to add tracker.")
+    return {"success": True, "message": "Tracker added successfully."}
+
+@app.get("/api/torrents/{info_hash}/magnet")
+async def get_torrent_magnet(info_hash: str):
+    uri = engine.get_torrent_magnet_uri(info_hash)
+    if not uri:
+        raise HTTPException(status_code=404, detail="Torrent handle not found.")
+    return {"success": True, "magnet_uri": uri}
+
+@app.get("/api/settings/bandwidth")
+async def get_bandwidth_settings():
+    return engine.get_bandwidth_limits()
+
+@app.post("/api/settings/bandwidth")
+async def set_bandwidth_settings(req: BandwidthLimitRequest):
+    limits = engine.set_bandwidth_limits(req.download_limit_kbps, req.upload_limit_kbps)
+    return {"success": True, "limits": limits}
 
 def build_telemetry_payload():
     torrents = engine.get_torrents()

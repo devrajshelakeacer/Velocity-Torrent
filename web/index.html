@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VELOCITY — High-Throughput BitTorrent Engine</title>
   <link rel="stylesheet" href="css/geist.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 </head>
 <body>
   <div id="app">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <div class="brand-icon">⚡</div>
+        <img src="assets/logo.svg" width="30" height="30" alt="VELOCITY Brand Mark" style="display: block; border-radius: 6px;">
         <div class="brand-text">
           <h1>VELOCITY</h1>
           <span>Engine v2.1.1 (libtorrent)</span>
@@ -65,10 +65,17 @@
             <div class="badge-dot"></div>
             PROFILE: <span id="vforce-profile-pill" style="font-weight: 700; margin-left: 4px;">ULTRA</span>
           </div>
+          <button id="btn-bandwidth-modal" class="btn btn-secondary" style="height: 30px; font-size: 11px; padding: 0 10px; display: flex; align-items: center; gap: 6px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Limits: <span id="hdr-bandwidth-label" style="font-weight: 600; color: #fff;">Unlimited</span>
+          </button>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <button id="btn-open-add-modal" class="btn btn-primary">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button id="btn-sound-toggle" class="btn btn-secondary" style="height: 34px; padding: 0 10px; font-size: 12px;" title="Toggle Completion Chime">
+            🔔 <span id="sound-toggle-label">Audio On</span>
+          </button>
+          <button id="btn-open-add-modal" class="btn btn-primary" style="height: 34px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             Add Torrent
           </button>
@@ -139,6 +146,21 @@
               </div>
             </div>
 
+            <!-- Search & Status Filter Bar -->
+            <div class="filter-bar">
+              <div class="search-box">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input id="torrent-search-input" type="text" class="form-input" placeholder="Search name or hash... (Press /)" autocomplete="off">
+              </div>
+              <div class="filter-chips">
+                <div class="filter-chip active" data-filter="all">All (<span id="count-filter-all">0</span>)</div>
+                <div class="filter-chip" data-filter="downloading">Downloading (<span id="count-filter-dl">0</span>)</div>
+                <div class="filter-chip" data-filter="seeding">Seeding (<span id="count-filter-seed">0</span>)</div>
+                <div class="filter-chip" data-filter="paused">Paused (<span id="count-filter-paused">0</span>)</div>
+                <div class="filter-chip" data-filter="completed">Completed (<span id="count-filter-done">0</span>)</div>
+              </div>
+            </div>
+
             <!-- Empty Dropzone State -->
             <div id="torrents-empty-state" class="geist-card" style="text-align: center; padding: 64px 20px; border-style: dashed; border-color: var(--border-hover);">
               <div style="font-size: 32px; margin-bottom: 12px;">⚡</div>
@@ -155,9 +177,11 @@
                 <thead>
                   <tr>
                     <th>Torrent Name</th>
+                    <th>Size</th>
                     <th>Progress</th>
                     <th>Download</th>
                     <th>Upload</th>
+                    <th>Peers / Seeds</th>
                     <th>Status</th>
                     <th style="text-align: right;">Actions</th>
                   </tr>
@@ -406,6 +430,148 @@
       </div>
     </div>
   </div>
+
+  <!-- Deep Torrent Inspector Drawer -->
+  <div id="inspector-overlay" class="inspector-overlay">
+    <div class="inspector-panel">
+      <div class="inspector-header">
+        <div style="flex: 1; padding-right: 16px;">
+          <div class="inspector-title" id="inspector-torrent-name">Torrent Inspector</div>
+          <div style="font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <span>HASH: <span id="inspector-torrent-hash">-</span></span>
+            <span class="copy-pill" id="inspector-copy-hash">Copy Hash</span>
+            <span class="copy-pill" id="inspector-copy-magnet">Copy Magnet</span>
+          </div>
+        </div>
+        <button id="btn-close-inspector" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 12px;">✕ Close</button>
+      </div>
+
+      <div class="inspector-tabs">
+        <div class="inspector-tab active" data-tab="files">Files (<span id="inspector-files-count">0</span>)</div>
+        <div class="inspector-tab" data-tab="trackers">Trackers (<span id="inspector-trackers-count">0</span>)</div>
+        <div class="inspector-tab" data-tab="peers">Peers</div>
+        <div class="inspector-tab" data-tab="info">General Info</div>
+      </div>
+
+      <div class="inspector-body">
+        <!-- Files Tab -->
+        <div id="tab-files" class="inspector-tab-content">
+          <div class="table-container">
+            <table class="geist-table">
+              <thead>
+                <tr>
+                  <th style="width: 32px;">#</th>
+                  <th>File Name</th>
+                  <th>Size</th>
+                  <th>Progress</th>
+                  <th>Priority</th>
+                </tr>
+              </thead>
+              <tbody id="inspector-files-tbody">
+                <tr><td colspan="5" style="text-align: center; color: var(--text-tertiary); padding: 32px;">Loading torrent files...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Trackers Tab -->
+        <div id="tab-trackers" class="inspector-tab-content" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 13px; color: var(--text-secondary);">Swarm Announcement Servers</span>
+            <button id="btn-open-add-tracker" class="btn btn-secondary" style="height: 28px; font-size: 11px; padding: 0 10px;">+ Add Tracker</button>
+          </div>
+          <div class="table-container">
+            <table class="geist-table">
+              <thead>
+                <tr>
+                  <th>Tier</th>
+                  <th>Tracker Announce URL</th>
+                  <th>Status</th>
+                  <th>Seeds</th>
+                  <th>Peers</th>
+                </tr>
+              </thead>
+              <tbody id="inspector-trackers-tbody">
+                <tr><td colspan="5" style="text-align: center; color: var(--text-tertiary); padding: 32px;">Loading swarm trackers...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Peers Tab -->
+        <div id="tab-peers" class="inspector-tab-content" style="display: none;">
+          <div class="table-container">
+            <table class="geist-table">
+              <thead>
+                <tr>
+                  <th>Peer IP & Port</th>
+                  <th>Client</th>
+                  <th>PUS Score</th>
+                  <th>Down Rate</th>
+                  <th>Up Rate</th>
+                  <th>RTT</th>
+                </tr>
+              </thead>
+              <tbody id="inspector-peers-tbody">
+                <tr><td colspan="6" style="text-align: center; color: var(--text-tertiary); padding: 32px;">Loading connected peers...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- General Info Tab -->
+        <div id="tab-info" class="inspector-tab-content" style="display: none;">
+          <div id="inspector-info-fields" style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Bandwidth Limiter Modal -->
+  <div id="bandwidth-modal" class="modal-overlay">
+    <div class="modal-card" style="width: 440px;">
+      <h3 class="modal-title">Global Bandwidth Throttle</h3>
+      <p class="modal-desc">Set rate limits for all torrent swarms. Enter 0 for full line saturation (default 200 Mbps).</p>
+      
+      <div class="form-group">
+        <label class="form-label">Download Speed Limit (KB/s, 0 = Unlimited)</label>
+        <input id="bw-down-input" type="number" class="form-input" min="0" step="512" placeholder="0 (Unlimited)">
+        <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Quick sets: <a href="javascript:void(0)" onclick="document.getElementById('bw-down-input').value=0" style="color: var(--accent-blue);">Unlimited</a> | <a href="javascript:void(0)" onclick="document.getElementById('bw-down-input').value=5120" style="color: var(--accent-blue);">5 MB/s</a> | <a href="javascript:void(0)" onclick="document.getElementById('bw-down-input').value=10240" style="color: var(--accent-blue);">10 MB/s</a> | <a href="javascript:void(0)" onclick="document.getElementById('bw-down-input').value=24576" style="color: var(--accent-blue);">24 MB/s (200M)</a></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Upload Speed Limit (KB/s, 0 = Unlimited)</label>
+        <input id="bw-up-input" type="number" class="form-input" min="0" step="128" placeholder="0 (Unlimited)">
+        <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Quick sets: <a href="javascript:void(0)" onclick="document.getElementById('bw-up-input').value=0" style="color: var(--accent-blue);">Unlimited</a> | <a href="javascript:void(0)" onclick="document.getElementById('bw-up-input').value=1024" style="color: var(--accent-blue);">1 MB/s</a> | <a href="javascript:void(0)" onclick="document.getElementById('bw-up-input').value=5120" style="color: var(--accent-blue);">5 MB/s</a></div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+        <button id="bw-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="bw-save-btn" class="btn btn-primary">Apply Limits</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Tracker Modal -->
+  <div id="add-tracker-modal" class="modal-overlay">
+    <div class="modal-card" style="width: 480px;">
+      <h3 class="modal-title">Add Swarm Tracker</h3>
+      <p class="modal-desc">Announce to an additional BitTorrent tracker to expand the peer swarm.</p>
+      <div class="form-group">
+        <label class="form-label">Tracker Announce URL (UDP or HTTP)</label>
+        <input id="new-tracker-url" type="text" class="form-input" placeholder="udp://tracker.opentrackr.org:1337/announce">
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button id="add-tracker-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="add-tracker-submit-btn" class="btn btn-primary">Add Tracker</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast" class="geist-toast"></div>
 
   <!-- Scripts -->
   <script src="js/components/charts.js?v=1.0.2"></script>

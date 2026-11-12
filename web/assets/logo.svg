@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="velocityGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00DFD8"/>
+      <stop offset="45%" stop-color="#0070F3"/>
+      <stop offset="100%" stop-color="#7928CA"/>
+    </linearGradient>
+    <linearGradient id="velocityCore" x1="12" y1="8" x2="36" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#0070F3"/>
+    </linearGradient>
+    <filter id="velocityGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0070F3" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Background Badge Hexagon/Rounded Shield -->
+  <rect width="48" height="48" rx="12" fill="#0A0A0A" stroke="#222222" stroke-width="1.5"/>
+  <!-- Supersonic Chevron Wings -->
+  <g filter="url(#velocityGlow)">
+    <!-- Left Wing -->
+    <path d="M10 13L24 38L21 38L7 13H10Z" fill="url(#velocityGrad)" opacity="0.85"/>
+    <!-- Right Speed Wing -->
+    <path d="M38 13L24 38L27 38L41 13H38Z" fill="url(#velocityGrad)" opacity="0.85"/>
+    <!-- Sharp Central Supersonic Lightning Blade -->
+    <path d="M26 8L16 26H24L22 40L32 22H24L26 8Z" fill="url(#velocityCore)"/>
+  </g>
+</svg>

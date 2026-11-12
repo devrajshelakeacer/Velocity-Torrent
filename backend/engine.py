@@ -382,5 +382,151 @@ class TorrentEngine:
             "verified_count": sum(pieces)
         }
 
+    def get_torrent_files(self, info_hash: str) -> List[Dict[str, Any]]:
+        """Returns genuine per-file breakdown for the given torrent handle (zero mock)."""
+        handle = self._find_handle(info_hash)
+        if not handle or not handle.is_valid():
+            return []
+
+        try:
+            if not handle.has_metadata():
+                return []
+            ti = handle.torrent_file()
+            if not ti:
+                return []
+            fs = ti.files()
+            num = fs.num_files()
+            
+            # Get real downloaded progress per file
+            progress = handle.file_progress()
+            priorities = handle.file_priorities()
+
+            files = []
+            for i in range(num):
+                size = fs.file_size(i)
+                prog_b = progress[i] if i < len(progress) else 0
+                pct = round((prog_b / size * 100), 1) if size > 0 else 100.0
+                prio = int(priorities[i]) if i < len(priorities) else 1
+
+                files.append({
+                    "index": i,
+                    "name": fs.file_name(i),
+                    "path": fs.file_path(i),
+                    "size": size,
+                    "size_formatted": self._format_size(size),
+                    "progress_bytes": prog_b,
+                    "progress_pct": pct,
+                    "priority": prio,
+                    "priority_label": "Do Not Download" if prio == 0 else ("High" if prio >= 7 else "Normal")
+                })
+            return files
+        except Exception as e:
+            print(f"[ENGINE] Error extracting files for {info_hash}: {e}")
+            return []
+
+    def set_file_priority(self, info_hash: str, file_index: int, priority: int) -> bool:
+        """Sets download priority for a specific file (0=skip, 1=normal, 7=high)."""
+        handle = self._find_handle(info_hash)
+        if not handle or not handle.is_valid():
+            return False
+
+        try:
+            clamped = max(0, min(7, int(priority)))
+            handle.file_priority(file_index, clamped)
+            return True
+        except Exception as e:
+            print(f"[ENGINE] Failed to set file priority: {e}")
+            return False
+
+    def get_torrent_trackers(self, info_hash: str) -> List[Dict[str, Any]]:
+        """Returns list of real active trackers and announce statistics."""
+        handle = self._find_handle(info_hash)
+        if not handle or not handle.is_valid():
+            return []
+
+        trackers = []
+        try:
+            for tr in handle.trackers():
+                url = tr.url
+                tier = tr.tier
+                fails = tr.fails
+                working = tr.is_working
+                status_label = "Working" if (working or fails == 0) else f"Updating ({tr.message or 'Retrying'})"
+                
+                trackers.append({
+                    "url": url,
+                    "tier": tier,
+                    "status": status_label,
+                    "is_working": working,
+                    "fails": fails,
+                    "message": tr.message or "Active",
+                    "seeds": tr.scrape_complete if tr.scrape_complete >= 0 else 0,
+                    "peers": tr.scrape_incomplete if tr.scrape_incomplete >= 0 else 0,
+                    "downloaded": tr.scrape_downloaded if tr.scrape_downloaded >= 0 else 0
+                })
+        except Exception as e:
+            print(f"[ENGINE] Error querying trackers for {info_hash}: {e}")
+
+        return trackers
+
+    def add_torrent_tracker(self, info_hash: str, tracker_url: str) -> bool:
+        """Adds a new tracker URL to an active torrent handle."""
+        handle = self._find_handle(info_hash)
+        if not handle or not handle.is_valid():
+            return False
+
+        try:
+            entry = lt.announce_entry(tracker_url.strip())
+            handle.add_tracker(entry)
+            handle.force_reannounce()
+            return True
+        except Exception as e:
+            print(f"[ENGINE] Failed to add tracker: {e}")
+            return False
+
+    def get_torrent_magnet_uri(self, info_hash: str) -> Optional[str]:
+        """Generates real Magnet URI for active torrent handle."""
+        handle = self._find_handle(info_hash)
+        if not handle or not handle.is_valid():
+            return None
+        try:
+            return lt.make_magnet_uri(handle)
+        except Exception:
+            return f"magnet:?xt=urn:btih:{info_hash}"
+
+    def set_bandwidth_limits(self, download_limit_kbps: int, upload_limit_kbps: int) -> Dict[str, Any]:
+        """Applies global bandwidth throttle limits (0 = Unlimited)."""
+        down_b = int(download_limit_kbps) * 1024 if download_limit_kbps > 0 else 0
+        up_b = int(upload_limit_kbps) * 1024 if upload_limit_kbps > 0 else 0
+        self.session.apply_settings({
+            'download_rate_limit': down_b,
+            'upload_rate_limit': up_b
+        })
+        return self.get_bandwidth_limits()
+
+    def get_bandwidth_limits(self) -> Dict[str, Any]:
+        """Returns active global bandwidth rate limits."""
+        settings = self.session.get_settings()
+        down_b = settings.get('download_rate_limit', 0)
+        up_b = settings.get('upload_rate_limit', 0)
+        return {
+            "download_limit_kbps": down_b // 1024,
+            "upload_limit_kbps": up_b // 1024,
+            "download_limit_bytes": down_b,
+            "upload_limit_bytes": up_b,
+            "is_down_limited": down_b > 0,
+            "is_up_limited": up_b > 0
+        }
+
+    def _format_size(self, size_bytes: int) -> str:
+        if size_bytes < 1024:
+            return f"{size_bytes} B"
+        elif size_bytes < 1024 * 1024:
+            return f"{size_bytes / 1024:.1f} KB"
+        elif size_bytes < 1024 * 1024 * 1024:
+            return f"{size_bytes / (1024 * 1024):.1f} MB"
+        else:
+            return f"{size_bytes / (1024 * 1024 * 1024):.2f} GB"
+
     def shutdown(self):
         self._running = False

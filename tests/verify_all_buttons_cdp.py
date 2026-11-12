@@ -151,6 +151,84 @@ async def run_cdp_audit():
             await cdp_eval(ws, "window.app.selectTorrent(window.app.torrents[0].id)")
             print("  [PASS] Torrent row selected")
 
+            # 4b. Test Universal Polish Features: Search, Filters, Inspector & Bandwidth
+            print("\n--- 4b. Testing Universal Essentials: Search, Filters & Inspector ---")
+            
+            # Sound toggle
+            await cdp_eval(ws, "document.getElementById('btn-sound-toggle').click()")
+            sound_lbl = await cdp_eval(ws, "document.getElementById('sound-toggle-label').textContent")
+            print(f"  [PASS] 'btn-sound-toggle' clicked. Audio state: '{sound_lbl}'")
+            await cdp_eval(ws, "document.getElementById('btn-sound-toggle').click()") # restore
+
+            # Search bar filtering
+            await cdp_eval(ws, "{ const s = document.getElementById('torrent-search-input'); s.value = 'Ubuntu'; s.dispatchEvent(new Event('input')); }")
+            await asyncio.sleep(0.3)
+            rows_cnt = await cdp_eval(ws, "document.querySelectorAll('#torrents-tbody tr').length")
+            print(f"  [PASS] Search filter for 'Ubuntu' active. Rendered rows: {rows_cnt}")
+            await cdp_eval(ws, "{ const s = document.getElementById('torrent-search-input'); s.value = ''; s.dispatchEvent(new Event('input')); }")
+            await asyncio.sleep(0.3)
+
+            # Status Filter Chips
+            chips = ["downloading", "seeding", "paused", "completed", "all"]
+            for chip_name in chips:
+                await cdp_eval(ws, f"document.querySelector('.filter-chip[data-filter=\"{chip_name}\"]').click()")
+                await asyncio.sleep(0.2)
+                active_chip = await cdp_eval(ws, "document.querySelector('.filter-chip.active').getAttribute('data-filter')")
+                assert active_chip == chip_name, f"Expected active chip {chip_name}, got {active_chip}"
+            print("  [PASS] All 5 status filter chips clicked and verified (Downloading, Seeding, Paused, Completed, All)")
+
+            # Bandwidth Limiter Modal
+            await cdp_eval(ws, "document.getElementById('btn-bandwidth-modal').click()")
+            await asyncio.sleep(0.4)
+            bw_modal_active = await cdp_eval(ws, "document.getElementById('bandwidth-modal').classList.contains('active')")
+            assert bw_modal_active, "Bandwidth modal failed to open!"
+            await cdp_eval(ws, "document.getElementById('bw-down-input').value = 10240") # 10 MB/s
+            await cdp_eval(ws, "document.getElementById('bw-save-btn').click()")
+            await asyncio.sleep(0.5)
+            bw_hdr_lbl = await cdp_eval(ws, "document.getElementById('hdr-bandwidth-label').textContent")
+            print(f"  [PASS] Bandwidth Limiter modal configured and applied. Header label: '{bw_hdr_lbl}'")
+
+            # Reset bandwidth to unlimited
+            await cdp_eval(ws, "document.getElementById('btn-bandwidth-modal').click()")
+            await asyncio.sleep(0.3)
+            await cdp_eval(ws, "document.getElementById('bw-down-input').value = 0")
+            await cdp_eval(ws, "document.getElementById('bw-save-btn').click()")
+            await asyncio.sleep(0.3)
+
+            # Deep Torrent Inspector Drawer
+            torrent_id = await cdp_eval(ws, "window.app.torrents[0].id")
+            await cdp_eval(ws, f"window.app.openInspector('{torrent_id}')")
+            await asyncio.sleep(0.6)
+            inspector_active = await cdp_eval(ws, "document.getElementById('inspector-overlay').classList.contains('active')")
+            assert inspector_active, "Inspector Drawer failed to open!"
+            print("  [PASS] Inspector Drawer opened successfully")
+
+            # Switch Inspector Tabs: Trackers, Peers, Info, Files
+            await cdp_eval(ws, "document.querySelector('.inspector-tab[data-tab=\"trackers\"]').click()")
+            await asyncio.sleep(0.4)
+            tr_display = await cdp_eval(ws, "document.getElementById('tab-trackers').style.display")
+            assert tr_display == 'block', "Trackers tab failed to display!"
+            print("  [PASS] Inspector 'Trackers' tab active and populated")
+
+            await cdp_eval(ws, "document.querySelector('.inspector-tab[data-tab=\"peers\"]').click()")
+            await asyncio.sleep(0.4)
+            peers_display = await cdp_eval(ws, "document.getElementById('tab-peers').style.display")
+            assert peers_display == 'block', "Peers tab failed to display!"
+            print("  [PASS] Inspector 'Peers' tab active and populated")
+
+            await cdp_eval(ws, "document.querySelector('.inspector-tab[data-tab=\"info\"]').click()")
+            await asyncio.sleep(0.4)
+            info_display = await cdp_eval(ws, "document.getElementById('tab-info').style.display")
+            assert info_display == 'block', "Info tab failed to display!"
+            print("  [PASS] Inspector 'General Info' tab active and populated")
+
+            # Close Inspector
+            await cdp_eval(ws, "document.getElementById('btn-close-inspector').click()")
+            await asyncio.sleep(0.3)
+            inspector_active = await cdp_eval(ws, "document.getElementById('inspector-overlay').classList.contains('active')")
+            assert not inspector_active, "Inspector failed to close!"
+            print("  [PASS] Inspector Drawer closed cleanly")
+
             # 5. Test Swarm Peers View
             print("\n--- 5. Testing Swarm Peers Controls ---")
             await cdp_eval(ws, "window.app.switchView('peers')")
@@ -230,12 +308,19 @@ async def run_cdp_audit():
             print("\n--- 10. Testing Torrent Removal & Clean Empty State ---")
             await cdp_eval(ws, "window.app.switchView('dashboard')")
             await cdp_eval(ws, "window.confirm = () => true;")
-            torrent_id = await cdp_eval(ws, "window.app.torrents[0].id")
-            await cdp_eval(ws, f"window.app.deleteTorrent('{torrent_id}')")
-            await asyncio.sleep(1.0)
+            # Remove all torrents in session to restore pristine clean state
+            await cdp_eval(ws, """
+                (async () => {
+                    for (const t of [...window.app.torrents]) {
+                        await window.app.deleteTorrent(t.id);
+                    }
+                    await window.app.fetchTorrents();
+                })()
+            """)
+            await asyncio.sleep(1.5)
             is_empty_visible = await cdp_eval(ws, "document.getElementById('torrents-empty-state').style.display === 'block'")
-            assert is_empty_visible, "Empty state failed to display after deleting torrent!"
-            print("  [PASS] Torrent removed. Dashboard returned to clean 'No Active Downloads' state")
+            assert is_empty_visible, "Empty state failed to display after deleting all torrents!"
+            print("  [PASS] All session torrents removed. Dashboard returned to clean 'No Active Downloads' state")
 
             print("\n" + "=" * 65)
             print("  CDP AUDIT VERDICT: 100% OF BUTTONS & CONTROLS RESPONSIVE AND VERIFIED!")

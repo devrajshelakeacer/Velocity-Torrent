@@ -6,6 +6,7 @@ Zero-trust file path canonicalization, NTFS ADS stripping, and reserved device d
 
 import os
 import re
+import urllib.parse
 from pathlib import Path
 from typing import Tuple
 
@@ -64,8 +65,13 @@ class VShieldSanitizer:
         if "\x00" in relative_path:
             return False, "", "Path contains illegal null bytes."
 
+        # Decode URL-encoded traversal evasion sequences
+        decoded_path = urllib.parse.unquote(relative_path)
+        if "\x00" in decoded_path:
+            return False, "", "Path contains illegal null bytes after URL decoding."
+
         # Strip NTFS Alternate Data Streams
-        cleaned = cls.strip_alternate_data_streams(relative_path)
+        cleaned = cls.strip_alternate_data_streams(decoded_path)
 
         # Standardize separators
         cleaned = cleaned.replace("\\", "/")

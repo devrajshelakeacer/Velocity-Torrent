@@ -16,18 +16,30 @@ class VelocityApp {
     this.chart = null;
     this.pieceMap = null;
 
+    // Search, Filter & Universal Inspector State
+    this.filterText = '';
+    this.activeFilter = 'all'; // 'all', 'downloading', 'seeding', 'paused', 'completed'
+    this.activeInspectorTab = 'files';
+    this.audioEnabled = true;
+    this.audioCtx = null;
+    this.completedTorrentHashes = new Set();
+
     this.init();
   }
 
   init() {
     this.setupNavigation();
     this.setupModals();
+    this.setupSearchAndFilters();
+    this.setupInspectorDrawer();
+    this.setupBandwidthModal();
     this.setupDropzones();
     this.setupGlobalShortcuts();
     this.setupComponents();
     this.connectWebSocket();
     this.fetchTorrents();
     this.fetchSettings();
+    this.fetchBandwidthLimits();
 
     // Periodic torrent polling (1s) to keep list synchronized
     setInterval(() => this.fetchTorrents(), 1000);
@@ -227,6 +239,46 @@ class VelocityApp {
 
     if (!tableBody) return;
 
+    // 1. Calculate filter counts
+    let countAll = this.torrents.length;
+    let countDl = 0;
+    let countSeed = 0;
+    let countPaused = 0;
+    let countDone = 0;
+
+    for (const t of this.torrents) {
+      const isPaused = (t.is_paused !== undefined ? t.is_paused : (t.state && t.state.toUpperCase() === 'PAUSED'));
+      const isFinished = (t.progress >= 1.0 || (t.state && (t.state.toUpperCase() === 'SEEDING' || t.state.toUpperCase() === 'COMPLETED')));
+
+      if (isPaused) {
+        countPaused++;
+      } else if (isFinished) {
+        countSeed++;
+        countDone++;
+      } else {
+        countDl++;
+      }
+
+      // Completion audio alert trigger
+      if (isFinished && !this.completedTorrentHashes.has(t.id)) {
+        this.completedTorrentHashes.add(t.id);
+        this.playCompletionChime();
+        this.showToast(`⚡ Download Complete: ${t.name}`);
+      }
+    }
+
+    const elAll = document.getElementById('count-filter-all');
+    const elDl = document.getElementById('count-filter-dl');
+    const elSeed = document.getElementById('count-filter-seed');
+    const elPaused = document.getElementById('count-filter-paused');
+    const elDone = document.getElementById('count-filter-done');
+
+    if (elAll) elAll.textContent = countAll;
+    if (elDl) elDl.textContent = countDl;
+    if (elSeed) elSeed.textContent = countSeed;
+    if (elPaused) elPaused.textContent = countPaused;
+    if (elDone) elDone.textContent = countDone;
+
     if (this.torrents.length === 0) {
       if (emptyState) emptyState.style.display = 'block';
       if (tableContainer) tableContainer.style.display = 'none';
@@ -236,8 +288,33 @@ class VelocityApp {
     if (emptyState) emptyState.style.display = 'none';
     if (tableContainer) tableContainer.style.display = 'block';
 
+    // 2. Filter matching torrents
+    const filtered = this.torrents.filter(t => {
+      const isPaused = (t.is_paused !== undefined ? t.is_paused : (t.state && t.state.toUpperCase() === 'PAUSED'));
+      const isFinished = (t.progress >= 1.0 || (t.state && (t.state.toUpperCase() === 'SEEDING' || t.state.toUpperCase() === 'COMPLETED')));
+
+      // Category filter
+      if (this.activeFilter === 'downloading' && (isPaused || isFinished)) return false;
+      if (this.activeFilter === 'seeding' && (!isFinished || isPaused)) return false;
+      if (this.activeFilter === 'paused' && !isPaused) return false;
+      if (this.activeFilter === 'completed' && !isFinished) return false;
+
+      // Text query filter
+      if (this.filterText) {
+        const nameMatch = (t.name || '').toLowerCase().includes(this.filterText);
+        const hashMatch = (t.info_hash || t.id || '').toLowerCase().includes(this.filterText);
+        if (!nameMatch && !hashMatch) return false;
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-tertiary); padding: 36px;">No torrents match current filter "${this.activeFilter}" ${this.filterText ? 'and search query' : ''}.</td></tr>`;
+      return;
+    }
+
     let html = '';
-    for (const t of this.torrents) {
+    for (const t of filtered) {
       const isSelected = t.id === this.selectedTorrentId;
       const pct = (t.progress * 100).toFixed(1);
       const isPaused = (t.is_paused !== undefined ? t.is_paused : (t.state && t.state.toUpperCase() === 'PAUSED'));
@@ -248,16 +325,17 @@ class VelocityApp {
 
       html += `
         <tr class="${isSelected ? 'selected-row' : ''}" onclick="window.app.selectTorrent('${t.id}')">
-          <td>
-            <div style="font-weight: 600; color: #fff; margin-bottom: 2px;">${this.escapeHtml(t.name)}</div>
-            <div style="font-size: 12px; color: var(--text-tertiary);">${sizeStr} · ${t.num_seeds} seeds, ${t.num_peers} peers</div>
+          <td style="max-width: 280px;">
+            <div style="font-weight: 600; color: #fff; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.escapeHtml(t.name)}">${this.escapeHtml(t.name)}</div>
+            <div style="font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis;">${t.info_hash || t.id}</div>
           </td>
+          <td class="tabular" style="white-space: nowrap;">${sizeStr}</td>
           <td style="width: 140px;">
-            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
               <span>${pct}%</span>
               <span style="color: var(--text-tertiary);">${etaStr}</span>
             </div>
-            <div class="progress-track">
+            <div class="progress-track" style="height: 5px;">
               <div class="progress-fill" style="width: ${pct}%;"></div>
             </div>
           </td>
@@ -267,14 +345,23 @@ class VelocityApp {
           <td class="tabular">
             <span style="color: var(--text-secondary);">↑ ${upStr}</span>
           </td>
+          <td class="tabular" style="font-size: 12px; white-space: nowrap;">
+            <span style="color: var(--text-primary); font-weight: 600;">${t.num_seeds}</span> <span style="color: var(--text-tertiary);">/ ${t.num_peers}</span>
+          </td>
           <td>
             <span class="badge" style="font-size: 11px;">${t.state.toUpperCase()}</span>
           </td>
-          <td style="text-align: right;">
-            <button class="btn btn-secondary" style="height: 28px; padding: 0 10px; font-size: 12px;" onclick="event.stopPropagation(); window.app.togglePause('${t.id}', ${isPaused})">
+          <td style="text-align: right; white-space: nowrap;">
+            <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px;" title="Inspect Files & Trackers" onclick="event.stopPropagation(); window.app.openInspector('${t.id}')">
+              Inspect
+            </button>
+            <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" title="Copy Magnet" onclick="event.stopPropagation(); window.app.copyTorrentMagnet('${t.id}')">
+              🧲
+            </button>
+            <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" onclick="event.stopPropagation(); window.app.togglePause('${t.id}', ${isPaused})">
               ${isPaused ? 'Resume' : 'Pause'}
             </button>
-            <button class="btn btn-danger" style="height: 28px; padding: 0 10px; font-size: 12px; margin-left: 6px;" onclick="event.stopPropagation(); window.app.deleteTorrent('${t.id}')">
+            <button class="btn btn-danger" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" onclick="event.stopPropagation(); window.app.deleteTorrent('${t.id}')">
               Remove
             </button>
           </td>
@@ -668,6 +755,446 @@ class VelocityApp {
     }
   }
 
+  setupSearchAndFilters() {
+    const searchInput = document.getElementById('torrent-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        this.filterText = (e.target.value || '').toLowerCase().trim();
+        this.renderTorrentsTable();
+      });
+    }
+
+    const chips = document.querySelectorAll('.filter-chip[data-filter]');
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        this.activeFilter = chip.getAttribute('data-filter') || 'all';
+        this.renderTorrentsTable();
+      });
+    });
+
+    const soundBtn = document.getElementById('btn-sound-toggle');
+    if (soundBtn) {
+      soundBtn.addEventListener('click', () => {
+        this.audioEnabled = !this.audioEnabled;
+        const label = document.getElementById('sound-toggle-label');
+        if (label) label.textContent = this.audioEnabled ? 'Audio On' : 'Audio Off';
+        this.showToast(this.audioEnabled ? 'Completion Chime Enabled' : 'Audio Chimes Muted');
+      });
+    }
+  }
+
+  setupInspectorDrawer() {
+    const closeBtn = document.getElementById('btn-close-inspector');
+    const overlay = document.getElementById('inspector-overlay');
+    if (closeBtn) closeBtn.addEventListener('click', () => this.closeInspector());
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) this.closeInspector();
+      });
+    }
+
+    // Tab buttons
+    const tabs = document.querySelectorAll('.inspector-tab[data-tab]');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+        this.switchInspectorTab(tabName);
+      });
+    });
+
+    // Copy pills
+    const copyHash = document.getElementById('inspector-copy-hash');
+    const copyMagnet = document.getElementById('inspector-copy-magnet');
+    if (copyHash) copyHash.addEventListener('click', () => this.copyTorrentHash(this.selectedTorrentId));
+    if (copyMagnet) copyMagnet.addEventListener('click', () => this.copyTorrentMagnet(this.selectedTorrentId));
+
+    // Add tracker modal openers
+    const openAddTrackerBtn = document.getElementById('btn-open-add-tracker');
+    const addTrackerModal = document.getElementById('add-tracker-modal');
+    const cancelAddTrackerBtn = document.getElementById('add-tracker-cancel-btn');
+    const submitAddTrackerBtn = document.getElementById('add-tracker-submit-btn');
+    const newTrackerUrl = document.getElementById('new-tracker-url');
+
+    if (openAddTrackerBtn && addTrackerModal) {
+      openAddTrackerBtn.addEventListener('click', () => {
+        addTrackerModal.classList.add('active');
+        if (newTrackerUrl) newTrackerUrl.focus();
+      });
+    }
+
+    if (cancelAddTrackerBtn && addTrackerModal) {
+      cancelAddTrackerBtn.addEventListener('click', () => {
+        addTrackerModal.classList.remove('active');
+        if (newTrackerUrl) newTrackerUrl.value = '';
+      });
+    }
+
+    if (submitAddTrackerBtn && addTrackerModal) {
+      submitAddTrackerBtn.addEventListener('click', async () => {
+        if (newTrackerUrl && newTrackerUrl.value.trim()) {
+          await this.addTracker(newTrackerUrl.value.trim());
+          addTrackerModal.classList.remove('active');
+          newTrackerUrl.value = '';
+        }
+      });
+    }
+  }
+
+  setupBandwidthModal() {
+    const openBtn = document.getElementById('btn-bandwidth-modal');
+    const modal = document.getElementById('bandwidth-modal');
+    const cancelBtn = document.getElementById('bw-cancel-btn');
+    const saveBtn = document.getElementById('bw-save-btn');
+
+    if (openBtn) openBtn.addEventListener('click', () => this.openBandwidthModal());
+    if (cancelBtn && modal) cancelBtn.addEventListener('click', () => modal.classList.remove('active'));
+    if (saveBtn) saveBtn.addEventListener('click', () => this.saveBandwidthLimits());
+  }
+
+  async fetchBandwidthLimits() {
+    try {
+      const res = await fetch('/api/settings/bandwidth');
+      if (res.ok) {
+        const data = await res.json();
+        this.updateBandwidthLabel(data);
+      }
+    } catch (e) {}
+  }
+
+  async openBandwidthModal() {
+    const modal = document.getElementById('bandwidth-modal');
+    if (!modal) return;
+    modal.classList.add('active');
+    try {
+      const res = await fetch('/api/settings/bandwidth');
+      if (res.ok) {
+        const data = await res.json();
+        const downInput = document.getElementById('bw-down-input');
+        const upInput = document.getElementById('bw-up-input');
+        if (downInput) downInput.value = data.download_limit_kbps;
+        if (upInput) upInput.value = data.upload_limit_kbps;
+      }
+    } catch (e) {}
+  }
+
+  async saveBandwidthLimits() {
+    const downInput = document.getElementById('bw-down-input');
+    const upInput = document.getElementById('bw-up-input');
+    const downKbps = downInput ? parseInt(downInput.value || 0, 10) : 0;
+    const upKbps = upInput ? parseInt(upInput.value || 0, 10) : 0;
+
+    try {
+      const res = await fetch('/api/settings/bandwidth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          download_limit_kbps: Math.max(0, downKbps),
+          upload_limit_kbps: Math.max(0, upKbps)
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        this.updateBandwidthLabel(data.limits);
+        const modal = document.getElementById('bandwidth-modal');
+        if (modal) modal.classList.remove('active');
+        this.showToast('Global bandwidth limits updated!');
+      }
+    } catch (e) {
+      this.showToast('Failed to save bandwidth: ' + e.message);
+    }
+  }
+
+  updateBandwidthLabel(limits) {
+    const label = document.getElementById('hdr-bandwidth-label');
+    if (!label || !limits) return;
+    if (limits.download_limit_kbps === 0 && limits.upload_limit_kbps === 0) {
+      label.textContent = 'Unlimited';
+    } else {
+      const d = limits.download_limit_kbps > 0 ? `↓ ${Math.round(limits.download_limit_kbps / 1024)}M` : '↓ ∞';
+      const u = limits.upload_limit_kbps > 0 ? `↑ ${Math.round(limits.upload_limit_kbps / 1024)}M` : '↑ ∞';
+      label.textContent = `${d} ${u}`;
+    }
+  }
+
+  openInspector(id) {
+    this.selectedTorrentId = id;
+    const overlay = document.getElementById('inspector-overlay');
+    if (!overlay) return;
+    overlay.classList.add('active');
+
+    const t = this.torrents.find(x => x.id === id);
+    const titleEl = document.getElementById('inspector-torrent-name');
+    const hashEl = document.getElementById('inspector-torrent-hash');
+    if (titleEl && t) titleEl.textContent = t.name;
+    if (hashEl) hashEl.textContent = id;
+
+    this.renderInspectorTab();
+  }
+
+  closeInspector() {
+    const overlay = document.getElementById('inspector-overlay');
+    if (overlay) overlay.classList.remove('active');
+  }
+
+  switchInspectorTab(tabName) {
+    this.activeInspectorTab = tabName;
+    document.querySelectorAll('.inspector-tab').forEach(tab => {
+      if (tab.getAttribute('data-tab') === tabName) {
+        tab.classList.add('active');
+      } else {
+        tab.classList.remove('active');
+      }
+    });
+
+    document.querySelectorAll('.inspector-tab-content').forEach(content => {
+      if (content.id === `tab-${tabName}`) {
+        content.style.display = 'block';
+      } else {
+        content.style.display = 'none';
+      }
+    });
+
+    this.renderInspectorTab();
+  }
+
+  async renderInspectorTab() {
+    if (!this.selectedTorrentId) return;
+    const id = this.selectedTorrentId;
+
+    if (this.activeInspectorTab === 'files') {
+      await this.loadInspectorFiles(id);
+    } else if (this.activeInspectorTab === 'trackers') {
+      await this.loadInspectorTrackers(id);
+    } else if (this.activeInspectorTab === 'peers') {
+      await this.loadInspectorPeers(id);
+    } else if (this.activeInspectorTab === 'info') {
+      this.loadInspectorInfo(id);
+    }
+  }
+
+  async loadInspectorFiles(id) {
+    const tbody = document.getElementById('inspector-files-tbody');
+    const countEl = document.getElementById('inspector-files-count');
+    if (!tbody) return;
+    try {
+      const res = await fetch(`/api/torrents/${id}/files`);
+      if (!res.ok) return;
+      const files = await res.json();
+      if (countEl) countEl.textContent = files.length;
+      if (files.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary); padding: 32px;">No file metadata available yet.</td></tr>';
+        return;
+      }
+      let html = '';
+      for (const f of files) {
+        html += `
+          <tr>
+            <td style="color: var(--text-tertiary);">${f.index + 1}</td>
+            <td style="font-weight: 500; word-break: break-all;">${this.escapeHtml(f.name)}</td>
+            <td class="tabular" style="white-space: nowrap;">${f.size_formatted}</td>
+            <td style="width: 140px;">
+              <div style="font-size: 11px; margin-bottom: 2px;">${f.progress_pct}%</div>
+              <div class="progress-track" style="height: 4px;">
+                <div class="progress-fill" style="width: ${f.progress_pct}%;"></div>
+              </div>
+            </td>
+            <td>
+              <select class="priority-select" onchange="window.app.setFilePriority('${id}', ${f.index}, this.value)">
+                <option value="1" ${f.priority === 1 ? 'selected' : ''}>Normal</option>
+                <option value="7" ${f.priority >= 7 ? 'selected' : ''}>High</option>
+                <option value="0" ${f.priority === 0 ? 'selected' : ''}>Do Not Download</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }
+      tbody.innerHTML = html;
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--accent-red); padding: 16px;">Failed to load files: ${e.message}</td></tr>`;
+    }
+  }
+
+  async setFilePriority(id, fileIndex, priority) {
+    try {
+      const res = await fetch(`/api/torrents/${id}/files/${fileIndex}/priority`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priority: parseInt(priority, 10) })
+      });
+      const data = await res.json();
+      if (data.success) {
+        this.showToast(`File priority set to ${priority === '0' ? 'Do Not Download' : (priority === '7' ? 'High' : 'Normal')}`);
+      }
+    } catch (e) {
+      this.showToast('Failed to update file priority: ' + e.message);
+    }
+  }
+
+  async loadInspectorTrackers(id) {
+    const tbody = document.getElementById('inspector-trackers-tbody');
+    const countEl = document.getElementById('inspector-trackers-count');
+    if (!tbody) return;
+    try {
+      const res = await fetch(`/api/torrents/${id}/trackers`);
+      if (!res.ok) return;
+      const trackers = await res.json();
+      if (countEl) countEl.textContent = trackers.length;
+      if (trackers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary); padding: 32px;">No trackers configured.</td></tr>';
+        return;
+      }
+      let html = '';
+      for (const tr of trackers) {
+        html += `
+          <tr>
+            <td style="color: var(--text-tertiary);">${tr.tier}</td>
+            <td style="font-family: var(--font-mono); font-size: 12px; word-break: break-all;">${this.escapeHtml(tr.url)}</td>
+            <td><span class="badge" style="font-size: 11px;">${tr.status}</span></td>
+            <td class="tabular">${tr.seeds}</td>
+            <td class="tabular">${tr.peers}</td>
+          </tr>
+        `;
+      }
+      tbody.innerHTML = html;
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--accent-red); padding: 16px;">Failed to load trackers: ${e.message}</td></tr>`;
+    }
+  }
+
+  async addTracker(url) {
+    if (!this.selectedTorrentId || !url) return;
+    try {
+      const res = await fetch(`/api/torrents/${this.selectedTorrentId}/trackers`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url.trim() })
+      });
+      const data = await res.json();
+      if (data.success) {
+        this.showToast('Tracker added to swarm');
+        this.loadInspectorTrackers(this.selectedTorrentId);
+      } else {
+        this.showToast('Failed to add tracker');
+      }
+    } catch (e) {
+      this.showToast('Error adding tracker: ' + e.message);
+    }
+  }
+
+  async loadInspectorPeers(id) {
+    const tbody = document.getElementById('inspector-peers-tbody');
+    if (!tbody) return;
+    try {
+      const res = await fetch(`/api/torrents/${id}/peers`);
+      if (!res.ok) return;
+      const peers = await res.json();
+      if (peers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-tertiary); padding: 32px;">No connected swarm peers yet.</td></tr>';
+        return;
+      }
+      let html = '';
+      for (const p of peers) {
+        html += `
+          <tr>
+            <td style="font-family: var(--font-mono); font-size: 12px;">${this.escapeHtml(p.ip)}</td>
+            <td>${this.escapeHtml(p.client)}</td>
+            <td class="tabular"><span style="color: var(--accent-blue); font-weight: 700;">${p.pus}</span></td>
+            <td class="tabular" style="color: var(--accent-green);">↓ ${this.formatSpeed(p.down_rate)}</td>
+            <td class="tabular">↑ ${this.formatSpeed(p.up_rate)}</td>
+            <td class="tabular" style="color: var(--text-secondary);">${p.rtt}</td>
+          </tr>
+        `;
+      }
+      tbody.innerHTML = html;
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="6" style="color: var(--accent-red); padding: 16px;">Failed to load peers: ${e.message}</td></tr>`;
+    }
+  }
+
+  loadInspectorInfo(id) {
+    const container = document.getElementById('inspector-info-fields');
+    if (!container) return;
+    const t = this.torrents.find(x => x.id === id);
+    if (!t) return;
+
+    container.innerHTML = `
+      <div style="background: #111; padding: 16px; border-radius: 6px; border: 1px solid var(--border-hairline);">
+        <div style="margin-bottom: 8px;"><strong>Torrent Name:</strong> ${this.escapeHtml(t.name)}</div>
+        <div style="margin-bottom: 8px;"><strong>Info Hash:</strong> <code style="font-family: var(--font-mono); color: #fff;">${t.info_hash || t.id}</code></div>
+        <div style="margin-bottom: 8px;"><strong>Total Size:</strong> ${this.formatBytes(t.total_size)} (${(t.total_size || 0).toLocaleString()} bytes)</div>
+        <div style="margin-bottom: 8px;"><strong>Downloaded / Uploaded:</strong> ${this.formatBytes(t.downloaded_bytes)} / ${this.formatBytes(t.uploaded_bytes)}</div>
+        <div style="margin-bottom: 8px;"><strong>Save Path:</strong> <code style="font-family: var(--font-mono);">${this.escapeHtml(t.save_path || 'downloads')}</code></div>
+        <div style="margin-bottom: 8px;"><strong>State / Health:</strong> <span class="badge">${t.state}</span> (${t.num_seeds} seeds, ${t.num_peers} peers)</div>
+      </div>
+    `;
+  }
+
+  async copyTorrentHash(id) {
+    if (!id) return;
+    await this.copyToClipboard(id, 'Torrent info hash');
+  }
+
+  async copyTorrentMagnet(id) {
+    if (!id) return;
+    try {
+      const res = await fetch(`/api/torrents/${id}/magnet`);
+      const data = await res.json();
+      if (data.success && data.magnet_uri) {
+        await this.copyToClipboard(data.magnet_uri, 'Magnet link');
+      } else {
+        await this.copyToClipboard(`magnet:?xt=urn:btih:${id}`, 'Magnet link');
+      }
+    } catch (e) {
+      await this.copyToClipboard(`magnet:?xt=urn:btih:${id}`, 'Magnet link');
+    }
+  }
+
+  async copyToClipboard(text, label) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+      this.showToast(`${label} copied to clipboard!`);
+    } catch (e) {
+      this.showToast(`Failed to copy: ${e.message}`);
+    }
+  }
+
+  playCompletionChime() {
+    if (!this.audioEnabled) return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!this.audioCtx) this.audioCtx = new AudioCtx();
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(1320, now + 0.15);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.35);
+    } catch (e) {
+      // Audio autoplay policy or headless browser
+    }
+  }
+
   setupDropzones() {
     // Window-level drag and drop for .torrent files
     window.addEventListener('dragover', (e) => {
@@ -708,6 +1235,49 @@ class VelocityApp {
           magnetInput.focus();
           this.showToast('Magnet link detected from clipboard');
         }
+      }
+    });
+
+    // Universal Keyboard Navigation Shortcuts
+    window.addEventListener('keydown', (e) => {
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+
+      // Slash (/) -> Focus search input
+      if (e.key === '/' && !isInput) {
+        e.preventDefault();
+        const searchInput = document.getElementById('torrent-search-input');
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      }
+
+      // Escape -> Close inspector drawer or any active modal
+      if (e.key === 'Escape') {
+        const inspector = document.getElementById('inspector-overlay');
+        if (inspector && inspector.classList.contains('active')) {
+          this.closeInspector();
+          return;
+        }
+        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+          modal.classList.remove('active');
+        });
+      }
+
+      // Space -> Toggle pause/resume on selected torrent
+      if (e.key === ' ' && !isInput && this.selectedTorrentId) {
+        e.preventDefault();
+        const t = this.torrents.find(x => x.id === this.selectedTorrentId);
+        if (t) {
+          const isPaused = (t.is_paused !== undefined ? t.is_paused : (t.state && t.state.toUpperCase() === 'PAUSED'));
+          this.togglePause(this.selectedTorrentId, isPaused);
+        }
+      }
+
+      // Delete -> Delete selected torrent
+      if ((e.key === 'Delete' || e.key === 'Backspace') && !isInput && this.selectedTorrentId) {
+        e.preventDefault();
+        this.deleteTorrent(this.selectedTorrentId);
       }
     });
   }
