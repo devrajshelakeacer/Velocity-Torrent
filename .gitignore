@@ -38,3 +38,9 @@ Desktop.ini
 .DS_Store
 chrome_temp/
 chrome_test_profile/
+
+# Agent & Planning Internal Scratch
+.planning/
+PRD.md
+progress.txt
+
