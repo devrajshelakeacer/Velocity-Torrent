@@ -333,8 +333,26 @@ class VelocityApp {
       return;
     }
 
-    let html = '';
-    for (const t of filtered) {
+    // Keyed in-place DOM reconciliation: only modify changed cells, never rebuild the entire table
+    const currentKeys = new Set(filtered.map(t => t.id));
+    
+    // 1. Remove rows no longer present
+    const existingRows = Array.from(tableBody.querySelectorAll('tr[data-torrent-id]'));
+    for (const row of existingRows) {
+      const rowId = row.getAttribute('data-torrent-id');
+      if (!currentKeys.has(rowId)) {
+        row.remove();
+      }
+    }
+
+    // If placeholder row was showing, clear it
+    if (tableBody.children.length === 1 && !tableBody.children[0].hasAttribute('data-torrent-id')) {
+      tableBody.innerHTML = '';
+    }
+
+    // 2. Reconcile or append rows in order
+    for (let i = 0; i < filtered.length; i++) {
+      const t = filtered[i];
       const isSelected = t.id === this.selectedTorrentId;
       const pct = (t.progress * 100).toFixed(1);
       const isPaused = (t.is_paused !== undefined ? t.is_paused : (t.state && t.state.toUpperCase() === 'PAUSED'));
@@ -343,8 +361,38 @@ class VelocityApp {
       const sizeStr = this.formatBytes(t.total_size);
       const etaStr = this.formatEta(t.eta_seconds);
 
-      html += `
-        <tr class="${isSelected ? 'selected-row' : ''}" onclick="window.app.selectTorrent('${t.id}')">
+      let row = tableBody.querySelector(`tr[data-torrent-id="${t.id}"]`);
+
+      if (row) {
+        // Fast in-place updates: only touch modified DOM nodes
+        row.className = isSelected ? 'selected-row' : '';
+        const pctEl = row.querySelector('.col-pct');
+        const etaEl = row.querySelector('.col-eta');
+        const fillEl = row.querySelector('.progress-fill');
+        const downEl = row.querySelector('.col-down');
+        const upEl = row.querySelector('.col-up');
+        const peersEl = row.querySelector('.col-peers');
+        const badgeEl = row.querySelector('.col-badge');
+        const pauseBtn = row.querySelector('.btn-toggle-pause');
+
+        if (pctEl && pctEl.textContent !== `${pct}%`) pctEl.textContent = `${pct}%`;
+        if (etaEl && etaEl.textContent !== etaStr) etaEl.textContent = etaStr;
+        if (fillEl && fillEl.style.width !== `${pct}%`) fillEl.style.width = `${pct}%`;
+        if (downEl) downEl.textContent = `↓ ${downStr}`;
+        if (upEl) upEl.textContent = `↑ ${upStr}`;
+        if (peersEl) peersEl.innerHTML = `<span style="color: var(--text-primary); font-weight: 600;">${t.num_seeds}</span> <span style="color: var(--text-tertiary);">/ ${t.num_peers}</span>`;
+        if (badgeEl && badgeEl.textContent !== t.state.toUpperCase()) badgeEl.textContent = t.state.toUpperCase();
+        if (pauseBtn) {
+          pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
+          pauseBtn.setAttribute('onclick', `event.stopPropagation(); window.app.togglePause('${t.id}', ${isPaused})`);
+        }
+      } else {
+        // Create new row
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-torrent-id', t.id);
+        tr.className = isSelected ? 'selected-row' : '';
+        tr.setAttribute('onclick', `window.app.selectTorrent('${t.id}')`);
+        tr.innerHTML = `
           <td style="max-width: 280px;">
             <div style="font-weight: 600; color: #fff; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.escapeHtml(t.name)}">${this.escapeHtml(t.name)}</div>
             <div style="font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis;">${t.info_hash || t.id}</div>
@@ -352,24 +400,24 @@ class VelocityApp {
           <td class="tabular" style="white-space: nowrap;">${sizeStr}</td>
           <td style="width: 140px;">
             <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
-              <span>${pct}%</span>
-              <span style="color: var(--text-tertiary);">${etaStr}</span>
+              <span class="col-pct">${pct}%</span>
+              <span class="col-eta" style="color: var(--text-tertiary);">${etaStr}</span>
             </div>
             <div class="progress-track" style="height: 5px;">
               <div class="progress-fill" style="width: ${pct}%;"></div>
             </div>
           </td>
           <td class="tabular">
-            <span style="color: var(--accent-green); font-weight: 600;">↓ ${downStr}</span>
+            <span class="col-down" style="color: var(--accent-green); font-weight: 600;">↓ ${downStr}</span>
           </td>
           <td class="tabular">
-            <span style="color: var(--text-secondary);">↑ ${upStr}</span>
+            <span class="col-up" style="color: var(--text-secondary);">↑ ${upStr}</span>
           </td>
-          <td class="tabular" style="font-size: 12px; white-space: nowrap;">
+          <td class="col-peers tabular" style="font-size: 12px; white-space: nowrap;">
             <span style="color: var(--text-primary); font-weight: 600;">${t.num_seeds}</span> <span style="color: var(--text-tertiary);">/ ${t.num_peers}</span>
           </td>
           <td>
-            <span class="badge" style="font-size: 11px;">${t.state.toUpperCase()}</span>
+            <span class="col-badge badge" style="font-size: 11px;">${t.state.toUpperCase()}</span>
           </td>
           <td style="text-align: right; white-space: nowrap;">
             <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px;" title="Inspect Files & Trackers" onclick="event.stopPropagation(); window.app.openInspector('${t.id}')">
@@ -378,17 +426,17 @@ class VelocityApp {
             <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px; display: inline-flex; align-items: center;" title="Copy Magnet" onclick="event.stopPropagation(); window.app.copyTorrentMagnet('${t.id}')">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
             </button>
-            <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" onclick="event.stopPropagation(); window.app.togglePause('${t.id}', ${isPaused})">
+            <button class="btn btn-secondary btn-toggle-pause" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" onclick="event.stopPropagation(); window.app.togglePause('${t.id}', ${isPaused})">
               ${isPaused ? 'Resume' : 'Pause'}
             </button>
             <button class="btn btn-danger" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" onclick="event.stopPropagation(); window.app.deleteTorrent('${t.id}')">
               Remove
             </button>
           </td>
-        </tr>
-      `;
+        `;
+        tableBody.appendChild(tr);
+      }
     }
-    tableBody.innerHTML = html;
   }
 
   selectTorrent(id) {
