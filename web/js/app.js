@@ -239,7 +239,7 @@ class VelocityApp {
     for (const t of this.torrents) {
       const isSelected = t.id === this.selectedTorrentId;
       const pct = (t.progress * 100).toFixed(1);
-      const isPaused = t.state === 'paused';
+      const isPaused = (t.state && t.state.toUpperCase() === 'PAUSED');
       const downStr = this.formatSpeed(t.download_rate);
       const upStr = this.formatSpeed(t.upload_rate);
       const sizeStr = this.formatBytes(t.total_size);
@@ -363,7 +363,8 @@ class VelocityApp {
       if (!res.ok) return;
       const data = await res.json();
 
-      this.pieceMap.setPieces(data.pieces, data.piece_length);
+      const isPending = (data.num_pieces === 0);
+      this.pieceMap.setPieces(data.pieces, data.piece_length, isPending);
 
       const countVerified = data.pieces.filter(s => s === 2).length;
       const countDownloading = data.pieces.filter(s => s === 1).length;
@@ -377,7 +378,7 @@ class VelocityApp {
       if (statVerified) statVerified.textContent = countVerified;
       if (statActive) statActive.textContent = countDownloading;
       if (statEmpty) statEmpty.textContent = countEmpty;
-      if (statTotal) statTotal.textContent = data.num_pieces;
+      if (statTotal) statTotal.textContent = isPending ? 'Fetching...' : data.num_pieces;
     } catch (e) {
       console.error('Failed to load pieces:', e);
     }
@@ -428,6 +429,15 @@ class VelocityApp {
       });
     }
 
+    if (magnetInput && submitBtn) {
+      magnetInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          submitBtn.click();
+        }
+      });
+    }
+
     if (submitBtn && modal) {
       submitBtn.addEventListener('click', async () => {
         submitBtn.disabled = true;
@@ -443,7 +453,7 @@ class VelocityApp {
               body: formData
             });
             const data = await res.json();
-            if (data.status === 'success') {
+            if (data.success || data.status === 'success') {
               this.showToast('Torrent added successfully');
               modal.classList.remove('active');
               magnetInput.value = '';
@@ -461,7 +471,7 @@ class VelocityApp {
               body: JSON.stringify({ magnet_uri: uri })
             });
             const data = await res.json();
-            if (data.status === 'success') {
+            if (data.success || data.status === 'success') {
               this.showToast('Magnet link added to swarm');
               modal.classList.remove('active');
               magnetInput.value = '';
@@ -480,6 +490,35 @@ class VelocityApp {
           submitBtn.textContent = 'Add to Swarm';
         }
       });
+    }
+  }
+
+  async setProfile(profileName) {
+    try {
+      const res = await fetch('/api/settings/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile: profileName })
+      });
+      const data = await res.json();
+      if (data.success) {
+        this.showToast(`Switched performance profile to ${profileName}`);
+        const pill = document.getElementById('vforce-profile-pill');
+        if (pill) pill.textContent = profileName;
+
+        // Synchronize Settings profile buttons UI
+        document.querySelectorAll('.btn-profile').forEach(btn => {
+          if (btn.getAttribute('data-profile') === profileName) {
+            btn.classList.remove('btn-secondary');
+            btn.classList.add('btn-primary');
+          } else {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-secondary');
+          }
+        });
+      }
+    } catch (e) {
+      this.showToast('Failed to switch profile: ' + e.message);
     }
   }
 

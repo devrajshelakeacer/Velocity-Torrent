@@ -64,10 +64,11 @@ class PieceMap {
     }
   }
 
-  setPieces(pieceArray, pieceSizeBytes = 1048576) {
+  setPieces(pieceArray, pieceSizeBytes = 1048576, isPending = false) {
     this.pieces = pieceArray || [];
     this.totalPieces = this.pieces.length;
     this.pieceSize = pieceSizeBytes;
+    this.isPending = isPending;
     this.calculateGrid();
     this.render();
   }
@@ -120,7 +121,7 @@ class PieceMap {
       ctx.fillStyle = '#737373';
       ctx.font = '13px Inter, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('No active torrent selected', this.width / 2, this.height / 2);
+      ctx.fillText(this.isPending ? 'Connecting to swarm / retrieving metadata...' : 'No active torrent selected', this.width / 2, this.height / 2);
       return;
     }
 

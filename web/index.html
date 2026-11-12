@@ -303,9 +303,9 @@
             <div class="form-group">
               <label class="form-label">V-FORCE Performance Profile</label>
               <div style="display: flex; gap: 12px; margin-top: 8px;">
-                <button class="btn btn-secondary" style="flex: 1;" onclick="alert('Profile set to ECO')">ECO (128 MB Cache)</button>
-                <button class="btn btn-secondary" style="flex: 1;" onclick="alert('Profile set to BALANCED')">BALANCED (256 MB Cache)</button>
-                <button class="btn btn-primary" style="flex: 1;" onclick="alert('Profile set to ULTRA')">ULTRA (512 MB Cache)</button>
+                <button class="btn btn-secondary btn-profile" data-profile="ECO" style="flex: 1;" onclick="window.app.setProfile('ECO')">ECO (128 MB Cache)</button>
+                <button class="btn btn-secondary btn-profile" data-profile="BALANCED" style="flex: 1;" onclick="window.app.setProfile('BALANCED')">BALANCED (256 MB Cache)</button>
+                <button class="btn btn-primary btn-profile" data-profile="V-FORCE MAX" style="flex: 1;" onclick="window.app.setProfile('V-FORCE MAX')">ULTRA / MAX (1.5 GB)</button>
               </div>
             </div>
 
