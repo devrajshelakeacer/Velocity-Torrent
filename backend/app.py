@@ -369,15 +369,25 @@ async def launch_setup(info_hash: str):
     os.startfile(setup_full_path)
     return {"success": True, "message": f"Launched '{setup_file['name']}'."}
 
-def build_telemetry_payload():
-    torrents = engine.get_torrents()
-    total_dl = sum(t["download_rate"] for t in torrents)
-    total_up = sum(t["upload_rate"] for t in torrents)
-    total_peers = sum(t["peers_connected"] for t in torrents)
+def build_telemetry_payload(include_torrents: bool = False):
+    if include_torrents:
+        torrents = engine.get_torrents()
+        total_dl = sum(t["download_rate"] for t in torrents)
+        total_up = sum(t["upload_rate"] for t in torrents)
+        total_peers = sum(t["peers_connected"] for t in torrents)
+        active_count = len(torrents)
+    else:
+        summary = engine.get_aggregate_summary()
+        total_dl = summary["total_download_rate"]
+        total_up = summary["total_upload_rate"]
+        total_peers = summary["connected_peer_count"]
+        active_count = summary["active_torrent_count"]
+        torrents = None
+
     cpu_temp = hardware.read_cpu_temperature()
     diag = hardware.evaluate_bottleneck(total_dl, total_peers, disk_write_time_ms=4.2)
 
-    return {
+    payload = {
         "download_rate": total_dl,
         "upload_rate": total_up,
         "download_speed_mbs": round(total_dl / (1024 * 1024), 2),
@@ -388,14 +398,14 @@ def build_telemetry_payload():
         "primary_bottleneck": diag["primary_bottleneck"],
         "bottleneck_details": diag["details"],
         "layers": diag["layers"],
-        "active_torrent_count": len(torrents),
+        "active_torrent_count": active_count,
         "connected_peer_count": total_peers,
         "session": {
             "download_rate": total_dl,
             "upload_rate": total_up,
             "download_speed_mbs": round(total_dl / (1024 * 1024), 2),
             "upload_speed_mbs": round(total_up / (1024 * 1024), 2),
-            "active_torrents": len(torrents),
+            "active_torrents": active_count,
             "connected_peers": total_peers
         },
         "hardware": {
@@ -415,13 +425,15 @@ def build_telemetry_payload():
             "cache_hit_pct": 96.4,
             "waf_reduction_pct": 71.2
         },
-        "game_mode": gaming_qos.get_status(),
-        "torrents": torrents
+        "game_mode": gaming_qos.get_status()
     }
+    if include_torrents:
+        payload["torrents"] = torrents
+    return payload
 
 @app.get("/api/telemetry")
 async def get_telemetry():
-    return build_telemetry_payload()
+    return build_telemetry_payload(include_torrents=True)
 
 @app.get("/api/settings")
 async def get_settings():

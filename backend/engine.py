@@ -305,6 +305,25 @@ class TorrentEngine:
             })
         return snapshots
 
+    def get_aggregate_summary(self) -> Dict[str, Any]:
+        """Ultra-fast O(1) session transfer and swarm counters directly from libtorrent."""
+        try:
+            s = self.session.status()
+            torrents = self.session.get_torrents()
+            return {
+                "active_torrent_count": len(torrents),
+                "connected_peer_count": s.num_peers,
+                "total_download_rate": s.download_rate,
+                "total_upload_rate": s.upload_rate
+            }
+        except Exception:
+            return {
+                "active_torrent_count": 0,
+                "connected_peer_count": 0,
+                "total_download_rate": 0,
+                "total_upload_rate": 0
+            }
+
     def get_peers(self, info_hash: str) -> List[Dict[str, Any]]:
         """Returns real connected peer wire snapshots with VSE-X Peer Utility Scoring."""
         handle = self._find_handle(info_hash)
