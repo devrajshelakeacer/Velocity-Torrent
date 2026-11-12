@@ -25,6 +25,6 @@ Elevate the VELOCITY product showcase website (`http://127.0.0.1:8080/landing`) 
 - [x] Task 1: Typography Overhaul — Load Inter & JetBrains Mono fonts and update global stacks
 - [x] Task 2: Spacing & Gap Normalization — Normalize padding and margins across all sections in CSS
 - [x] Task 3: Cloudflare-Grade Navbar & Mobile Hamburger Drawer — Header markup, styles, and drawer logic
-- [ ] Task 4: Universal Website Essentials — FAQ Accordion, Platform strip, Back-to-Top, and Legal statements
+- [x] Task 4: Universal Website Essentials — FAQ Accordion, Platform strip, Back-to-Top, and Legal statements
 - [ ] Task 5: Responsive Architecture & Cross-Browser Controls — Mobile grid stacking, table scroll, and Firefox slider styling
 - [ ] Task 6: Multi-Viewport Automated CDP Verification & Testing — Automated tests on Mobile (375px), Tablet (768px), and Desktop (1920px)

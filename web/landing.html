@@ -512,6 +512,99 @@
       </div>
     </section>
 
+    <!-- ----------------- FREQUENTLY ASKED QUESTIONS (FAQ) ----------------- -->
+    <section id="faq" class="faq-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-tag">Clarity &amp; Verification</div>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-desc">
+            Everything you need to know about VELOCITY's architecture, hardware safety, and download mechanics:
+          </p>
+        </div>
+
+        <div class="faq-accordion">
+          <!-- Q1 -->
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-question">Is VELOCITY completely free and open source?</span>
+              <span class="faq-chevron">▾</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Yes, 100%. VELOCITY is released under the GNU General Public License v3.0 (GPL-3.0). There are no paid tiers, no premium unlocks, zero telemetry tracking, and zero third-party bundled advertisements. The entire source code is available on GitHub for audit and contribution.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-question">How does VELOCITY achieve 200 Mbps when other clients stall at 40 Mbps?</span>
+              <span class="faq-chevron">▾</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Conventional BitTorrent clients use legacy 256 KiB socket buffers. On a 200 Mbps connection with 50 ms latency, the theoretical Bandwidth-Delay Product (BDP) requirement is 1.19 MB. Because legacy buffers are smaller than the BDP, TCP sliding windows stall waiting for packet acknowledgments. VELOCITY allocates dedicated 8 MiB Winsock socket buffers (6.71x headroom) and maintains a 2,500-block in-flight request pipeline, eliminating TCP exhaustion.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-question">What is Anti-ISDone.dll &amp; Unarc.dll Checksum Armor?</span>
+              <span class="faq-chevron">▾</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Large PC game releases (50 GB – 150 GB+) use compressed multi-part archives. If even a single 16 KiB block is damaged during transmission, game setup programs crash with notorious <code>ISDone.dll error code -11 (CRC Mismatch)</code>. VELOCITY's background ChecksumAuditor automatically parses <code>.sfv</code> and <code>.md5</code> checksum files directly from the torrent payload and calculates true CRC32/MD5 hashes to certify bit-level archive purity before installation.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-question">Does high-throughput downloading harm or wear out my SSD?</span>
+              <span class="faq-chevron">▾</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                No. Standard clients write random 16 KiB blocks directly to disk as they arrive, causing severe SSD Write Amplification Factor (WAF) and degradation. VELOCITY's V-FORCE storage engine creates a 1.5 GB in-memory cache pool, coalesces out-of-order blocks into sequential spans, and executes large 64 MB batched disk flushes, reducing SSD write wear by 90%.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-question">How does Smart Gaming QoS protect my ping in online multiplayer games?</span>
+              <span class="faq-chevron">▾</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Using native Win32 <code>CreateToolhelp32Snapshot</code> process sensing, VELOCITY scans running processes in under 9 milliseconds (&lt;0.01s). When competitive games (Counter-Strike 2, Valorant, Apex Legends, Fortnite) are running, background torrent traffic is automatically throttled to 2 MB/s and 35 peer connections to prevent bufferbloat. As soon as the game exits, full 200 Mbps line saturation is restored immediately.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q6 -->
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-question">What platforms and operating systems are supported?</span>
+              <span class="faq-chevron">▾</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                VELOCITY is fully optimized for Windows 10 and 11 (64-bit), with native Win32 process sensing and NTFS fast allocation. It also runs smoothly on Linux (Ubuntu 22.04+, Debian 12, Arch) and macOS (Apple Silicon &amp; Intel) through Python 3.10+ and the libtorrent 2.1.1 runtime.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ----------------- QUICKSTART SECTION ----------------- -->
     <section id="quickstart" class="quickstart-section">
       <div class="container">
@@ -554,6 +647,22 @@
         </div>
       </div>
     </section>
+
+    <!-- ----------------- PLATFORMS & SYSTEM REQUIREMENTS STRIP ----------------- -->
+    <section class="platforms-strip">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div style="font-size: 13px; color: var(--text-secondary);">
+          <strong style="color: #fff;">Certified Hardware &amp; OS Compatibility:</strong>
+          Windows 10/11 (64-bit) · Ubuntu 22.04+ · macOS 12+ · Python 3.10+ · C++20 Core
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="bento-tag">Windows Native</span>
+          <span class="bento-tag">Linux / POSIX</span>
+          <span class="bento-tag">macOS Silicon/Intel</span>
+          <span class="bento-tag" style="border-color: rgba(0, 229, 153, 0.3); color: var(--accent-green);">Zero Telemetry Harvested</span>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- ----------------- FOOTER ----------------- -->
@@ -568,6 +677,9 @@
           <p style="font-size: 13px; line-height: 1.6; max-width: 320px; color: var(--text-secondary);">
             The next-generation high-throughput BitTorrent engine engineered for 200 Mbps broadband saturation and large PC game repacks.
           </p>
+          <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 12px; line-height: 1.5;">
+            🔒 <strong>Privacy Guarantee:</strong> VELOCITY operates 100% locally on your machine. Zero user tracking, zero data telemetry sent to remote servers.
+          </div>
         </div>
 
         <div class="footer-col">
@@ -608,6 +720,11 @@
       </div>
     </div>
   </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button id="back-to-top" class="back-to-top" aria-label="Scroll back to top">
+    ↑
+  </button>
 
   <!-- Scripts -->
   <script src="/js/landing.js"></script>

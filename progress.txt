@@ -18,3 +18,9 @@ Iteration 3: Completed Task 3 (Cloudflare-Grade Navbar & Mobile Hamburger Drawer
 - Added mobile hamburger toggle with animated 3-bar to 'X' transition.
 - Created mobile navigation drawer with backdrop dismissal, keyboard Escape key support, and auto-close on link navigation.
 - Verified via markup assertions and JS syntax checks.
+Iteration 4: Completed Task 4 (Universal Website Essentials).
+- Added interactive FAQ Accordion covering 6 critical user inquiries with animated height transitions and chevron rotation.
+- Added Platform Support & System Requirements Strip certifying Windows 10/11, macOS, Linux, and Python 3.10+.
+- Added floating Back to Top button with scroll listener.
+- Added local-only zero data collection privacy statement in footer.
+- Verified via python assertions and node JS syntax check.

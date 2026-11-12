@@ -10,6 +10,8 @@ class VelocityLanding {
     this.initSpeedSlider();
     this.initPreviewTabs();
     this.initCopyButtons();
+    this.initFaqAccordion();
+    this.initBackToTop();
   }
 
   /* ---------------- 0. CLOUDFLARE-GRADE MOBILE DRAWER ---------------- */
@@ -273,6 +275,45 @@ class VelocityLanding {
           });
         }
       });
+    });
+  }
+
+  /* ---------------- 4. FAQ ACCORDION LOGIC ---------------- */
+  initFaqAccordion() {
+    const items = document.querySelectorAll('.faq-item');
+    items.forEach(item => {
+      const trigger = item.querySelector('.faq-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', () => {
+        const wasActive = item.classList.contains('active');
+        // Close other items
+        items.forEach(i => {
+          i.classList.remove('active');
+          const t = i.querySelector('.faq-trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        });
+        if (!wasActive) {
+          item.classList.add('active');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
+  /* ---------------- 5. FLOATING BACK TO TOP ---------------- */
+  initBackToTop() {
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    }, { passive: true });
+
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
