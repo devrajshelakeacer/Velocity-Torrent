@@ -31,17 +31,35 @@ class TorrentEngine:
         self.default_save_path = default_save_path or os.path.abspath("downloads")
         os.makedirs(self.default_save_path, exist_ok=True)
 
-        self._active_profile = "V-FORCE MAX"
+        self._hardware_ram_gb = self._get_system_ram_gb()
+        self._active_profile = self._detect_optimal_hardware_profile()
         self._running = True
         self._lock = threading.Lock()
 
-        # Initialize libtorrent session settings with V200 optimization
+        # Initialize libtorrent session settings with adaptive V200 optimization
         self.session = lt.session()
         self._apply_session_settings()
 
         # Alert pump background thread
         self.alert_thread = threading.Thread(target=self._alert_loop, daemon=True)
         self.alert_thread.start()
+
+    @staticmethod
+    def _get_system_ram_gb() -> float:
+        try:
+            import psutil
+            return round(psutil.virtual_memory().total / (1024 ** 3), 1)
+        except Exception:
+            return 16.0
+
+    def _detect_optimal_hardware_profile(self) -> str:
+        """Autotunes cache profile to physical RAM: prevents pagefile thrashing on 8GB machines."""
+        if self._hardware_ram_gb >= 15.0:
+            return "V-FORCE MAX"  # 1.5 GB Cache (Max NVMe preservation)
+        elif self._hardware_ram_gb >= 7.5:
+            return "TURBO"        # 512 MB Cache (Balanced fast saturation)
+        else:
+            return "BALANCED"     # 128 MB Cache (Light memory footprint)
 
     def _apply_session_settings(self):
         """Configure 200 Mbps socket buffers, uTP/TCP multiplexing, and V-FORCE cache."""
@@ -71,7 +89,11 @@ class TorrentEngine:
             'request_queue_time': 3,
             'whole_pieces_threshold': 20,
             'piece_timeout': 15,
-            'connections_limit': 500,
+            # Staggered tracker announces to avoid socket contention & DNS burst storms
+            'announce_to_all_trackers': False,
+            'announce_to_all_tiers': True,
+            'prefer_udp_trackers': True,
+            'connections_limit': 500 if self._hardware_ram_gb >= 15.0 else 250,
             'connections_slack': 50,
             'active_downloads': 20,
             'active_seeds': 10,
