@@ -8,3 +8,8 @@ Iteration 1: Completed Task 1 (Typography Overhaul).
 - Added preconnect links to Google Fonts for Inter (400-800) and JetBrains Mono (400-700) with display=swap.
 - Updated CSS variables --font-sans and --font-mono in web/css/landing.css.
 - Verified via automated HTTP response inspection.
+Iteration 2: Completed Task 2 (Spacing & Gap Normalization).
+- Defined --section-pad-y: 56px in web/css/landing.css.
+- Normalized section padding across Hero (48px/32px), Calculator, Pillars, Showcase, Matrix, Security, and Quickstart to 56px (down from 90px-100px).
+- Normalized internal card padding (from 36px/40px down to 24px/28px) and section head margins (from 48px to 32px).
+- Verified via CSS assertion script.
