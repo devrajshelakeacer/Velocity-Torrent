@@ -167,6 +167,14 @@ if __name__ == "__main__":
         print(f"[FAIL] SBOM Verification Suite Failed: {e}", file=sys.stderr)
         sys.exit(1)
 
+    # Run Release Package Hygiene Verification
+    try:
+        from tests.test_package import run_all_package_tests
+        run_all_package_tests()
+    except Exception as e:
+        print(f"[FAIL] Release Package Verification Suite Failed: {e}", file=sys.stderr)
+        sys.exit(1)
+
     print("========================================================")
     print("  TEST VERDICT: 100% OF VERIFICATION SUITES PASSED      ")
     print("========================================================")

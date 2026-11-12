@@ -31,16 +31,14 @@ The repository includes pre-configured workflow configurations under `.github/wo
 
 ## 3. GitHub Pages Deployment for Google Search Ranking
 
-To publish the SEO-optimized web landing page with Schema.org JSON-LD structured data:
+To publish the SEO-optimized web landing page and web application with Schema.org JSON-LD structured data:
 
 1. Open your repository on GitHub.
 2. Go to **Settings** > **Pages** (under Code and automation).
 3. Under **Build and deployment**:
-   - **Source**: `Deploy from a branch`
-   - **Branch**: `main`
-   - **Folder**: `/docs`
-4. Click **Save**.
-5. Your landing page will be published at:  
+   - **Source**: `GitHub Actions`
+4. The `.github/workflows/deploy-pages.yml` workflow will automatically build and publish the contents of the `web/` directory.
+5. Your application and landing page will be published at:  
    `https://<your-username>.github.io/velocity-torrent/`
 
 ---
@@ -49,6 +47,6 @@ To publish the SEO-optimized web landing page with Schema.org JSON-LD structured
 
 To index the repository at the top of Google search results for *"intelligent torrent client"*, *"200 Mbps torrent downloader"*, and *"safe Windows torrent app"*:
 1. Open [Google Search Console](https://search.google.com/search-console).
-2. Add your GitHub Pages URL as a property.
-3. Verify ownership via the HTML meta tag method (already templated in `docs/index.html`).
+2. Add your GitHub Pages URL (or custom domain) as a property.
+3. Verify ownership via the HTML meta tag method (already templated in `web/landing.html`).
 4. Submit your URL for indexing. Google will crawl the `SoftwareApplication` rich-snippet and display review ratings, license, and download links in search results.
