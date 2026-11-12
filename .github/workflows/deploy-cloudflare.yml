@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Deploy Website to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'web/**'
+      - '.github/workflows/deploy-cloudflare.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy WebApp to Cloudflare Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Verify Cloudflare Credentials
+        id: check_credentials
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] || [ -z "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Cloudflare Pages Deployment Skipped::CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID secret is not configured in this repository. To enable automatic GitHub Actions deployments to Cloudflare Pages, add these secrets under Settings -> Secrets and variables -> Actions. (Alternatively, you can connect your repository directly in the Cloudflare Pages Dashboard)."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.check_credentials.outputs.configured == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy web --project-name=velocity-torrent --commit-dirty=true

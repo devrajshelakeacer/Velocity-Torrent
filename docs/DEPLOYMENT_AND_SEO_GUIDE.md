@@ -30,7 +30,7 @@ web/
 scripts/
 └── seo_engine.py                        # Automated CLI: audits SEO & pings IndexNow/Google APIs
 .github/workflows/
-└── deploy-pages.yml                     # 1-Click automatic zero-cost GitHub Pages pipeline
+└── deploy-cloudflare.yml               # Automated Cloudflare Pages edge deployment pipeline
 ```
 
 ### Key Technical Features
@@ -67,13 +67,13 @@ scripts/
      - **Build output directory**: `web`
   4. Click **Save and Deploy**. Your site is live globally in 60 seconds at `https://velocity-torrent.pages.dev`!
 
-### Recommendation 2: GitHub Pages (High Domain Authority)
-* **Cost**: $0.00 / month.
-* **SEO Advantage**: GitHub.com has a massive Domain Authority (**DA 96+**). Google crawls `github.io` subdomains far more aggressively than unknown platforms.
-* **How to Deploy**:
-  1. Push code to your GitHub repository `main` branch.
-  2. In your repo: Go to **Settings** > **Pages** > **Build and deployment** > Source: **GitHub Actions**.
-  3. Our included workflow `.github/workflows/deploy-pages.yml` automatically builds and deploys your site to `https://<your-username>.github.io/Velocity-Torrent/` on every push!
+### Automated Deployment via GitHub Actions (`deploy-cloudflare.yml`)
+To deploy automatically on every push to `main` without manual dashboard uploads:
+1. Generate a Cloudflare API Token: **My Profile** > **API Tokens** > **Create Token** (Template: **Edit Cloudflare Workers** or `Cloudflare Pages:Edit`).
+2. Add your GitHub repository secrets under **Settings** > **Secrets and variables** > **Actions**:
+   - `CLOUDFLARE_API_TOKEN`
+   - `CLOUDFLARE_ACCOUNT_ID`
+3. The `.github/workflows/deploy-cloudflare.yml` workflow will automatically build and publish the `web/` assets to Cloudflare Pages on push!
 
 ---
 
@@ -112,5 +112,5 @@ This forces Bing, DuckDuckGo, and Yandex to index your pages immediately.
 - [x] Dynamic in-browser canonical resolver in `<head>`
 - [x] High-intent title tag: `VELOCITY Torrent — Fastest Download BitTorrent Client & Web Engine for Large PC Games`
 - [x] Cloudflare `_headers` and `_redirects` for clean edge caching
-- [x] Automated GitHub Actions Pages deployment workflow in `.github/workflows/deploy-pages.yml`
+- [x] Automated Cloudflare Pages deployment workflow in `.github/workflows/deploy-cloudflare.yml`
 - [x] Local programmatic audit score: **100/100** (`python scripts/seo_engine.py --audit`)

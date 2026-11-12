@@ -3,7 +3,7 @@
 VELOCITY Torrent — Worktree & Website Sync Engine
 SPDX-License-Identifier: GPL-3.0-or-later
 
-Synchronizes the `web/` directory with the isolated `website` and `gh-pages` branches
+Synchronizes the `web/` directory with the isolated `website` branch
 and updates the external worktree at `../Velocity-Website`.
 """
 
@@ -38,10 +38,9 @@ def main():
     commit_hash = commit_hash.split()[-1]
     print(f"  -> Generated Subtree Commit: {commit_hash}")
 
-    # 2. Update website & gh-pages refs directly (safe with active worktrees)
-    print(f"\n[Step 2] Updating branch refs 'website' and 'gh-pages' to {commit_hash}...")
+    # 2. Update website branch ref directly (safe with active worktrees)
+    print(f"\n[Step 2] Updating branch ref 'website' to {commit_hash}...")
     run_cmd(f"git update-ref refs/heads/website {commit_hash}", cwd=root)
-    run_cmd(f"git update-ref refs/heads/gh-pages {commit_hash}", cwd=root)
 
     # 3. Fast-forward the external worktree if exists
     worktree_path = os.path.normpath(os.path.join(root, "..", "Velocity-Website"))
@@ -50,9 +49,8 @@ def main():
         run_cmd("git reset --hard website", cwd=worktree_path)
 
     print("\n" + "=" * 70)
-    print("  [SUCCESS] Website worktree & branches synchronized perfectly!")
+    print("  [SUCCESS] Website worktree & branch synchronized perfectly!")
     print("  - Isolated Website Branch: 'website'")
-    print("  - GitHub Pages Branch:    'gh-pages'")
     print(f"  - Isolated Worktree:       '{worktree_path}'")
     print("=" * 70)
     return 0
