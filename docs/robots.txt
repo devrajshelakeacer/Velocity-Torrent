@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://devrajshelake.github.io/velocity-torrent/sitemap.xml
