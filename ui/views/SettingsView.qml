@@ -39,7 +39,7 @@ Item {
             }
         }
 
-        // Settings Category Cards (Vercel Clean Monochromatic Hierarchy)
+        // Settings Category Cards (Clean Monochromatic Hierarchy)
         ScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true

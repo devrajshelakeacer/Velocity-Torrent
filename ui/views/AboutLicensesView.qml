@@ -57,7 +57,7 @@ Item {
                         color: GeistTheme.inkPrimary
                     }
                     Text {
-                        text: "Engineered in C++20 with Qt 6 / QML and libtorrent-rasterbar. Visual design crafted following Vercel's Geist design principles."
+                        text: "Engineered in C++20 with Qt 6 / QML and libtorrent-rasterbar. Visual design crafted following high-contrast industrial dark design principles."
                         font.family: GeistTheme.fontSans
                         font.pixelSize: GeistTheme.fontSizeSub
                         color: GeistTheme.inkSecondary

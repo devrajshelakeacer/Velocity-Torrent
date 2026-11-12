@@ -9,14 +9,14 @@ QtObject {
     // Dual-theme toggle: Dark mode by default
     property bool isDark: true
 
-    // Surface & Canvas Palette (Vercel Geist Dark Hierarchy)
+    // Surface & Canvas Palette (VELOCITY Dark Industrial Hierarchy)
     readonly property color canvas: isDark ? "#000000" : "#ffffff"
     readonly property color surfaceCard: isDark ? "#0a0a0a" : "#fafafa"
     readonly property color surfaceCardHover: isDark ? "#141414" : "#f0f0f0"
     readonly property color surfaceSubtle: isDark ? "#111111" : "#f5f5f5"
     readonly property color surfaceElevated: isDark ? "#171717" : "#ebebeb"
 
-    // 1px Hairline Borders (Crisp Vercel Precision)
+    // 1px Hairline Borders (Crisp Precision Borders)
     readonly property color borderHairline: isDark ? "#222222" : "#eaeaea"
     readonly property color borderCard: isDark ? "#2a2a2a" : "#e5e5e5"
     readonly property color borderHover: isDark ? "#444444" : "#cccccc"
@@ -29,7 +29,7 @@ QtObject {
     readonly property color inkMuted: isDark ? "#525252" : "#a1a1a1"
 
     // Restrained Purpose-Driven Accents (Strictly for Interaction & Status)
-    readonly property color accentBlue: "#0070f3"       // Vercel Electric Blue
+    readonly property color accentBlue: "#0070f3"       // Electric Industrial Blue
     readonly property color accentBlueHover: "#0060df"
     readonly property color accentGreen: "#00e599"      // Status: Connected/Active
     readonly property color accentAmber: "#f5a623"      // Status: Warning/Elevated
@@ -59,7 +59,7 @@ QtObject {
     readonly property int space32: 32
     readonly property int space48: 48
 
-    // Radii (Vercel Geist Standards)
+    // Radii (VELOCITY Industrial Radius Standards)
     readonly property int radiusSmall: 4
     readonly property int radiusMedium: 6
     readonly property int radiusCard: 8

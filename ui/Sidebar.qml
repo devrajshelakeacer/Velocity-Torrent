@@ -20,7 +20,7 @@ Rectangle {
         anchors.margins: 18
         spacing: 16
 
-        // Brand Title (Vercel Style Minimalist Header)
+        // Brand Title (Minimalist Precision Header)
         RowLayout {
             spacing: 10
             Rectangle {

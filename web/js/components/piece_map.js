@@ -15,7 +15,7 @@ class PieceMap {
     this.totalPieces = 0;
     this.dpr = window.devicePixelRatio || 1;
 
-    // Palette (Vercel Geist tokens)
+    // Palette (VELOCITY design tokens)
     this.colors = {
       empty: '#171717',
       emptyBorder: '#262626',

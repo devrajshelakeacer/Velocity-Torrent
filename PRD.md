@@ -1,7 +1,7 @@
 # PRD: VELOCITY Flagship Website Overhaul
 
 ## Objective
-Elevate the VELOCITY product showcase website (`http://127.0.0.1:8080/landing`) to world-class enterprise SaaS standards (Cloudflare / Vercel grade), resolve excessive whitespace gaps, integrate Google Font Inter across all platforms, ensure strict mobile and laptop responsiveness, and introduce all universal website essentials (FAQ accordion, mobile drawer, platform requirements, back-to-top).
+Elevate the VELOCITY product showcase website (`http://127.0.0.1:8080/landing`) to world-class enterprise SaaS standards (Cloudflare / VELOCITY grade), resolve excessive whitespace gaps, integrate Google Font Inter across all platforms, ensure strict mobile and laptop responsiveness, and introduce all universal website essentials (FAQ accordion, mobile drawer, platform requirements, back-to-top).
 
 ## Acceptance Criteria
 1. **Typography**: Google Font Inter (400, 500, 600, 700, 800) and JetBrains Mono loaded via preconnect CDN with `font-display: swap`.

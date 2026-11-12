@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* VELOCITY — Flagship Marketing & Product Showcase Design System (Vercel / Linear Aesthetic) */
+/* VELOCITY — Flagship Marketing & Product Showcase Design System (High-Contrast Industrial Theme) */
 
 :root {
   --bg-canvas: #000000;
@@ -53,7 +53,7 @@ body {
   line-height: 1.5;
 }
 
-/* Background Atmosphere */
+/* Background Atmosphere & Blueprint Grid */
 .ambient-glow {
   position: absolute;
   top: 0;
@@ -62,6 +62,22 @@ body {
   width: 1000px;
   height: 550px;
   background: radial-gradient(ellipse at 50% 0%, rgba(0, 112, 243, 0.18) 0%, rgba(121, 40, 202, 0.10) 40%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-grid-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 800px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 10%, black 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 10%, black 20%, transparent 80%);
   pointer-events: none;
   z-index: 0;
 }
@@ -75,7 +91,7 @@ body {
   z-index: 1;
 }
 
-/* ------------------- ENTERPRISE VERCEL / LINEAR HEADER ------------------- */
+/* ------------------- ENTERPRISE HIGH-CONTRAST HEADER ------------------- */
 .landing-header {
   position: sticky;
   top: 0;
@@ -792,43 +808,27 @@ input[type="range"]::-moz-range-track {
   height: 44px;
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  color: #fff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   transition: all var(--transition-fast);
 }
 
 .bento-icon-box svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   stroke-width: 2;
+  stroke: #ffffff;
 }
 
-.bento-icon-box.accent-blue {
-  color: var(--accent-blue);
-  background: rgba(0, 112, 243, 0.08);
-  border-color: rgba(0, 112, 243, 0.25);
-}
-
-.bento-icon-box.accent-purple {
-  color: #a855f7;
-  background: rgba(168, 85, 247, 0.08);
-  border-color: rgba(168, 85, 247, 0.25);
-}
-
-.bento-icon-box.accent-green {
-  color: var(--accent-green);
-  background: rgba(0, 229, 153, 0.08);
-  border-color: rgba(0, 229, 153, 0.25);
-}
-
-.bento-icon-box.accent-amber {
-  color: var(--accent-amber);
-  background: rgba(245, 166, 35, 0.08);
-  border-color: rgba(245, 166, 35, 0.25);
+.bento-card:hover .bento-icon-box {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
 }
 
 .bento-icon {

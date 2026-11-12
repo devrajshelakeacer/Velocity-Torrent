@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>The Ultimate Open-Source BitTorrent Client & WebApp for Windows 10 & 11</strong><br />
-  <em>Engineered to saturate 200 Mbps+ broadband lines (~24 MB/s) with zero mock data. Powered by C++20 (libtorrent 2.1.1), FastAPI, and Vercel Geist design.</em>
+  <em>Engineered to saturate 200 Mbps+ broadband lines (~24 MB/s) with zero mock data. Powered by C++20 (libtorrent 2.1.1), FastAPI, and VELOCITY Industrial Design design.</em>
 </p>
 
 <p align="center">
@@ -126,7 +126,7 @@ VELOCITY underwent an exhaustive Red Team penetration test across 8 threat vecto
 | **SSD WAF Reduction** | **90% Reduction** | Moderate | None | Low |
 | **Peer Intelligence Engine** | **VSE-X (PUS Score 0-100)**| Generic Down Rate | None | Peer Speed Sorting |
 | **Path Traversal Defense** | **V-Shield Root Jail** | Basic Sanitization | Proprietary Web Svc | POSIX Chroot Option |
-| **User Interface Design** | **Vercel Geist Dark Theme**| Legacy Desktop Qt5 | Ad-Supported Web | Minimalist GNOME |
+| **User Interface Design** | **VELOCITY Dark Industrial Theme**| Legacy Desktop Qt5 | Ad-Supported Web | Minimalist GNOME |
 | **Zero Mock Data Guarantee** | **100% Real libtorrent** | 100% Real | Proprietary Cloud | 100% Real |
 
 ---
@@ -172,7 +172,7 @@ VELOCITY underwent an exhaustive Red Team penetration test across 8 threat vecto
 ## 📥 Quick Start & Installation
 
 ### Option A: Clone & Run Local WebApp (Recommended)
-Users can clone this repository and run the client immediately with zero build friction. The automated launcher configures the local virtual environment and starts the high-throughput engine with the Vercel-inspired web frontend.
+Users can clone this repository and run the client immediately with zero build friction. The automated launcher configures the local virtual environment and starts the high-throughput engine with the VELOCITY-inspired web frontend.
 
 ```powershell
 # 1. Clone the repository

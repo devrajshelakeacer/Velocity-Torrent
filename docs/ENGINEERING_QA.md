@@ -654,13 +654,13 @@ Every entry adheres to the strict 10-point evaluation protocol:
 
 ## Domain F: UI/UX Design (10 Questions)
 
-### Q-F01: How does the Vercel Geist design system translate into Qt 6 / QML primitives?
+### Q-F01: How does the VELOCITY Industrial Design design system translate into Qt 6 / QML primitives?
 - **Technical answer**: Geist's design language is implemented via a central singleton `GeistTheme.qml` defining tokens for:
   - Surface palette (`background`, `surfaceCard`, `borderHairline`, `inkPrimary`, `inkSecondary`).
   - Typography (`fontSans`, `fontMono`, size scale: 11px, 12px, 14px, 16px, 20px, 24px, 32px with tight tracking).
   - Spacing scale (`space4`, `space8`, `space12`, `space16`, `space24`, `space32`).
   - Border geometry: crisp 1px borders with 6px/8px corner radii; zero gaudy gradients.
-- **Evidence & research**: Vercel's Geist design system is widely recognized for developer ergonomics, readability, and elegant minimalism.
+- **Evidence & research**: the Geist design system is widely recognized for developer ergonomics, readability, and elegant minimalism.
 - **Alternative approaches**: Native Windows WinUI 3 styling or standard Qt Quick Controls flat style.
 - **Advantages & Disadvantages**: Distinctive, world-class developer-first aesthetic; requires custom styling of QML controls.
 - **Final engineering decision**: Custom Geist QML component suite (`GeistButton`, `GeistCard`, `GeistBadge`, `GeistTable`).

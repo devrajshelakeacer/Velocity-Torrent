@@ -1,6 +1,6 @@
 # UI Design Contract — VELOCITY Game Engine Hub & Advisor
 
-> **Design System**: Vercel Geist Minimalist Dark Theme  
+> **Design System**: VELOCITY High-Contrast Dark Theme  
 > **Target Audience**: PC Gamers downloading 50 GB – 150 GB+ releases  
 > **Key Philosophy**: Complete transparency, non-destructive defaults, explicit guidance before action.
 

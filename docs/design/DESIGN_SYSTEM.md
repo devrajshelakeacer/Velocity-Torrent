@@ -17,7 +17,7 @@ VELOCITY provides full, reactive dual-theme support (Dark Mode default; Light Mo
 | `colorInkPrimary` | `#ffffff` | Primary headings, prominent values |
 | `colorInkSecondary` | `#888888` | Secondary labels, descriptions, column headers |
 | `colorInkTertiary` | `#555555` | Disabled text, subtle timestamps |
-| `colorAccentBlue` | `#0070f3` | Vercel Blue: primary CTA buttons, active tab indicators |
+| `colorAccentBlue` | `#0070f3` | Electric Accent Blue: primary CTA buttons, active tab indicators |
 | `colorAccentGreen` | `#00e599` | Emerald: seeding status, healthy swarm, clean security scan |
 | `colorAccentAmber` | `#f5a623` | Amber: thermal throttle warning, slow peer warning |
 | `colorAccentRed` | `#ff3333` | Crimson: path traversal blocked, malware quarantined, error |
@@ -35,7 +35,7 @@ VELOCITY provides full, reactive dual-theme support (Dark Mode default; Light Mo
 | `colorInkPrimary` | `#000000` | Primary headings, prominent values |
 | `colorInkSecondary` | `#666666` | Secondary labels, descriptions, column headers |
 | `colorInkTertiary` | `#999999` | Disabled text, subtle timestamps |
-| `colorAccentBlue` | `#0070f3` | Vercel Blue: primary CTA buttons |
+| `colorAccentBlue` | `#0070f3` | Electric Accent Blue: primary CTA buttons |
 | `colorAccentGreen` | `#10b981` | Emerald: seeding status, clean scan |
 | `colorAccentAmber` | `#d97706` | Amber: warning indicators |
 | `colorAccentRed` | `#dc2626` | Crimson: error indicators |

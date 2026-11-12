@@ -1,6 +1,6 @@
 # VELOCITY Flagship Website — 50+ Deep Logical Q&A Exploration
 
-> **Engineering & Design Council**: Lead Product Architect, World-Class Frontend Architect (Vercel/Cloudflare caliber), Responsive Systems Lead, Accessibility & QA Lead  
+> **Engineering & Design Council**: Lead Product Architect, World-Class Frontend Architect (Linear/Cloudflare caliber), Responsive Systems Lead, Accessibility & QA Lead  
 > **Methodology**: Socratic Deep Inquiry across 8 Architectural Dimensions
 
 ---
@@ -83,7 +83,7 @@ Using `display=swap` ensures zero render-blocking text and instantaneous First C
 **Answer**: The CSS applied `padding: 100px 0` to multiple consecutive sections (`.pillars-section`, `.showcase-section`, `.matrix-section`, `.security-section`, `.quickstart-section`), compounded by `margin-bottom: 48px` on `.section-head` and `margin-bottom: 50px` on `.hero-cta-group`. This accumulated 150px–180px of vertical empty space between content blocks.
 
 ### Q16: What is the industry standard vertical spacing for modern SaaS landing pages?
-**Answer**: Top-tier products (Vercel, Linear, Cloudflare, Stripe) use:
+**Answer**: Top-tier products (Linear, Cloudflare, Cloudflare, Stripe) use:
 - **Mobile (< 768px)**: `36px` to `48px` section padding.
 - **Desktop (≥ 768px)**: `56px` to `64px` section padding (max 72px for hero).
 - **Section Headings**: `24px` to `32px` margin bottom.

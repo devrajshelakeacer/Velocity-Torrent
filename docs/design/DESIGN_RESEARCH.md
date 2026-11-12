@@ -1,11 +1,11 @@
 # VELOCITY — Visual Design Research
 
 ## Executive Design Direction
-VELOCITY is styled with a world-class, developer-first minimalist aesthetic inspired by Vercel's public design philosophy and the Swiss typography movement. Torrent clients have historically suffered from cluttered, garish, and chaotic interfaces laden with colorful icons, confusing tab walls, and outdated Windows XP-era controls. VELOCITY sets a new benchmark for visual elegance, restraint, and information density.
+VELOCITY is styled with a world-class, developer-first minimalist aesthetic inspired by modern developer-first design philosophy and the Swiss typography movement. Torrent clients have historically suffered from cluttered, garish, and chaotic interfaces laden with colorful icons, confusing tab walls, and outdated Windows XP-era controls. VELOCITY sets a new benchmark for visual elegance, restraint, and information density.
 
 ---
 
-## 1. Visual Research Findings (Vercel Geist Interface Principles)
+## 1. Visual Research Findings (VELOCITY Industrial Design Interface Principles)
 
 ### A. The Principle of Restraint ("Restraint is the Product")
 - **Monochrome Foundation**: Color is treated as a scarce, deliberate resource. Primary surfaces are absolute pitch black (`#000000`) or clean white (`#ffffff`). Contrast is achieved through subtle stepped gray values rather than saturated colors.

@@ -4,7 +4,7 @@
 - [x] Environment inspection and toolchain discovery.
 - [x] 75-Question Engineering Examination completed (`docs/ENGINEERING_QA.md`).
 - [x] 28-Risk Register completed (`docs/RISK_REGISTER.md`).
-- [x] Visual research and Vercel Geist design tokens completed (`docs/design/*`).
+- [x] Visual research and VELOCITY design tokens completed (`docs/design/*`).
 - [x] System architecture, interfaces, and ADRs completed (`docs/*`).
 - [x] Open-source governance files generated (`LICENSE`, `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `PRIVACY.md`, `CHANGELOG.md`, `CODEOWNERS`, `SECURITY_ADVISORIES.md`).
 - [x] CMake build configuration (`CMakeLists.txt`) & folder tree initialized.
@@ -47,13 +47,13 @@
 
 ## Phase 5: Local WebApp Architecture Migration (COMPLETED)
 - [x] Converted desktop application to clone-and-run local webapp (`git clone && .\Launch-Velocity.bat`).
-- [x] Vetted through 6-Engineer Council (Lead Architect, Network Engineer, Hardware Engineer, Cybersecurity Engineer, Daemon Architect, Vercel/Stripe Frontend Principal).
+- [x] Vetted through 6-Engineer Council (Lead Architect, Network Engineer, Hardware Engineer, Cybersecurity Engineer, Daemon Architect, VELOCITY/Stripe Frontend Principal).
 - [x] Purged all mock torrents and fake peers: 100% genuine libtorrent 2.1.1 engine metrics.
 - [x] Created `backend/sanitizer.py` implementing `VShieldSanitizer` (NTFS ADS stripping, path canonicalization, Win32 device name defense).
 - [x] Created `backend/telemetry.py` implementing `HardwareTelemetry` (WMI CPU temp, 5-layer bottleneck triage, line saturation).
 - [x] Created `backend/engine.py` orchestrating real `libtorrent 2.1.1` session, 8 MiB socket buffers, VSE-X PUS scoring, and V-FORCE cache.
 - [x] Created `backend/app.py` FastAPI asynchronous daemon with REST endpoints, 100ms WebSocket stream, and static hosting.
-- [x] Created `web/css/geist.css` with Vercel Geist design tokens, Inter font, strict 12px minimum font size, and dark obsidian palette.
+- [x] Created `web/css/geist.css` with VELOCITY design tokens, Inter font, strict 12px minimum font size, and dark obsidian palette.
 - [x] Created `web/js/components/charts.js` (60 FPS High-DPI Catmull-Rom cubic spline throughput visualizer).
 - [x] Created `web/js/components/piece_map.js` (interactive piece heatmap for up to 20,000 blocks with hover inspection).
 - [x] Created `web/js/app.js` master application state controller with WebSocket streaming and global drag-and-drop / Ctrl+V magnet detection.

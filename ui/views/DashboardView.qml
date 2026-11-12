@@ -96,7 +96,7 @@ Item {
                 }
             }
 
-            // Top 3 KPI Metric Cards (Monochromatic Vercel Standard)
+            // Top 3 KPI Metric Cards (Monochromatic Precision Standard)
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 18
@@ -268,7 +268,7 @@ Item {
                 }
             }
 
-            // Bottleneck Attribution Diagnostics (Monochromatic Vercel Card)
+            // Bottleneck Attribution Diagnostics (Monochromatic Precision Card)
             GeistCard {
                 Layout.fillWidth: true
                 height: 64

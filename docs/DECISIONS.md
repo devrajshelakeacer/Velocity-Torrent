@@ -12,7 +12,7 @@
 - **Status**: Approved.
 - **Consequences**: Verified protocol compliance with high-speed performance; isolated behind `ITorrentEngine` interface.
 
-## ADR-03: Vercel Geist Minimalist Design System
+## ADR-03: VELOCITY Industrial Design Minimalist Design System
 - **Context**: Existing BitTorrent desktop apps have cluttered, outdated Windows 7/XP visual aesthetics.
 - **Decision**: Create a custom Geist-inspired QML component library featuring stark monochrome surfaces, 1px hairline borders, Geist typography, and micro-accents.
 - **Status**: Approved.

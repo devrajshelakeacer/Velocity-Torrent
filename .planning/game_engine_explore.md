@@ -64,4 +64,4 @@
 1. **Decision**: Never deselect or delete any torrent file automatically. Always require explicit user confirmation via an informative Guidance Card.
 2. **Decision**: Implement lightweight process detection with zero third-party requirements (ctypes / tasklist fallback, with psutil enhancement).
 3. **Decision**: Integrate automated CRC32/MD5 checksum verification for game archives.
-4. **Decision**: Adhere strictly to the Vercel Geist design tokens for all new UI components.
+4. **Decision**: Adhere strictly to the VELOCITY design tokens for all new UI components.

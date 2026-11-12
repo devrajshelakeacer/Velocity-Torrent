@@ -21,7 +21,7 @@
 
 ## 1. Executive Summary
 
-**VELOCITY** is a next-generation, high-performance BitTorrent client engineered from the ground up for modern high-speed broadband connections (100 Mbps – 1 Gbps+). Built on a native C++20 `libtorrent 2.1.1` core paired with an asynchronous Python 3.12 daemon and a zero-dependency Vercel Geist design system frontend, VELOCITY eliminates the chronic throughput bottlenecks, socket starvation, and SSD write churn endemic to traditional legacy clients.
+**VELOCITY** is a next-generation, high-performance BitTorrent client engineered from the ground up for modern high-speed broadband connections (100 Mbps – 1 Gbps+). Built on a native C++20 `libtorrent 2.1.1` core paired with an asynchronous Python 3.12 daemon and a zero-dependency VELOCITY Industrial Design design system frontend, VELOCITY eliminates the chronic throughput bottlenecks, socket starvation, and SSD write churn endemic to traditional legacy clients.
 
 Unlike existing desktop torrent software burdened with bloated legacy UIs, third-party advertising, and fragile web remotes, VELOCITY delivers:
 1. **Guaranteed 200 Mbps Broadband Saturation**: Mathematically derived Bandwidth-Delay Product (BDP) tuning with an 8 MiB socket buffer and a 2,500-block in-flight request pipeline.
@@ -87,7 +87,7 @@ Every torrent added to VELOCITY is automatically augmented with **11 high-throug
 ```mermaid
 flowchart TD
     subgraph Client Layer: Modern WebApp
-        UI[Vercel Geist Dark Theme / Zero Bundler Vanilla HTML5]
+        UI[VELOCITY Dark Industrial Theme / Zero Bundler Vanilla HTML5]
         WS_C[Bi-Directional Telemetry WebSocket Client]
         UI --> WS_C
     end
@@ -134,7 +134,7 @@ flowchart TD
 | **Path Traversal Defense** | **V-Shield Root Jail** | Basic Sanitization | Proprietary Web Svc | POSIX Chroot Option |
 | **NTFS ADS Injection Guard**| **Zero-Trust Stream Strip**| OS Handled | Unprotected | OS Handled |
 | **Win32 Reserved Device Guard**| **Active DOS Filter** | Partial | Partial | None (POSIX native) |
-| **UI Aesthetics & Design** | **Vercel / Stripe Geist** | Legacy 2010 Desktop Web | Ad-Supported Web | Minimalist GNOME |
+| **UI Aesthetics & Design** | **VELOCITY High-Contrast Dark Theme** | Legacy 2010 Desktop Web | Ad-Supported Web | Minimalist GNOME |
 | **Zero Mock Data Guarantee** | **100% Genuine libtorrent** | 100% Real | Proprietary Cloud | 100% Real |
 | **Real-Time Spline Graphs** | **Catmull-Rom Cubic Spline** | Step Line Canvas | Static Line | No Live Graph |
 | **Bitfield Piece Heatmap** | **Dynamic Multi-Resolution**| Static Bar | None | Static Progress |
@@ -245,7 +245,7 @@ To ensure maximum visibility, authority, and developer adoption across search en
 - *"qbittorrent modern web alternative"*
 - *"c++20 libtorrent webapp client"*
 - *"secure bittorrent client windows 11"*
-- *"minimalist vercel design torrent client"*
+- *"minimalist velocity design torrent client"*
 
 ### 7.2 Schema.org JSON-LD Structured Metadata
 ```json
@@ -297,6 +297,6 @@ The application automatically opens your default browser at `http://127.0.0.1:80
 
 ## 9. Conclusion & Release Gate Verdict
 
-VELOCITY v1.0.0 successfully transitions from development to production readiness. Every design goal — from genuine 200 Mbps line saturation and 1.5 GB memory caching to impenetrable V-Shield security defense and sleek Vercel Geist design — has been implemented, validated, and certified with zero mock data.
+VELOCITY v1.0.0 successfully transitions from development to production readiness. Every design goal — from genuine 200 Mbps line saturation and 1.5 GB memory caching to impenetrable V-Shield security defense and sleek VELOCITY Industrial Design design — has been implemented, validated, and certified with zero mock data.
 
 **APPROVED FOR IMMEDIATE WORLDWIDE RELEASE.**
