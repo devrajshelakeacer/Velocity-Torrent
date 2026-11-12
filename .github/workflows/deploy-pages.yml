@@ -1,4 +1,4 @@
-name: Deploy Website to GitHub Pages & Cloudflare Pages
+name: Deploy Website to GitHub Pages
 
 on:
   push:
@@ -29,13 +29,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Pages
+        id: setup_pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
+        continue-on-error: true
 
       - name: Upload Web Artifacts
+        if: steps.setup_pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'web/'
 
       - name: Deploy to GitHub Pages
+        if: steps.setup_pages.outcome == 'success'
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: GitHub Pages Status Notice
+        if: steps.setup_pages.outcome != 'success'
+        run: |
+          echo "::notice title=GitHub Pages Deployment Skipped::GitHub Pages is not enabled in repository settings. To enable: Go to Settings -> Pages -> Source: 'GitHub Actions'. (If you are deploying via Cloudflare Pages, this workflow gracefully skips without failing)."
