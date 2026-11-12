@@ -24,3 +24,8 @@ Iteration 4: Completed Task 4 (Universal Website Essentials).
 - Added floating Back to Top button with scroll listener.
 - Added local-only zero data collection privacy statement in footer.
 - Verified via python assertions and node JS syntax check.
+Iteration 5: Completed Task 5 (Responsive Architecture & Cross-Browser Controls).
+- Added Firefox range slider pseudo-elements (::-moz-range-thumb and ::-moz-range-track) matching WebKit.
+- Implemented multi-tier media queries for Tablet (<= 1024px), Mobile/Phablet (<= 840px), and Compact Mobile (<= 480px).
+- Enabled full-width touch button wrapping on mobile, stacked bento cards, responsive metrics grid, and accessible focus rings.
+- Verified via CSS rule assertions.
