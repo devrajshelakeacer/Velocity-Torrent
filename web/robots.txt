@@ -34,4 +34,3 @@ Crawl-delay: 1
 
 # Canonical Sitemap Declaration
 Sitemap: https://velocity-torrent.pages.dev/sitemap.xml
-Sitemap: https://velocity-torrent.github.io/sitemap.xml

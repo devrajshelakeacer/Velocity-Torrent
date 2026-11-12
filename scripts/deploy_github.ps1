@@ -49,7 +49,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "  DEPLOYMENT SUCCESSFUL!                                " -ForegroundColor Green
     Write-Host "  VELOCITY is now published on your public GitHub repo! " -ForegroundColor Green
     Write-Host "========================================================" -ForegroundColor Green
-    Write-Host "`nNext Step: Under Settings -> Pages, set Source to 'GitHub Actions' to launch your web client!" -ForegroundColor Cyan
+    Write-Host "`nNext Step: Connect Cloudflare Pages to your repo (or set CLOUDFLARE_API_TOKEN) to deploy your web client!" -ForegroundColor Cyan
 } else {
     Write-Host "`n[NOTICE] Push failed or authentication was required." -ForegroundColor Yellow
     Write-Host "If GitHub prompted for credentials, ensure you use a Personal Access Token (PAT) with 'repo' scope." -ForegroundColor Gray

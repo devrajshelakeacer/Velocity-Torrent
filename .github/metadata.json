@@ -1,7 +1,7 @@
 {
   "name": "velocity",
   "description": "⚡ High-performance, secure, and completely free BitTorrent client for Windows 10 & 11 (64-bit). Saturates 200 Mbps broadband (~25 MB/s). Built with C++20, Qt 6 / QML, and libtorrent. VELOCITY High-Contrast Dark Industrial Design System. Features VSE-X Swarm Intelligence, V200 Optimizer, V-FORCE SSD Protection, and V-SHIELD Antivirus Defense.",
-  "homepage": "https://velocity-torrent.github.io/velocity/",
+  "homepage": "https://velocity-torrent.pages.dev",
   "topics": [
     "torrent",
     "bittorrent",
