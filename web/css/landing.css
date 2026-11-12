@@ -1277,7 +1277,7 @@ input[type="range"]::-moz-range-track {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 32px;
   margin-bottom: 32px;
 }
