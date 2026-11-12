@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Primary Product Landing Showcase -->
+  <url>
+    <loc>https://velocity-torrent.pages.dev/landing</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://velocity-torrent.pages.dev/assets/logo.svg</image:loc>
+      <image:title>VELOCITY Torrent — Fastest Download BitTorrent Engine for Large PC Games</image:title>
+    </image:image>
+  </url>
+
+  <!-- High-Throughput Web Torrent Client Application -->
+  <url>
+    <loc>https://velocity-torrent.pages.dev/</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Section Anchors for Deep Direct Indexation -->
+  <url>
+    <loc>https://velocity-torrent.pages.dev/landing#bdp-calculator</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://velocity-torrent.pages.dev/landing#pc-gaming</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://velocity-torrent.pages.dev/landing#pillars</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://velocity-torrent.pages.dev/landing#matrix</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://velocity-torrent.pages.dev/landing#security</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://velocity-torrent.pages.dev/landing#faq</loc>
+    <lastmod>2026-11-12T18:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

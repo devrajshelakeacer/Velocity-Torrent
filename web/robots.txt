@@ -1,0 +1,37 @@
+# VELOCITY Torrent — Universal Search Engine Crawler Rules
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+User-agent: Googlebot
+Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Allow: /landing
+
+User-agent: Bingbot
+Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Allow: /landing
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /temp/
+
+# Crawl-delay for polite scraping
+Crawl-delay: 1
+
+# Canonical Sitemap Declaration
+Sitemap: https://velocity-torrent.pages.dev/sitemap.xml
+Sitemap: https://velocity-torrent.github.io/sitemap.xml
