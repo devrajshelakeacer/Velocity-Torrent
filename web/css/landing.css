@@ -324,7 +324,7 @@ body {
   pointer-events: none;
   transform: translateY(-8px);
   transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 99;
+  z-index: 1000;
   overflow-y: auto;
 }
 
@@ -1333,14 +1333,26 @@ input[type="range"]::-moz-range-track {
     --section-pad-y: 42px;
   }
   .nav-links {
-    display: none;
+    display: none !important;
   }
   .nav-gh-btn {
-    display: none;
+    display: none !important;
   }
   .mobile-menu-toggle {
-    display: flex;
+    display: flex !important;
   }
+}
+
+@media (max-width: 600px) {
+  .btn-launch-header {
+    display: none !important;
+  }
+  .brand-badge {
+    display: none !important;
+  }
+}
+
+@media (max-width: 840px) {
   .hero-title {
     font-size: clamp(30px, 6.5vw, 44px);
   }

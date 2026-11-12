@@ -441,9 +441,12 @@ async def set_profile(req: ProfileRequest):
 
 @app.post("/api/settings/save-path")
 async def set_save_path(req: SavePathRequest):
-    os.makedirs(req.path, exist_ok=True)
-    engine.default_save_path = req.path
-    return {"success": True, "default_save_path": req.path}
+    clean_path = req.path.strip()
+    if any(c in clean_path for c in ['`', '$', '|', '&', ';', '<', '>', '\n', '\r']):
+        raise HTTPException(status_code=400, detail="Invalid characters in download path")
+    os.makedirs(clean_path, exist_ok=True)
+    engine.default_save_path = os.path.abspath(clean_path)
+    return {"success": True, "default_save_path": engine.default_save_path}
 
 # ----------------- WebSocket Live Telemetry -----------------
 
