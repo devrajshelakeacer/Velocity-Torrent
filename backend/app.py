@@ -17,6 +17,7 @@ import asyncio
 import webbrowser
 from typing import Optional, List
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, Form, HTTPException
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -457,10 +458,16 @@ async def websocket_telemetry(websocket: WebSocket):
     except (WebSocketDisconnect, asyncio.CancelledError):
         pass
 
-# ----------------- Serve Static Web Frontend -----------------
+# ----------------- Serve Static Web Frontend & Marketing Showcase -----------------
 
 web_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web")
 os.makedirs(web_dir, exist_ok=True)
+
+@app.get("/landing", response_class=FileResponse)
+@app.get("/showcase", response_class=FileResponse)
+def get_landing_page():
+    return FileResponse(os.path.join(web_dir, "landing.html"))
+
 app.mount("/", StaticFiles(directory=web_dir, html=True), name="static")
 
 def main():
