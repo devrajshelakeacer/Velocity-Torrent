@@ -157,6 +157,16 @@ if __name__ == "__main__":
     test_vsex_peer_scorer()
     test_v200_bottleneck_attributor()
     test_vforce_and_thermal_guardian()
+    
+    # Run SPDX 2.3 SBOM Verification
+    try:
+        sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+        from tests.test_sbom import run_all_sbom_tests
+        run_all_sbom_tests()
+    except Exception as e:
+        print(f"[FAIL] SBOM Verification Suite Failed: {e}", file=sys.stderr)
+        sys.exit(1)
+
     print("========================================================")
     print("  TEST VERDICT: 100% OF VERIFICATION SUITES PASSED      ")
     print("========================================================")

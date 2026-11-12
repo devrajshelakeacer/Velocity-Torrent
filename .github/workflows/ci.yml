@@ -29,5 +29,4 @@ jobs:
 
       - name: Verify SPDX SBOM Integrity
         run: |
-          python scripts/generate_sbom.py
-          git diff --exit-code docs/SBOM.json
+          python scripts/generate_sbom.py --check
