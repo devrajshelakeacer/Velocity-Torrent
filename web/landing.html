@@ -53,32 +53,61 @@
   <!-- Ambient Glow Background -->
   <div class="ambient-glow"></div>
 
-  <!-- ----------------- CLOUDFLARE-GRADE STICKY HEADER ----------------- -->
+  <!-- ----------------- ENTERPRISE VERCEL / LINEAR HEADER ----------------- -->
   <header class="landing-header">
     <div class="container landing-nav">
+      <!-- Left: Brandmark Identity -->
       <a href="/landing" class="brand-wrap" aria-label="VELOCITY Homepage">
-        <img src="/assets/logo.svg" alt="VELOCITY Brandmark" width="28" height="28">
+        <img src="/assets/logo.svg" alt="VELOCITY Brandmark" width="26" height="26">
+        <span class="header-divider">/</span>
         <span class="brand-name">VELOCITY</span>
-        <span class="brand-badge">v1.1.0</span>
+        <span class="brand-badge">
+          <span class="status-pulse-dot"></span>
+          v1.1.0
+        </span>
       </a>
 
-      <nav class="nav-links" aria-label="Desktop Navigation">
-        <a href="#bdp-calculator" class="nav-link">Speed Calc</a>
-        <a href="#pillars" class="nav-link">Architecture</a>
-        <a href="#pc-gaming" class="nav-link">PC Gaming</a>
-        <a href="#ui-preview" class="nav-link">Showcase</a>
-        <a href="#matrix" class="nav-link">Benchmarks</a>
-        <a href="#security" class="nav-link">Security</a>
-        <a href="#faq" class="nav-link">FAQ</a>
-        <a href="#quickstart" class="nav-link">Quickstart</a>
+      <!-- Center: Floating Navigation Pill -->
+      <nav class="nav-links nav-pill-container" aria-label="Main Navigation">
+        <a href="#bdp-calculator" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          Speed Calc
+        </a>
+        <a href="#pillars" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+          Architecture
+        </a>
+        <a href="#pc-gaming" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
+          PC Gaming
+        </a>
+        <a href="#ui-preview" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          Showcase
+        </a>
+        <a href="#matrix" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Benchmarks
+        </a>
+        <a href="#security" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Security
+        </a>
+        <a href="#faq" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          FAQ
+        </a>
       </nav>
 
+      <!-- Right: Action Cluster -->
       <div class="nav-actions">
-        <a href="https://github.com/developer/Velocity-Torrent" target="_blank" rel="noopener" class="btn btn-secondary nav-gh-btn" style="height: 34px; font-size: 12px;">
-          ★ GitHub
+        <a href="https://github.com/developer/Velocity-Torrent" target="_blank" rel="noopener" class="btn-github nav-gh-btn" aria-label="GitHub Repository">
+          <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          <span>Star</span>
         </a>
-        <a href="/" class="btn btn-primary" style="height: 34px; font-size: 12px;">
-          ⚡ Launch Client
+        <a href="/" class="btn-launch-header" aria-label="Launch Web Client">
+          <span>Launch Client</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
         <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
           <span class="hamburger-bar"></span>
@@ -91,21 +120,46 @@
     <!-- Mobile Drawer -->
     <div id="mobile-drawer" class="mobile-drawer" aria-label="Mobile Navigation Drawer">
       <nav class="mobile-drawer-links">
-        <a href="#bdp-calculator" class="mobile-drawer-link">⚡ Live Speed Calculator</a>
-        <a href="#pillars" class="mobile-drawer-link">🏛️ Four Engineering Pillars</a>
-        <a href="#pc-gaming" class="mobile-drawer-link">🎮 Large PC Game Engine</a>
-        <a href="#ui-preview" class="mobile-drawer-link">🖥️ Product UI Showcase</a>
-        <a href="#matrix" class="mobile-drawer-link">📊 Competitor Benchmarks</a>
-        <a href="#security" class="mobile-drawer-link">🛡️ V-Shield Security Audit</a>
-        <a href="#faq" class="mobile-drawer-link">❓ Frequently Asked Questions</a>
-        <a href="#quickstart" class="mobile-drawer-link">🚀 60-Second Quickstart</a>
+        <a href="#bdp-calculator" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          Live Speed Calculator
+        </a>
+        <a href="#pillars" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+          Engineering Architecture
+        </a>
+        <a href="#pc-gaming" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
+          Large PC Game Engine
+        </a>
+        <a href="#ui-preview" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          Product UI Showcase
+        </a>
+        <a href="#matrix" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Competitor Benchmarks
+        </a>
+        <a href="#security" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          V-Shield Security Audit
+        </a>
+        <a href="#faq" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          Frequently Asked Questions
+        </a>
+        <a href="#quickstart" class="mobile-drawer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+          60-Second Quickstart
+        </a>
       </nav>
       <div class="mobile-drawer-actions">
         <a href="/" class="btn btn-primary" style="width: 100%; height: 42px;">
-          ⚡ Launch Web Client
+          Launch Web Client
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: 6px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
         <a href="https://github.com/developer/Velocity-Torrent" target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%; height: 42px;">
-          ★ View on GitHub
+          View on GitHub
         </a>
       </div>
     </div>
@@ -117,7 +171,8 @@
       <div class="container">
         <a href="#pc-gaming" class="hero-pill">
           <span class="hero-pill-badge">NEW IN V1.1.0</span>
-          <span>Dedicated Large PC Game Engine & Anti-ISDone.dll Armor →</span>
+          <span>Dedicated Large PC Game Engine &amp; Anti-ISDone.dll Armor</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
 
         <h1 class="hero-title">
@@ -130,10 +185,12 @@
 
         <div class="hero-cta-group">
           <a href="/" class="btn btn-primary" style="height: 44px; padding: 0 24px; font-size: 14px;">
-            ⚡ Launch Web Client
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 2px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            Launch Web Client
           </a>
           <button class="hero-copy-cmd" data-copy-target="git-cmd" data-copy-text="git clone https://github.com/developer/Velocity-Torrent.git">
-            <span style="color: var(--text-tertiary);">$</span> git clone .../Velocity-Torrent.git
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+            git clone .../Velocity-Torrent.git
             <span style="font-size: 11px; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px;">Copy</span>
           </button>
         </div>
@@ -195,7 +252,8 @@
             <!-- Legacy Clients -->
             <div class="calc-side legacy">
               <div class="calc-side-title">
-                <span>⚠️ Legacy Clients (uTorrent / Standard qBittorrent)</span>
+                <svg class="badge-icon-svg" style="stroke: #ff5e57;" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span>Legacy Clients (uTorrent / Standard qBittorrent)</span>
               </div>
               <div class="calc-stat-row">
                 <span class="calc-stat-label">Default Socket Buffer:</span>
@@ -211,7 +269,7 @@
               </div>
               <div class="calc-stat-row">
                 <span class="calc-stat-label">TCP Sliding Window:</span>
-                <span id="legacy-stall-status" class="calc-stat-value">⚠️ STALLED</span>
+                <span id="legacy-stall-status" class="calc-stat-value" style="color: #ff5e57;">Stalled (Exhausted)</span>
               </div>
               <div class="calc-bar-wrap">
                 <div class="calc-bar-bg">
@@ -223,7 +281,8 @@
             <!-- VELOCITY Engine -->
             <div class="calc-side velocity">
               <div class="calc-side-title">
-                <span>⚡ VELOCITY Engine (V-FORCE 2.0)</span>
+                <svg class="badge-icon-svg" style="stroke: var(--accent-green);" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                <span>VELOCITY Engine (V-FORCE 2.0)</span>
               </div>
               <div class="calc-stat-row">
                 <span class="calc-stat-label">Dedicated Winsock Buffer:</span>
@@ -270,7 +329,9 @@
         <div class="bento-grid">
           <!-- Pillar 1 (Span 2) -->
           <div class="bento-card span-2">
-            <span class="bento-icon">⚡</span>
+            <div class="bento-icon-box accent-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
             <h3 class="bento-card-title">200 Mbps Line Saturation Engine</h3>
             <p class="bento-card-desc">
               Conventional clients request 100 to 250 blocks per peer, causing pipeline starvation over transatlantic swarms. VELOCITY enforces a 2,500 in-flight block request pipeline (39 MB dynamic wire depth) alongside 11 pre-injected high-throughput Tier-1 public trackers.
@@ -285,7 +346,9 @@
 
           <!-- Pillar 3 -->
           <div class="bento-card">
-            <span class="bento-icon">💾</span>
+            <div class="bento-icon-box accent-amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            </div>
             <h3 class="bento-card-title">V-FORCE 1.5 GB Memory Coalescing</h3>
             <p class="bento-card-desc">
               Eliminates 16 KiB random write thrashing on NVMe/SATA SSDs. Batches swarm pieces in memory and executes sequential 64 MB disk flushes, reducing SSD Write Amplification Factor (WAF) by 90%.
@@ -299,7 +362,9 @@
 
           <!-- Pillar 2 (Span 2 - PC Gaming) -->
           <div id="pc-gaming" class="bento-card span-2" style="background: radial-gradient(circle at 10% 20%, rgba(121, 40, 202, 0.12) 0%, transparent 60%); border-color: rgba(121, 40, 202, 0.3);">
-            <span class="bento-icon">🎮</span>
+            <div class="bento-icon-box accent-purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
+            </div>
             <h3 class="bento-card-title">Dedicated Large PC Game Specialization</h3>
             <p class="bento-card-desc">
               Downloading massive 50 GB to 150 GB+ games introduces severe risks of installer decompression failure. VELOCITY introduces the world's first Anti-ISDone.dll & Unarc.dll Cryptographic Checksum Armor (.sfv/.md5), a Smart Repack Advisor with 100% User Autonomy (never deselects files silently), and sub-10ms Win32 Gaming QoS process sensing.
@@ -314,7 +379,9 @@
 
           <!-- Pillar 4 -->
           <div class="bento-card">
-            <span class="bento-icon">🛡️</span>
+            <div class="bento-icon-box accent-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            </div>
             <h3 class="bento-card-title">V-Shield Offensive Security Armor</h3>
             <p class="bento-card-desc">
               Certified 34/34 passes in Red Team penetration audit. Enforces canonical root jail verification, strips NTFS Alternate Data Streams (ADS), blocks Win32 reserved devices (CON, PRN, AUX, NUL), and runs with zero shell command spawning.
@@ -384,7 +451,9 @@
             <thead>
               <tr>
                 <th>Engineering Dimension</th>
-                <th class="highlight-col" style="color: #fff;">⚡ VELOCITY v1.1.0</th>
+                <th class="highlight-col" style="color: #fff;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -2px; margin-right: 6px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>VELOCITY v1.1.0
+                </th>
                 <th>qBittorrent 4.6.x</th>
                 <th>uTorrent Web</th>
                 <th>Transmission 4.0</th>
@@ -415,36 +484,36 @@
               <tr>
                 <td class="feature-name">Dedicated PC Game Repack Advisor</td>
                 <td class="highlight-col matrix-badge-pass">Built-in (Non-Destructive)</td>
-                <td class="matrix-badge-fail">✕ None</td>
-                <td class="matrix-badge-fail">✕ None</td>
-                <td class="matrix-badge-fail">✕ None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
               </tr>
               <tr>
                 <td class="feature-name">Anti-ISDone.dll Checksum Armor</td>
                 <td class="highlight-col matrix-badge-pass">Built-in (.sfv / .md5)</td>
-                <td class="matrix-badge-fail">✕ None</td>
-                <td class="matrix-badge-fail">✕ None</td>
-                <td class="matrix-badge-fail">✕ None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
               </tr>
               <tr>
                 <td class="feature-name">Process-Aware Gaming QoS</td>
                 <td class="highlight-col matrix-badge-pass">Built-in (&lt;10ms Win32)</td>
-                <td class="matrix-badge-fail">✕ None</td>
-                <td class="matrix-badge-fail">✕ None</td>
-                <td class="matrix-badge-fail">✕ None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>None</td>
               </tr>
               <tr>
                 <td class="feature-name">Red Team Security Penetration</td>
                 <td class="highlight-col matrix-badge-pass">34/34 Exploits Defeated</td>
                 <td>Partial / CVE-Prone</td>
-                <td class="matrix-badge-fail">Proprietary / Closed</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Proprietary / Closed</td>
                 <td>POSIX Chroot Only</td>
               </tr>
               <tr>
                 <td class="feature-name">User Interface & Design</td>
                 <td class="highlight-col matrix-badge-pass">Vercel Geist Dark Theme</td>
                 <td>Legacy Qt5 Desktop</td>
-                <td class="matrix-badge-fail">Ad-Supported HTML</td>
+                <td class="matrix-badge-fail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px; stroke: #ff5e57;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Ad-Supported HTML</td>
                 <td>Minimalist GTK</td>
               </tr>
               <tr>
@@ -465,7 +534,7 @@
       <div class="container">
         <div class="sec-badge-card">
           <div class="sec-stamp">
-            <span>🛡️</span> OFFICIALLY CERTIFIED: 34 / 34 DEFENSE PASSES
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -2px; margin-right: 6px; stroke: var(--accent-green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>OFFICIALLY CERTIFIED: 34 / 34 DEFENSE PASSES
           </div>
           <h2 class="section-title" style="font-size: 28px; margin-bottom: 12px;">
             V-Shield Zero-Escape Security Architecture
@@ -642,7 +711,7 @@
 
         <div style="margin-top: 36px;">
           <a href="/" class="btn btn-primary" style="height: 48px; padding: 0 32px; font-size: 15px;">
-            ⚡ Open Live Web Client Now
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -2px; margin-right: 8px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>Open Live Web Client Now
           </a>
         </div>
       </div>
@@ -678,7 +747,7 @@
             The next-generation high-throughput BitTorrent engine engineered for 200 Mbps broadband saturation and large PC game repacks.
           </p>
           <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 12px; line-height: 1.5;">
-            🔒 <strong>Privacy Guarantee:</strong> VELOCITY operates 100% locally on your machine. Zero user tracking, zero data telemetry sent to remote servers.
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -1px; margin-right: 4px; stroke: var(--text-tertiary);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><strong>Privacy Guarantee:</strong> VELOCITY operates 100% locally on your machine. Zero user tracking, zero data telemetry sent to remote servers.
           </div>
         </div>
 

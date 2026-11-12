@@ -233,7 +233,7 @@ async def run_cdp_audit():
             await asyncio.sleep(0.4)
             game_display = await cdp_eval(ws, "document.getElementById('tab-game').style.display")
             assert game_display == 'block', "Game Hub tab failed to display!"
-            print("  [PASS] Inspector '🎮 Game Hub' tab active and populated")
+            print("  [PASS] Inspector 'Game Hub' tab active and populated")
 
             # Close Inspector
             await cdp_eval(ws, "document.getElementById('btn-close-inspector').click()")
@@ -303,14 +303,14 @@ async def run_cdp_audit():
             await cdp_eval(ws, "document.getElementById('btn-reannounce-swarm').click()")
             await asyncio.sleep(0.5)
             toast_text = await cdp_eval(ws, "document.querySelector('.geist-toast') ? document.querySelector('.geist-toast').textContent : ''")
-            print(f"  [PASS] '⚡ Re-announce Trackers' clicked. Toast: '{toast_text}'")
+            print(f"  [PASS] 'Re-announce Trackers' clicked. Toast: '{toast_text}'")
 
             # 6. Test Piece Heatmap View
             print("\n--- 6. Testing Piece Heatmap Controls ---")
             await cdp_eval(ws, "window.app.switchView('pieces')")
             await cdp_eval(ws, "document.getElementById('btn-refresh-pieces').click()")
             await asyncio.sleep(0.5)
-            print("  [PASS] '🔄 Refresh Bitfield Heatmap' clicked successfully")
+            print("  [PASS] 'Refresh Bitfield Heatmap' clicked successfully")
 
             # 7. Test V-FORCE Pipeline View
             print("\n--- 7. Testing V-FORCE Pipeline Controls ---")
@@ -318,7 +318,7 @@ async def run_cdp_audit():
             await cdp_eval(ws, "document.getElementById('btn-flush-cache').click()")
             await asyncio.sleep(0.5)
             toast_text = await cdp_eval(ws, "document.querySelector('.geist-toast') ? document.querySelector('.geist-toast').textContent : ''")
-            print(f"  [PASS] '💾 Flush Memory Cache' clicked. Toast: '{toast_text}'")
+            print(f"  [PASS] 'Flush Memory Cache' clicked. Toast: '{toast_text}'")
 
             # 8. Test V-Shield Security View
             print("\n--- 8. Testing V-Shield Security Controls ---")
@@ -328,13 +328,13 @@ async def run_cdp_audit():
             toast_text = await cdp_eval(ws, "document.querySelector('.geist-toast') ? document.querySelector('.geist-toast').textContent : ''")
             card_display = await cdp_eval(ws, "document.getElementById('security-report-card').style.display")
             assert card_display == 'block', "Security report card failed to display!"
-            print(f"  [PASS] '🛡️ Run V-Shield Threat Scan' clicked. Output card visible. Toast: '{toast_text}'")
+            print(f"  [PASS] 'Run V-Shield Threat Scan' clicked. Output card visible. Toast: '{toast_text}'")
 
             await cdp_eval(ws, "document.getElementById('btn-test-sanitizer').click()")
             await asyncio.sleep(1.0)
             report_pre = await cdp_eval(ws, "document.getElementById('security-report-pre').textContent")
             assert "V-SHIELD ZERO ESCAPE PASS" in report_pre, "Sanitizer test verdict missing!"
-            print(f"  [PASS] '🔒 Test Path Traversal Defense' clicked. Output confirmed: V-SHIELD ZERO ESCAPE PASS")
+            print(f"  [PASS] 'Test Path Traversal Defense' clicked. Output confirmed: V-SHIELD ZERO ESCAPE PASS")
 
             # 9. Test Settings View
             print("\n--- 9. Testing Settings Profile & Storage Controls ---")
@@ -370,7 +370,7 @@ async def run_cdp_audit():
             await cdp_eval(ws, "document.getElementById('btn-save-all-settings').click()")
             await asyncio.sleep(0.5)
             toast_text = await cdp_eval(ws, "document.querySelector('.geist-toast') ? document.querySelector('.geist-toast').textContent : ''")
-            print(f"  [PASS] '💾 Save All Engine Settings' clicked. Toast: '{toast_text}'")
+            print(f"  [PASS] 'Save All Engine Settings' clicked. Toast: '{toast_text}'")
 
             # 10. Cleanup & Empty State
             print("\n--- 10. Testing Torrent Removal & Clean Empty State ---")

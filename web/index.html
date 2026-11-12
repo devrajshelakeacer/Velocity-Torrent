@@ -70,17 +70,19 @@
             Limits: <span id="hdr-bandwidth-label" style="font-weight: 600; color: #fff;">Unlimited</span>
           </button>
           <button id="btn-game-mode" class="game-mode-pill" title="Smart Gaming QoS (Auto Ping Protection)">
-            <span id="game-mode-icon">🎮</span>
+            <span id="game-mode-icon" style="display: inline-flex; align-items: center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg></span>
             <span id="game-mode-text">Game Ping Guard: Idle</span>
           </button>
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px;">
-          <a href="/landing" class="btn btn-secondary" style="height: 34px; padding: 0 10px; font-size: 12px; text-decoration: none; display: flex; align-items: center; gap: 4px;" title="View Product Showcase Website">
-            🌐 Showcase
+          <a href="/landing" class="btn btn-secondary" style="height: 34px; padding: 0 10px; font-size: 12px; text-decoration: none; display: flex; align-items: center; gap: 6px;" title="View Product Showcase Website">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            Showcase
           </a>
-          <button id="btn-sound-toggle" class="btn btn-secondary" style="height: 34px; padding: 0 10px; font-size: 12px;" title="Toggle Completion Chime">
-            🔔 <span id="sound-toggle-label">Audio On</span>
+          <button id="btn-sound-toggle" class="btn btn-secondary" style="height: 34px; padding: 0 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" title="Toggle Completion Chime">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span id="sound-toggle-label">Audio On</span>
           </button>
           <button id="btn-open-add-modal" class="btn btn-primary" style="height: 34px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -101,7 +103,7 @@
 
         <!-- Pre-Allocation Storage Guard Banner -->
         <div id="disk-guard-banner" class="guidance-callout" style="display: none; margin-bottom: 20px;">
-          <div class="guidance-icon">⚠️</div>
+          <div class="guidance-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--accent-amber);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
           <div style="flex: 1;">
             <div class="guidance-title">Storage Space Warning</div>
             <div id="disk-guard-text" class="guidance-text">Checking available disk capacity...</div>
@@ -179,7 +181,9 @@
 
             <!-- Empty Dropzone State -->
             <div id="torrents-empty-state" class="geist-card" style="text-align: center; padding: 64px 20px; border-style: dashed; border-color: var(--border-hover);">
-              <div style="font-size: 32px; margin-bottom: 12px;">⚡</div>
+              <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--accent-blue);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              </div>
               <h3 style="font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px;">No Active Downloads</h3>
               <p style="font-size: 13px; color: var(--text-secondary); max-width: 440px; margin: 0 auto 20px auto;">
                 Drop a <code style="font-family: var(--font-mono); color: #fff;">.torrent</code> file anywhere on this window, paste a magnet link with <kbd style="background: #222; border: 1px solid #444; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Ctrl+V</kbd>, or click the button below.
@@ -215,8 +219,9 @@
               <h2 style="font-size: 18px; font-weight: 700;">Swarm Intelligence & Peer Scoring (VSE-X)</h2>
               <div style="font-size: 13px; color: var(--text-secondary);">Real-time peer scoring (PUS), RTT latency, and request pipeline status.</div>
             </div>
-            <button id="btn-reannounce-swarm" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.reannounceSelected()">
-              ⚡ Re-announce to Tier-1 Swarm Trackers
+            <button id="btn-reannounce-swarm" class="btn btn-secondary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.reannounceSelected()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              Re-announce to Tier-1 Swarm Trackers
             </button>
           </div>
 
@@ -249,8 +254,9 @@
               <h2 style="font-size: 18px; font-weight: 700;">Direct Piece Coalescing Heatmap</h2>
               <div style="font-size: 13px; color: var(--text-secondary);">Interactive block visualizer showing verified, downloading, and unrequested pieces.</div>
             </div>
-            <button id="btn-refresh-pieces" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.loadPiecesForSelected()">
-              🔄 Refresh Bitfield Heatmap
+            <button id="btn-refresh-pieces" class="btn btn-secondary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.loadPiecesForSelected()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              Refresh Bitfield Heatmap
             </button>
           </div>
 
@@ -286,8 +292,9 @@
               <div style="font-size: 13px; color: var(--text-secondary);">SSD Write Amplification Factor (WAF) reduction & WMI telemetry.</div>
             </div>
             <div style="display: flex; gap: 8px;">
-              <button id="btn-flush-cache" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.flushCache()">
-                💾 Flush Memory Cache to Disk
+              <button id="btn-flush-cache" class="btn btn-secondary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.flushCache()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Flush Memory Cache to Disk
               </button>
             </div>
           </div>
@@ -332,11 +339,13 @@
               <div style="font-size: 13px; color: var(--text-secondary);">Path canonicalization, Win32 reserved device defense, and NTFS ADS stripping.</div>
             </div>
             <div style="display: flex; gap: 8px;">
-              <button id="btn-scan-threats" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.runSecurityScan()">
-                🛡️ Run V-Shield Threat Scan
+              <button id="btn-scan-threats" class="btn btn-secondary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.runSecurityScan()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                Run V-Shield Threat Scan
               </button>
-              <button id="btn-test-sanitizer" class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.runSanitizerTest()">
-                🔒 Test Path Traversal Defense
+              <button id="btn-test-sanitizer" class="btn btn-secondary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.runSanitizerTest()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Test Path Traversal Defense
               </button>
             </div>
           </div>
@@ -414,8 +423,9 @@
             </div>
 
             <div style="margin-top: 28px; display: flex; justify-content: flex-end;">
-              <button id="btn-save-all-settings" class="btn btn-primary" onclick="window.app.saveAllSettings()">
-                💾 Save All Engine Settings
+              <button id="btn-save-all-settings" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.saveAllSettings()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Save All Engine Settings
               </button>
             </div>
           </div>
@@ -459,7 +469,10 @@
             <span class="copy-pill" id="inspector-copy-magnet">Copy Magnet</span>
           </div>
         </div>
-        <button id="btn-close-inspector" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 12px;">✕ Close</button>
+        <button id="btn-close-inspector" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          Close
+        </button>
       </div>
 
       <div class="inspector-tabs">
@@ -467,7 +480,10 @@
         <div class="inspector-tab" data-tab="trackers">Trackers (<span id="inspector-trackers-count">0</span>)</div>
         <div class="inspector-tab" data-tab="peers">Peers</div>
         <div class="inspector-tab" data-tab="info">General Info</div>
-        <div class="inspector-tab" data-tab="game">🎮 Game Hub</div>
+        <div class="inspector-tab" data-tab="game" style="display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
+          Game Hub
+        </div>
       </div>
 
       <div class="inspector-body">
@@ -599,15 +615,22 @@
     <div class="modal-card" style="width: 740px; max-width: 95vw;">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
         <div>
-          <h3 class="modal-title">🎮 Game Component Optimization Advisor</h3>
+          <h3 class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: #a855f7;"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
+            Game Component Optimization Advisor
+          </h3>
           <p class="modal-desc" style="margin-bottom: 0;">Optional voice packs & bonus files detected. VELOCITY never deselects files automatically.</p>
         </div>
-        <button id="advisor-close-x" class="btn btn-secondary" style="height: 28px; padding: 0 8px;">✕</button>
+        <button id="advisor-close-x" class="btn btn-secondary" style="height: 28px; padding: 0 8px; display: inline-flex; align-items: center;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
 
       <!-- Guidance Callout -->
       <div class="guidance-callout">
-        <div class="guidance-icon">💡</div>
+        <div class="guidance-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: #f5a623;"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line></svg>
+        </div>
         <div>
           <div class="guidance-title">Game Compatibility & Bandwidth Guidance</div>
           <div class="guidance-text">
@@ -641,8 +664,9 @@
           <button id="advisor-keep-all-btn" class="btn btn-secondary" style="font-size: 12px;">
             Download All Files (Default)
           </button>
-          <button id="advisor-apply-preset-btn" class="btn btn-primary" style="font-size: 12px;">
-            ⚡ Apply Selection
+          <button id="advisor-apply-preset-btn" class="btn btn-primary" style="font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            Apply Selection
           </button>
         </div>
       </div>

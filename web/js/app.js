@@ -283,7 +283,7 @@ class VelocityApp {
       if (isFinished && !this.completedTorrentHashes.has(t.id)) {
         this.completedTorrentHashes.add(t.id);
         this.playCompletionChime();
-        this.showToast(`⚡ Download Complete: ${t.name}`);
+        this.showToast(`Download Complete: ${t.name}`);
       }
     }
 
@@ -375,8 +375,8 @@ class VelocityApp {
             <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px;" title="Inspect Files & Trackers" onclick="event.stopPropagation(); window.app.openInspector('${t.id}')">
               Inspect
             </button>
-            <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" title="Copy Magnet" onclick="event.stopPropagation(); window.app.copyTorrentMagnet('${t.id}')">
-              🧲
+            <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px; display: inline-flex; align-items: center;" title="Copy Magnet" onclick="event.stopPropagation(); window.app.copyTorrentMagnet('${t.id}')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
             </button>
             <button class="btn btn-secondary" style="height: 28px; padding: 0 8px; font-size: 11px; margin-left: 4px;" onclick="event.stopPropagation(); window.app.togglePause('${t.id}', ${isPaused})">
               ${isPaused ? 'Resume' : 'Pause'}
@@ -1410,11 +1410,15 @@ class VelocityApp {
           <div class="game-hub-card">
             <div class="game-hub-header">
               <div>
-                <strong style="color: #fff; font-size: 14px;">🎮 Game Installer Executable Detected</strong>
+                <strong style="color: #fff; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: #a855f7;"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
+                  Game Installer Executable Detected
+                </strong>
                 <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Direct launch available once download completes.</div>
               </div>
-              <button class="btn btn-primary" style="height: 32px; font-size: 12px;" onclick="window.app.launchGameSetup('${id}')">
-                ▶ Launch Game Setup
+              <button class="btn btn-primary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.launchGameSetup('${id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Launch Game Setup
               </button>
             </div>
           </div>
@@ -1428,11 +1432,15 @@ class VelocityApp {
           <div class="game-hub-card">
             <div class="game-hub-header">
               <div>
-                <strong style="color: #fff; font-size: 14px;">⚡ Disk Image (ISO) Detected</strong>
+                <strong style="color: #fff; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--accent-blue);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                  Disk Image (ISO) Detected
+                </strong>
                 <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Mount image directly into Windows Explorer with one click.</div>
               </div>
-              <button class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.mountIsoImage('${id}')">
-                ⚡ Mount ISO Image
+              <button class="btn btn-secondary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.mountIsoImage('${id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Mount ISO Image
               </button>
             </div>
           </div>
@@ -1443,11 +1451,15 @@ class VelocityApp {
         <div class="game-hub-card">
           <div class="game-hub-header">
             <div>
-              <strong style="color: #fff; font-size: 14px;">🛡️ Anti-ISDone.dll Cryptographic Verifier</strong>
+              <strong style="color: #fff; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--accent-green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                Anti-ISDone.dll Cryptographic Verifier
+              </strong>
               <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Verifies archive integrity against .sfv/.md5 hash files to prevent installer decompression errors.</div>
             </div>
-            <button class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.verifyGameChecksums('${id}')">
-              🔄 Run SFV / MD5 Hash Audit
+            <button class="btn btn-secondary" style="height: 32px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.verifyGameChecksums('${id}')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              Run SFV / MD5 Hash Audit
             </button>
           </div>
           <div id="game-checksum-result" style="font-size: 12px; font-family: var(--font-mono); margin-top: 8px; color: var(--text-tertiary);">
@@ -1458,13 +1470,17 @@ class VelocityApp {
 
       let summaryHtml = `
         <div class="game-hub-card">
-          <strong style="color: #fff; font-size: 14px;">📦 Game Repack Component Overview</strong>
+          <strong style="color: #fff; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--accent-cyan);"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            Game Repack Component Overview
+          </strong>
           <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; margin-bottom: 12px;">
             Total Package Size: <strong>${data.total_size_formatted}</strong> (${data.total_files} files) · Optional: ${data.optional_size_formatted} (${data.optional_files_count} files)
           </div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary" style="height: 28px; font-size: 11px;" onclick="window.app.openGameAdvisorModal('${id}', window.app.activeAdvisorData || ${JSON.stringify(data).replace(/"/g, '&quot;')})">
-              ⚙️ Open Component Optimization Advisor
+            <button class="btn btn-secondary" style="height: 28px; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;" onclick="window.app.openGameAdvisorModal('${id}', window.app.activeAdvisorData || ${JSON.stringify(data).replace(/"/g, '&quot;')})">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              Open Component Optimization Advisor
             </button>
           </div>
         </div>
@@ -1499,7 +1515,7 @@ class VelocityApp {
 
   async verifyGameChecksums(id) {
     const el = document.getElementById('game-checksum-result');
-    if (el) el.innerHTML = '<span style="color: var(--accent-amber);">🔄 Auditing CRC32/MD5 hash bitstreams...</span>';
+    if (el) el.innerHTML = '<span style="color: var(--accent-amber); display: inline-flex; align-items: center; gap: 6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>Auditing CRC32/MD5 hash bitstreams...</span>';
     try {
       const res = await fetch(`/api/torrents/${id}/verify-checksums`, { method: 'POST' });
       const data = await res.json();

@@ -98,7 +98,7 @@ class VelocityLanding {
 
       const legacyStatus = document.getElementById('legacy-stall-status');
       if (mbps > 40) {
-        legacyStatus.innerHTML = `<span style="color: #ff5e57;">⚠️ STALLED</span> (Window exhausted by ${((bdpBytes / (256 * 1024))).toFixed(1)}x)`;
+        legacyStatus.innerHTML = `<span style="color: #ff5e57;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>STALLED</span> (Window exhausted by ${((bdpBytes / (256 * 1024))).toFixed(1)}x)`;
       } else {
         legacyStatus.innerHTML = `<span style="color: var(--accent-green);">OK</span>`;
       }
@@ -152,7 +152,8 @@ class VelocityLanding {
           <div style="background: #12101a; border: 1px solid rgba(121, 40, 202, 0.3); border-radius: 8px; padding: 18px; display: flex; justify-content: space-between; align-items: center;">
             <div>
               <div style="font-weight: 700; color: #fff; font-size: 14px; display: flex; align-items: center; gap: 8px;">
-                <span>🎮</span> Game Repack Optimization Advisor
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: #a855f7;"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
+                Game Repack Optimization Advisor
               </div>
               <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
                 "Yes! The game will run 100% smoothly in English without optional language files."
@@ -164,14 +165,23 @@ class VelocityLanding {
           </div>
           <div style="background: #111; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 18px; display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <div style="font-weight: 700; color: #fff; font-size: 14px;">🛡️ Anti-ISDone.dll Cryptographic Checksum Armor</div>
+              <div style="font-weight: 700; color: #fff; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--accent-green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                Anti-ISDone.dll Cryptographic Checksum Armor
+              </div>
               <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Multi-threaded background verification of .sfv & .md5 game archive digests.</div>
             </div>
-            <span style="color: var(--accent-green); font-size: 12px; font-weight: 700;">✅ ZERO CORRUPT BITS</span>
+            <span style="color: var(--accent-green); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              ZERO CORRUPT BITS
+            </span>
           </div>
           <div style="background: #111; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 18px; display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <div style="font-weight: 700; color: #fff; font-size: 14px;">⚡ Sub-10ms Win32 Gaming QoS Detector</div>
+              <div style="font-weight: 700; color: #fff; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--accent-blue);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Sub-10ms Win32 Gaming QoS Detector
+              </div>
               <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Auto-throttles to 2 MB/s during CS2/Valorant matches; restores 200 Mbps saturation on exit.</div>
             </div>
             <span style="color: var(--accent-cyan); font-size: 12px; font-family: var(--font-mono);">STATUS: SENSOR ACTIVE</span>
