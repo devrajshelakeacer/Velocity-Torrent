@@ -69,6 +69,10 @@
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             Limits: <span id="hdr-bandwidth-label" style="font-weight: 600; color: #fff;">Unlimited</span>
           </button>
+          <button id="btn-game-mode" class="game-mode-pill" title="Smart Gaming QoS (Auto Ping Protection)">
+            <span id="game-mode-icon">🎮</span>
+            <span id="game-mode-text">Game Ping Guard: Idle</span>
+          </button>
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -90,6 +94,15 @@
             <strong>Thermal Warning:</strong> CPU temperature is <span id="thermal-temp">85°C</span>. Preserving ULTRA download profile per ADR-06 user autonomy policy.
           </div>
           <span style="font-size: 12px; opacity: 0.8;">No auto-throttling active</span>
+        </div>
+
+        <!-- Pre-Allocation Storage Guard Banner -->
+        <div id="disk-guard-banner" class="guidance-callout" style="display: none; margin-bottom: 20px;">
+          <div class="guidance-icon">⚠️</div>
+          <div style="flex: 1;">
+            <div class="guidance-title">Storage Space Warning</div>
+            <div id="disk-guard-text" class="guidance-text">Checking available disk capacity...</div>
+          </div>
         </div>
 
         <!-- 1. DASHBOARD VIEW -->
@@ -451,6 +464,7 @@
         <div class="inspector-tab" data-tab="trackers">Trackers (<span id="inspector-trackers-count">0</span>)</div>
         <div class="inspector-tab" data-tab="peers">Peers</div>
         <div class="inspector-tab" data-tab="info">General Info</div>
+        <div class="inspector-tab" data-tab="game">🎮 Game Hub</div>
       </div>
 
       <div class="inspector-body">
@@ -525,6 +539,13 @@
             <!-- Rendered by JS -->
           </div>
         </div>
+
+        <!-- Game Hub Tab -->
+        <div id="tab-game" class="inspector-tab-content" style="display: none;">
+          <div id="game-hub-container">
+            <!-- Rendered dynamically by JS with installer action, ISO mount, and SFV checksum audit -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -566,6 +587,61 @@
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
         <button id="add-tracker-cancel-btn" class="btn btn-secondary">Cancel</button>
         <button id="add-tracker-submit-btn" class="btn btn-primary">Add Tracker</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Component Optimization Advisor Modal -->
+  <div id="game-advisor-modal" class="modal-overlay">
+    <div class="modal-card" style="width: 740px; max-width: 95vw;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+        <div>
+          <h3 class="modal-title">🎮 Game Component Optimization Advisor</h3>
+          <p class="modal-desc" style="margin-bottom: 0;">Optional voice packs & bonus files detected. VELOCITY never deselects files automatically.</p>
+        </div>
+        <button id="advisor-close-x" class="btn btn-secondary" style="height: 28px; padding: 0 8px;">✕</button>
+      </div>
+
+      <!-- Guidance Callout -->
+      <div class="guidance-callout">
+        <div class="guidance-icon">💡</div>
+        <div>
+          <div class="guidance-title">Game Compatibility & Bandwidth Guidance</div>
+          <div class="guidance-text">
+            Yes! This game will run <strong>100% smoothly in English</strong> without non-English voice packs or 4K bonus clips. Skipping unneeded components saves significant bandwidth and SSD space. <strong>All files are included by default</strong>. You have complete autonomy to customize your download:
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Components List -->
+      <div class="table-container" style="max-height: 260px; overflow-y: auto; margin-bottom: 16px;">
+        <table class="geist-table">
+          <thead>
+            <tr>
+              <th style="width: 44px; text-align: center;">Keep</th>
+              <th>Component Name</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Guidance</th>
+            </tr>
+          </thead>
+          <tbody id="advisor-files-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Savings Summary & Actions -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-hairline); padding-top: 16px;">
+        <div id="advisor-savings-summary" style="font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono);">
+          <!-- Dynamic savings text -->
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button id="advisor-keep-all-btn" class="btn btn-secondary" style="font-size: 12px;">
+            Download All Files (Default)
+          </button>
+          <button id="advisor-apply-preset-btn" class="btn btn-primary" style="font-size: 12px;">
+            ⚡ Apply Selection
+          </button>
+        </div>
       </div>
     </div>
   </div>

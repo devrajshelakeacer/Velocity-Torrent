@@ -24,6 +24,11 @@ class VelocityApp {
     this.audioCtx = null;
     this.completedTorrentHashes = new Set();
 
+    // Large PC Game Engine State
+    this.checkedRepackHashes = new Set();
+    this.activeAdvisorHash = null;
+    this.activeAdvisorData = null;
+
     this.init();
   }
 
@@ -33,6 +38,8 @@ class VelocityApp {
     this.setupSearchAndFilters();
     this.setupInspectorDrawer();
     this.setupBandwidthModal();
+    this.setupGameAdvisorModal();
+    this.setupGameModeControls();
     this.setupDropzones();
     this.setupGlobalShortcuts();
     this.setupComponents();
@@ -40,6 +47,7 @@ class VelocityApp {
     this.fetchTorrents();
     this.fetchSettings();
     this.fetchBandwidthLimits();
+    this.checkDiskStorage();
 
     // Periodic torrent polling (1s) to keep list synchronized
     setInterval(() => this.fetchTorrents(), 1000);
@@ -210,6 +218,11 @@ class VelocityApp {
       profilePill.textContent = data.engine.profile;
     }
 
+    // 6. Update Smart Gaming Mode Indicator
+    if (data.game_mode) {
+      this.updateGameModeUI(data.game_mode);
+    }
+
     // Update active view sub-telemetry
     if (this.currentView === 'pipeline') {
       this.renderPipelineView();
@@ -222,6 +235,13 @@ class VelocityApp {
       if (!res.ok) return;
       this.torrents = await res.json();
       this.renderTorrentsTable();
+
+      // Check newly discovered torrents for game repack guidance
+      for (const t of this.torrents) {
+        if (!this.checkedRepackHashes.has(t.id)) {
+          this.checkTorrentForGameRepack(t.id);
+        }
+      }
 
       // Default select first torrent if none selected
       if (!this.selectedTorrentId && this.torrents.length > 0) {
@@ -971,6 +991,8 @@ class VelocityApp {
       await this.loadInspectorPeers(id);
     } else if (this.activeInspectorTab === 'info') {
       this.loadInspectorInfo(id);
+    } else if (this.activeInspectorTab === 'game') {
+      await this.loadInspectorGameHub(id);
     }
   }
 
@@ -1192,6 +1214,305 @@ class VelocityApp {
       osc.stop(now + 0.35);
     } catch (e) {
       // Audio autoplay policy or headless browser
+    }
+  }
+
+  setupGameAdvisorModal() {
+    const modal = document.getElementById('game-advisor-modal');
+    const closeX = document.getElementById('advisor-close-x');
+    const keepAllBtn = document.getElementById('advisor-keep-all-btn');
+    const applyBtn = document.getElementById('advisor-apply-preset-btn');
+
+    if (closeX && modal) closeX.addEventListener('click', () => modal.classList.remove('active'));
+    if (keepAllBtn && modal) {
+      keepAllBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        this.showToast('Preserving 100% of torrent files (Default)');
+      });
+    }
+    if (applyBtn) applyBtn.addEventListener('click', () => this.applyGamePreset());
+  }
+
+  async checkTorrentForGameRepack(hash) {
+    this.checkedRepackHashes.add(hash);
+    try {
+      const res = await fetch(`/api/torrents/${hash}/game-classification`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.is_game_repack && data.optional_files_count > 0) {
+        this.openGameAdvisorModal(hash, data);
+      }
+    } catch (e) {}
+  }
+
+  openGameAdvisorModal(hash, data) {
+    this.activeAdvisorHash = hash;
+    this.activeAdvisorData = data;
+    const modal = document.getElementById('game-advisor-modal');
+    const tbody = document.getElementById('advisor-files-tbody');
+    if (!modal || !tbody) return;
+
+    let html = '';
+    for (const f of data.files) {
+      const isBase = f.category === 'BASE_GAME' || f.category === 'INSTALLER';
+      const badgeClass = isBase ? (f.category === 'INSTALLER' ? 'installer' : 'base') : 'optional';
+      
+      // All files are checked by default in adherence with user autonomy
+      html += `
+        <tr>
+          <td style="text-align: center;">
+            <input type="checkbox" class="advisor-file-chk" data-index="${f.index}" data-size="${f.size}" data-rec-skip="${f.recommended_skip}" checked style="accent-color: var(--accent-blue); cursor: pointer;">
+          </td>
+          <td style="font-weight: 500; font-size: 12px; word-break: break-all;">${this.escapeHtml(f.name)}</td>
+          <td><span class="component-badge ${badgeClass}">${this.escapeHtml(f.label)}</span></td>
+          <td class="tabular" style="font-size: 12px; white-space: nowrap;">${f.size_formatted}</td>
+          <td style="font-size: 11px; color: ${f.recommended_skip ? 'var(--accent-amber)' : 'var(--text-tertiary)'};">${this.escapeHtml(f.guidance)}</td>
+        </tr>
+      `;
+    }
+    tbody.innerHTML = html;
+
+    // Attach checkbox change listener for dynamic savings update
+    document.querySelectorAll('.advisor-file-chk').forEach(chk => {
+      chk.addEventListener('change', () => this.updateAdvisorSavings());
+    });
+
+    this.updateAdvisorSavings();
+    modal.classList.add('active');
+  }
+
+  updateAdvisorSavings() {
+    const summaryEl = document.getElementById('advisor-savings-summary');
+    if (!summaryEl || !this.activeAdvisorData) return;
+
+    const checkboxes = document.querySelectorAll('.advisor-file-chk');
+    let totalBytes = this.activeAdvisorData.total_size;
+    let selectedBytes = 0;
+    let excludedCount = 0;
+
+    checkboxes.forEach(chk => {
+      const size = parseInt(chk.getAttribute('data-size') || 0, 10);
+      if (chk.checked) {
+        selectedBytes += size;
+      } else {
+        excludedCount++;
+      }
+    });
+
+    const savedBytes = totalBytes - selectedBytes;
+    const savedFormatted = this.formatBytes(savedBytes);
+    const selectedFormatted = this.formatBytes(selectedBytes);
+    const totalFormatted = this.formatBytes(totalBytes);
+
+    if (excludedCount === 0) {
+      summaryEl.innerHTML = `All Files Selected: <strong>${totalFormatted}</strong> (0 B saved)`;
+    } else {
+      summaryEl.innerHTML = `Selected: <strong>${selectedFormatted}</strong> / ${totalFormatted} · <span style="color: var(--accent-green);">Saves ${savedFormatted}</span> (${excludedCount} optional files skipped)`;
+    }
+  }
+
+  async applyGamePreset() {
+    if (!this.activeAdvisorHash) return;
+    const checkboxes = document.querySelectorAll('.advisor-file-chk');
+    const excludedIndices = [];
+
+    checkboxes.forEach(chk => {
+      if (!chk.checked) {
+        excludedIndices.push(parseInt(chk.getAttribute('data-index'), 10));
+      }
+    });
+
+    try {
+      const res = await fetch(`/api/torrents/${this.activeAdvisorHash}/apply-game-preset`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ excluded_indices: excludedIndices })
+      });
+      const data = await res.json();
+      if (data.success) {
+        this.showToast(data.message || 'Game download preferences applied');
+        const modal = document.getElementById('game-advisor-modal');
+        if (modal) modal.classList.remove('active');
+      }
+    } catch (e) {
+      this.showToast('Failed to apply game preset: ' + e.message);
+    }
+  }
+
+  setupGameModeControls() {
+    const btn = document.getElementById('btn-game-mode');
+    if (btn) {
+      btn.addEventListener('click', async () => {
+        try {
+          const res = await fetch('/api/system/game-mode');
+          if (res.ok) {
+            const cur = await res.json();
+            const next = !cur.qos_enabled;
+            const toggleRes = await fetch('/api/system/game-mode/toggle', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ enabled: next })
+            });
+            const data = await toggleRes.json();
+            this.showToast(next ? 'Smart Gaming QoS Enabled (Ping Protection Active)' : 'Smart Gaming QoS Disabled');
+            this.updateGameModeUI(data.status);
+          }
+        } catch (e) {}
+      });
+    }
+  }
+
+  updateGameModeUI(status) {
+    const btn = document.getElementById('btn-game-mode');
+    const textEl = document.getElementById('game-mode-text');
+    if (!btn || !status) return;
+
+    if (status.is_gaming_active) {
+      btn.classList.add('active');
+      if (textEl) textEl.textContent = `${status.active_game} (Ping: ${status.protected_ping_ms}ms)`;
+    } else {
+      btn.classList.remove('active');
+      if (textEl) textEl.textContent = status.qos_enabled ? 'Game Ping Guard: Idle' : 'Game Ping Guard: Off';
+    }
+  }
+
+  async checkDiskStorage() {
+    try {
+      const res = await fetch('/api/system/disk-space?required_bytes=0');
+      if (!res.ok) return;
+      const data = await res.json();
+      const banner = document.getElementById('disk-guard-banner');
+      const text = document.getElementById('disk-guard-text');
+      if (banner && text) {
+        if (!data.is_sufficient || data.is_critical) {
+          banner.style.display = 'flex';
+          text.textContent = data.message;
+        } else {
+          banner.style.display = 'none';
+        }
+      }
+    } catch (e) {}
+  }
+
+  async loadInspectorGameHub(id) {
+    const container = document.getElementById('game-hub-container');
+    if (!container) return;
+    container.innerHTML = '<div style="color: var(--text-tertiary); padding: 24px; text-align: center;">Analyzing game repack structures and integrity...</div>';
+
+    try {
+      const res = await fetch(`/api/torrents/${id}/game-classification`);
+      if (!res.ok) return;
+      const data = await res.json();
+
+      let installerHtml = '';
+      if (data.has_installer) {
+        installerHtml = `
+          <div class="game-hub-card">
+            <div class="game-hub-header">
+              <div>
+                <strong style="color: #fff; font-size: 14px;">🎮 Game Installer Executable Detected</strong>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Direct launch available once download completes.</div>
+              </div>
+              <button class="btn btn-primary" style="height: 32px; font-size: 12px;" onclick="window.app.launchGameSetup('${id}')">
+                ▶ Launch Game Setup
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      let isoHtml = '';
+      const isoFile = data.files ? data.files.find(f => f.name.toLowerCase().endsWith('.iso')) : null;
+      if (isoFile) {
+        isoHtml = `
+          <div class="game-hub-card">
+            <div class="game-hub-header">
+              <div>
+                <strong style="color: #fff; font-size: 14px;">⚡ Disk Image (ISO) Detected</strong>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Mount image directly into Windows Explorer with one click.</div>
+              </div>
+              <button class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.mountIsoImage('${id}')">
+                ⚡ Mount ISO Image
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      let checksumHtml = `
+        <div class="game-hub-card">
+          <div class="game-hub-header">
+            <div>
+              <strong style="color: #fff; font-size: 14px;">🛡️ Anti-ISDone.dll Cryptographic Verifier</strong>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Verifies archive integrity against .sfv/.md5 hash files to prevent installer decompression errors.</div>
+            </div>
+            <button class="btn btn-secondary" style="height: 32px; font-size: 12px;" onclick="window.app.verifyGameChecksums('${id}')">
+              🔄 Run SFV / MD5 Hash Audit
+            </button>
+          </div>
+          <div id="game-checksum-result" style="font-size: 12px; font-family: var(--font-mono); margin-top: 8px; color: var(--text-tertiary);">
+            Ready to audit downloaded archives.
+          </div>
+        </div>
+      `;
+
+      let summaryHtml = `
+        <div class="game-hub-card">
+          <strong style="color: #fff; font-size: 14px;">📦 Game Repack Component Overview</strong>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; margin-bottom: 12px;">
+            Total Package Size: <strong>${data.total_size_formatted}</strong> (${data.total_files} files) · Optional: ${data.optional_size_formatted} (${data.optional_files_count} files)
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary" style="height: 28px; font-size: 11px;" onclick="window.app.openGameAdvisorModal('${id}', window.app.activeAdvisorData || ${JSON.stringify(data).replace(/"/g, '&quot;')})">
+              ⚙️ Open Component Optimization Advisor
+            </button>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = installerHtml + isoHtml + checksumHtml + summaryHtml;
+      this.activeAdvisorData = data;
+    } catch (e) {
+      container.innerHTML = `<div style="color: var(--accent-red); padding: 24px;">Failed to load game hub: ${e.message}</div>`;
+    }
+  }
+
+  async launchGameSetup(id) {
+    try {
+      const res = await fetch(`/api/torrents/${id}/launch-setup`, { method: 'POST' });
+      const data = await res.json();
+      this.showToast(data.message || 'Launched installer');
+    } catch (e) {
+      this.showToast('Launch failed: ' + e.message);
+    }
+  }
+
+  async mountIsoImage(id) {
+    try {
+      const res = await fetch(`/api/torrents/${id}/mount-iso`, { method: 'POST' });
+      const data = await res.json();
+      this.showToast(data.message || 'Mounted ISO successfully');
+    } catch (e) {
+      this.showToast('Mount failed: ' + e.message);
+    }
+  }
+
+  async verifyGameChecksums(id) {
+    const el = document.getElementById('game-checksum-result');
+    if (el) el.innerHTML = '<span style="color: var(--accent-amber);">🔄 Auditing CRC32/MD5 hash bitstreams...</span>';
+    try {
+      const res = await fetch(`/api/torrents/${id}/verify-checksums`, { method: 'POST' });
+      const data = await res.json();
+      if (el) {
+        if (data.is_clean) {
+          el.innerHTML = `<span style="color: var(--accent-green); font-weight: 600;">${this.escapeHtml(data.message)}</span>`;
+        } else {
+          el.innerHTML = `<span style="color: var(--accent-amber); font-weight: 600;">${this.escapeHtml(data.message)}</span>`;
+        }
+      }
+      this.showToast(data.message);
+    } catch (e) {
+      if (el) el.innerHTML = `<span style="color: var(--accent-red);">Audit error: ${e.message}</span>`;
     }
   }
 

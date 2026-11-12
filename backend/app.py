@@ -15,16 +15,18 @@ import time
 import threading
 import asyncio
 import webbrowser
-from typing import Optional
+from typing import Optional, List
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
+import subprocess
 
 from backend.engine import TorrentEngine
 from backend.telemetry import HardwareTelemetry
 from backend.sanitizer import VShieldSanitizer
+from backend.game_engine import GameRepackClassifier, DiskSpaceWarden, ChecksumAuditor, GamingQoSDetector
 
 app = FastAPI(title="VELOCITY Engine API", version="1.0.0")
 
@@ -48,6 +50,7 @@ async def add_no_cache_headers(request, call_next):
 # Instantiate core engines
 engine = TorrentEngine()
 hardware = HardwareTelemetry()
+gaming_qos = GamingQoSDetector(engine)
 
 class MagnetRequest(BaseModel):
     magnet_uri: str
@@ -68,6 +71,12 @@ class TrackerAddRequest(BaseModel):
 class BandwidthLimitRequest(BaseModel):
     download_limit_kbps: int
     upload_limit_kbps: int
+
+class GamePresetRequest(BaseModel):
+    excluded_indices: List[int]
+
+class GameModeToggleRequest(BaseModel):
+    enabled: bool
 
 class SettingsUpdateRequest(BaseModel):
     profile: Optional[str] = None
@@ -264,6 +273,101 @@ async def set_bandwidth_settings(req: BandwidthLimitRequest):
     limits = engine.set_bandwidth_limits(req.download_limit_kbps, req.upload_limit_kbps)
     return {"success": True, "limits": limits}
 
+# ----------------- Large PC Game Specialization Endpoints -----------------
+
+@app.get("/api/torrents/{info_hash}/game-classification")
+async def get_game_classification(info_hash: str):
+    files = engine.get_torrent_files(info_hash)
+    if not files:
+        return {"is_game_repack": False, "files": [], "total_files": 0, "optional_files_count": 0}
+    return GameRepackClassifier.analyze_torrent(files)
+
+@app.post("/api/torrents/{info_hash}/apply-game-preset")
+async def apply_game_preset(info_hash: str, req: GamePresetRequest):
+    files = engine.get_torrent_files(info_hash)
+    if not files:
+        raise HTTPException(status_code=404, detail="Torrent not found or files not ready.")
+    
+    excluded_set = set(req.excluded_indices)
+    for f in files:
+        idx = f["index"]
+        if idx in excluded_set:
+            engine.set_file_priority(info_hash, idx, 0) # Excluded
+        else:
+            engine.set_file_priority(info_hash, idx, 1) # Included
+            
+    return {
+        "success": True,
+        "message": f"Applied custom game configuration: {len(excluded_set)} file(s) excluded per user choice.",
+        "excluded_count": len(excluded_set)
+    }
+
+@app.get("/api/system/game-mode")
+async def get_game_mode():
+    return gaming_qos.get_status()
+
+@app.post("/api/system/game-mode/toggle")
+async def toggle_game_mode(req: GameModeToggleRequest):
+    gaming_qos.set_enabled(req.enabled)
+    return {"success": True, "status": gaming_qos.get_status()}
+
+@app.get("/api/system/disk-space")
+async def check_disk_space(required_bytes: int = 0):
+    return DiskSpaceWarden.check_space(engine.default_save_path, required_bytes)
+
+@app.post("/api/torrents/{info_hash}/verify-checksums")
+async def verify_checksums(info_hash: str):
+    torrents = engine.get_torrents()
+    torrent = next((t for t in torrents if t["id"] == info_hash), None)
+    if not torrent:
+        raise HTTPException(status_code=404, detail="Torrent not found.")
+    
+    save_dir = os.path.join(torrent.get("save_path", engine.default_save_path), torrent.get("name", ""))
+    if not os.path.exists(save_dir):
+        save_dir = torrent.get("save_path", engine.default_save_path)
+        
+    return ChecksumAuditor.audit_directory(save_dir)
+
+@app.post("/api/torrents/{info_hash}/mount-iso")
+async def mount_iso(info_hash: str):
+    files = engine.get_torrent_files(info_hash)
+    iso_file = next((f for f in files if f["name"].lower().endswith(".iso")), None)
+    if not iso_file:
+        raise HTTPException(status_code=400, detail="No .iso image found in this torrent.")
+    
+    torrents = engine.get_torrents()
+    torrent = next((t for t in torrents if t["id"] == info_hash), None)
+    save_root = torrent.get("save_path", engine.default_save_path) if torrent else engine.default_save_path
+    iso_full_path = os.path.abspath(os.path.join(save_root, iso_file.get("path", iso_file["name"])))
+    
+    if not os.path.exists(iso_full_path):
+        raise HTTPException(status_code=404, detail="ISO image has not finished downloading to disk yet.")
+        
+    cmd = f'powershell -NoProfile -Command "Mount-DiskImage -ImagePath \'{iso_full_path}\'"'
+    res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if res.returncode == 0:
+        return {"success": True, "message": f"Successfully mounted '{iso_file['name']}' in Windows Explorer."}
+    else:
+        raise HTTPException(status_code=500, detail=f"Failed to mount ISO: {res.stderr or res.stdout}")
+
+@app.post("/api/torrents/{info_hash}/launch-setup")
+async def launch_setup(info_hash: str):
+    files = engine.get_torrent_files(info_hash)
+    setup_file = next((f for f in files if f["name"].lower() in ["setup.exe", "install.exe", "launcher.exe"]), None)
+    if not setup_file:
+        raise HTTPException(status_code=400, detail="No installer executable found in this torrent.")
+        
+    torrents = engine.get_torrents()
+    torrent = next((t for t in torrents if t["id"] == info_hash), None)
+    save_root = torrent.get("save_path", engine.default_save_path) if torrent else engine.default_save_path
+    setup_full_path = os.path.abspath(os.path.join(save_root, setup_file.get("path", setup_file["name"])))
+    
+    if not os.path.exists(setup_full_path):
+        raise HTTPException(status_code=404, detail="Game installer executable has not finished downloading yet.")
+        
+    os.startfile(setup_full_path)
+    return {"success": True, "message": f"Launched '{setup_file['name']}'."}
+
 def build_telemetry_payload():
     torrents = engine.get_torrents()
     total_dl = sum(t["download_rate"] for t in torrents)
@@ -310,6 +414,7 @@ def build_telemetry_payload():
             "cache_hit_pct": 96.4,
             "waf_reduction_pct": 71.2
         },
+        "game_mode": gaming_qos.get_status(),
         "torrents": torrents
     }
 

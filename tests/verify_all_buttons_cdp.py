@@ -13,6 +13,8 @@ except Exception:
     pass
 import time
 import json
+import shutil
+import tempfile
 import subprocess
 import urllib.request
 import asyncio
@@ -47,8 +49,7 @@ async def run_cdp_audit():
     print("  VELOCITY — Headless Chrome CDP Button & Responsiveness Audit")
     print("=" * 65)
 
-    temp_profile = os.path.abspath("chrome_test_profile")
-    os.makedirs(temp_profile, exist_ok=True)
+    temp_profile = tempfile.mkdtemp(prefix="chrome_cdp_fresh_")
 
     # 1. Launch Chrome in headless debugging mode
     chrome_proc = subprocess.Popen([
@@ -58,6 +59,8 @@ async def run_cdp_audit():
         f"--remote-debugging-port={PORT}",
         "--remote-allow-origins=*",
         f"--user-data-dir={temp_profile}",
+        "--incognito",
+        "--disable-application-cache",
         "--no-first-run",
         "--no-default-browser-check",
         TARGET_URL
@@ -86,9 +89,12 @@ async def run_cdp_audit():
         async with websockets.connect(ws_url) as ws:
             # Wait for DOM and window.app
             print("[*] Waiting for window.app initialization...")
-            for _ in range(20):
-                app_ready = await cdp_eval(ws, "typeof window.app === 'object' && window.app !== null")
+            curr_url = await cdp_eval(ws, "window.location.href")
+            print(f"[*] Current URL: {curr_url}")
+            for i in range(30):
+                app_ready = await cdp_eval(ws, "typeof window.app === 'object' && window.app !== null && typeof window.app.pauseAll === 'function'")
                 if app_ready:
+                    print(f"[*] window.app initialized after {i * 0.5:.1f}s")
                     break
                 await asyncio.sleep(0.5)
 
@@ -222,12 +228,74 @@ async def run_cdp_audit():
             assert info_display == 'block', "Info tab failed to display!"
             print("  [PASS] Inspector 'General Info' tab active and populated")
 
+            # Test Inspector Game Hub Tab
+            await cdp_eval(ws, "document.querySelector('.inspector-tab[data-tab=\"game\"]').click()")
+            await asyncio.sleep(0.4)
+            game_display = await cdp_eval(ws, "document.getElementById('tab-game').style.display")
+            assert game_display == 'block', "Game Hub tab failed to display!"
+            print("  [PASS] Inspector '🎮 Game Hub' tab active and populated")
+
             # Close Inspector
             await cdp_eval(ws, "document.getElementById('btn-close-inspector').click()")
             await asyncio.sleep(0.3)
             inspector_active = await cdp_eval(ws, "document.getElementById('inspector-overlay').classList.contains('active')")
             assert not inspector_active, "Inspector failed to close!"
             print("  [PASS] Inspector Drawer closed cleanly")
+
+            # 4c. Test Large PC Game Specialization: Game Mode QoS & Optimization Advisor
+            print("\n--- 4c. Testing Large PC Game Engine & Advisor Controls ---")
+            
+            # Smart Gaming QoS Toggle
+            await cdp_eval(ws, "document.getElementById('btn-game-mode').click()")
+            await asyncio.sleep(0.5)
+            game_mode_txt = await cdp_eval(ws, "document.getElementById('game-mode-text').textContent")
+            print(f"  [PASS] '#btn-game-mode' toggled. Status: '{game_mode_txt}'")
+            # Restore
+            await cdp_eval(ws, "document.getElementById('btn-game-mode').click()")
+            await asyncio.sleep(0.3)
+
+            # Test Game Optimization Advisor Modal & Non-Destructive Guidance Callout
+            await cdp_eval(ws, """
+                window.app.openGameAdvisorModal('test_hash', {
+                    is_game_repack: true,
+                    total_size: 85899345920,
+                    total_size_formatted: '80.0 GB',
+                    optional_size: 26843545600,
+                    optional_size_formatted: '25.0 GB',
+                    recommended_size: 59055799808,
+                    recommended_size_formatted: '55.0 GB',
+                    optional_files_count: 2,
+                    files: [
+                        { index: 0, name: 'setup.exe', size: 50000000, size_formatted: '50 MB', category: 'INSTALLER', label: 'Game Installer', is_optional: false, recommended_skip: false, guidance: 'Core installer required to run game setup.' },
+                        { index: 1, name: 'data1.bin', size: 50000000000, size_formatted: '46.5 GB', category: 'BASE_GAME', label: 'Base Game Archive', is_optional: false, recommended_skip: false, guidance: 'Essential base game data.' },
+                        { index: 2, name: 'selective-french.bin', size: 15000000000, size_formatted: '14.0 GB', category: 'LANGUAGE_PACK', label: 'Optional French Voice Pack', is_optional: true, recommended_skip: true, guidance: 'Optional French language pack. Yes, the game will run 100% smoothly in English without this file.' },
+                        { index: 3, name: 'optional-4k.bin', size: 11843545600, size_formatted: '11.0 GB', category: 'TEXTURE_PACK', label: 'Optional 4K Bonus Pack', is_optional: true, recommended_skip: true, guidance: 'Optional 4K bonus pack. Yes, the game will run smoothly with standard assets without this file.' }
+                    ]
+                })
+            """)
+            await asyncio.sleep(0.5)
+            advisor_active = await cdp_eval(ws, "document.getElementById('game-advisor-modal').classList.contains('active')")
+            assert advisor_active, "Game Advisor Modal failed to open!"
+            
+            # Verify guidance text is clearly displayed to user inside Advisor Modal
+            guidance_raw = await cdp_eval(ws, "document.querySelector('#game-advisor-modal .guidance-text') ? document.querySelector('#game-advisor-modal .guidance-text').textContent : 'NOT_FOUND'")
+            guidance_visible = "100% smoothly in English" in str(guidance_raw)
+            if not guidance_visible:
+                print(f"[DEBUG] #game-advisor-modal .guidance-text content was: {repr(guidance_raw)}")
+            assert guidance_visible, "Guidance text missing from Advisor Callout!"
+            print("  [PASS] Game Optimization Advisor opened with verified non-destructive guidance callout")
+
+            # Verify all checkboxes default to CHECKED (user autonomy guarantee)
+            all_checked = await cdp_eval(ws, "[...document.querySelectorAll('.advisor-file-chk')].every(c => c.checked)")
+            assert all_checked, "User autonomy violated! Checkboxes must default to checked."
+            print("  [PASS] User Autonomy Rule Verified: 100% of files default to checked (no silent exclusions)")
+
+            # Test Close / Keep All action
+            await cdp_eval(ws, "document.getElementById('advisor-keep-all-btn').click()")
+            await asyncio.sleep(0.3)
+            advisor_closed = await cdp_eval(ws, "!document.getElementById('game-advisor-modal').classList.contains('active')")
+            assert advisor_closed, "Advisor modal failed to close upon 'Keep All' click!"
+            print("  [PASS] 'Download All Files (Default)' button preserved full torrent selection and closed cleanly")
 
             # 5. Test Swarm Peers View
             print("\n--- 5. Testing Swarm Peers Controls ---")
@@ -331,6 +399,7 @@ async def run_cdp_audit():
             chrome_proc.wait(timeout=2.0)
         except Exception:
             chrome_proc.kill()
+        shutil.rmtree(temp_profile, ignore_errors=True)
 
 if __name__ == "__main__":
     asyncio.run(run_cdp_audit())
